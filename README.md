@@ -1,6 +1,7 @@
-![Crushers #1](https://img.shields.io/static/v1?label=%F0%9F%90%B1%E2%80%8D%F0%9F%92%BB%20Crushers&message=%231&labelColor=9454bf&color=9454bf&style=for-the-badge)
+![Crushers #1](https://img.shields.io/static/v1?label=%F0%9F%90%B1%E2%80%8D%F0%9F%92%BB%20Crushers&message=%231&labelColor=9454bf&color=9454bf&style=for-the-badge) 
+![Arduino Build Status](https://github.com/DIT113-V22/group-01/actions/workflows/arduino-build.yml/badge.svg)
 
-[🖼 Presentation](https://docs.google.com/presentation/d/16SZ2ToYdbLL906brSV6_ACyWLJ0RKk2l5obWzS27Ddo/edit#slide=id.p)
+[🖼 Project Idea Presentation](https://docs.google.com/presentation/d/16SZ2ToYdbLL906brSV6_ACyWLJ0RKk2l5obWzS27Ddo/edit#slide=id.p)
 
 ***
 
@@ -13,15 +14,17 @@ For more info on how we tackle the challenge, have a look at our [wiki](https://
 
 ### What we are going to make
 
-Crushers is dedicated to prepare you to **crush the test**, the drivers license test that is. We are going to do so by providing an app which quizes you on the traffic laws, signs, and scenarios. Our app will provide you with explanations, visual illustrations, and a hands on manual driving mode to give you the full experience and prepare you like you have never before been prepared for a test.
+Crushers is dedicated to prepare you to **crush the test**, the theoretical drivers license test that is. We are going to do so by providing an app which quizes you on the traffic laws, signs, and scenarios. Our app will provide you with explanations, visual illustrations, and a hands on manual driving mode to give you the full experience and prepare you like you have never before been prepared for a test.
 
 ### Why we will make it
 
-The simple reason why we assigned ourselves with this mission is the fail rate for the drivers license exam, theory and driving. Keeping calm and focused in a busy and noisy environment as the road, especially within cities, can be difficult. To date most apps focus on the theory exam, but our goal is to combine the theory with visual illustrations showing why a certain traffic law/sign is necessary and a manual driving mode in a virtual city to also train you for the driving test.
+The simple reason why we assigned ourselves with this mission is the fail rate for the drivers license exam, theory and driving. Keeping calm and focused in a busy and noisy environment as the road, especially within cities, can be difficult and leads to accidents yearly. Some accidents, however, could be mitigated through better knowledge of driving theory. To date most apps focus on the theoretical exam, but our goal is to combine the theory with visual illustrations showing why a certain traffic law/sign is necessary and a manual driving mode in a virtual city to also train you for the driving test.
 
 **What problem it solves**
 
-![fail rate at drivers license exams](https://user-images.githubusercontent.com/52662014/160342758-7d2307f5-fed8-4d68-b21b-6e3106f1162e.png)
+Fail rate of drivers license exams in Sweden (2021)
+
+![59% fail the theory test and 52% fail the driving test](https://user-images.githubusercontent.com/52662014/160342758-7d2307f5-fed8-4d68-b21b-6e3106f1162e.png)
 
 *source: https://korkortonline.se/en/facts/statistics/*
 
