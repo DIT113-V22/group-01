@@ -23,6 +23,7 @@ The simple reason why we assigned ourselves with this mission is the fail rate f
 **What problem it solves**
 
 Fail rate of drivers license exams in Sweden (2021)
+
 ![59% fail the theory test and 52% fail the driving test](https://user-images.githubusercontent.com/52662014/160342758-7d2307f5-fed8-4d68-b21b-6e3106f1162e.png)
 
 *source: https://korkortonline.se/en/facts/statistics/*
