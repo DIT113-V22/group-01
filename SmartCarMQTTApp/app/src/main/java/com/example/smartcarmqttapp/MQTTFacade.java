@@ -27,7 +27,8 @@ public class MQTTFacade {
      * existing Server URL
      */
     public void connect(String username, String password,
-                      IMqttActionListener connectionCallback, MqttCallback clientCallback) {
+                      IMqttActionListener connectionCallback, 
+                      MqttCallback clientCallback) {
         mMqttAndroidClient.setCallback(clientCallback);
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(username);
@@ -60,7 +61,8 @@ public class MQTTFacade {
      * @param qos (default = 1)
      * @param subscriptionCallback
      */
-    public void subscribe(String topic, int qos, IMqttActionListener subscriptionCallback) {
+    public void subscribe(String topic, int qos, 
+                          IMqttActionListener subscriptionCallback) {
         try {
             mMqttAndroidClient.subscribe(topic, qos, null, subscriptionCallback);
         } catch (MqttException e) {
@@ -72,7 +74,8 @@ public class MQTTFacade {
      * @param topic that you want to remove from subscription list
      * @param unsubscriptionCallback
      */
-    public void unsubscribe(String topic, IMqttActionListener unsubscriptionCallback) {
+    public void unsubscribe(String topic, 
+                            IMqttActionListener unsubscriptionCallback) {
         try {
             mMqttAndroidClient.unsubscribe(topic, null, unsubscriptionCallback);
         } catch (MqttException e) {
@@ -86,7 +89,8 @@ public class MQTTFacade {
      * @param qos (default = 1)
      * @param publishCallback
      */
-    public void publish(String topic, String message, int qos, IMqttActionListener publishCallback) {
+    public void publish(String topic, String message, int qos, 
+                        IMqttActionListener publishCallback) {
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setPayload(message.getBytes());
         mqttMessage.setQos(qos);

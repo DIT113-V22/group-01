@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Connects the app to the MQTT Broker via the tag that connects to where the broker
-     * is hosted (localhost)
+     * Connects the app to the MQTT Broker via the tag that connects to where 
+     * the broker is hosted (localhost)
      */
     private void connectToMQTT(){
         if(!isConnected){
@@ -59,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
                     isConnected = true;
 
                     // For if you want to listen to the car's ir sensor
-                    //example of a subscription = controller.subscribe(IR_TOPIC, QOS, null);
+                    //example of a subscription = controller.subscribe(IR_TOPIC, 
+                    //QOS, null);
                 }
 
                 @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                public void onFailure(IMqttToken asyncActionToken, 
+                                      Throwable exception) {
                     final String failedConnection = "Failure to Connect to MQTT Broker";
                     System.out.println(failedConnection);
                 }
