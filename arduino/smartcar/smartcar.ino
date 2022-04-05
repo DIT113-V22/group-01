@@ -2,7 +2,9 @@
 #include <vector>
 #include <MQTT.h>
 #include <WiFi.h>
-#include <OV767X.h>
+#ifdef __SMCE__
+  #include <OV767X.h>
+#endif
 
 MQTTClient mqtt;
 WiFiClient net;
@@ -61,10 +63,11 @@ void setup() {
 
   //camera is initialized with a frame buffer
   // should be RGB888 so if something breaks start here
-  Camera.begin(QVGA, RGB565, 15);
-  frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+  #ifdef __SMCE__
+    Camera.begin(QVGA, RGB888, 15);
+    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+  #endif
   
-
   //starts wifi connection to localhost
   WiFi.begin(ssid, pass);
   auto wifiStatus = WiFi.status();
@@ -83,7 +86,10 @@ void setup() {
 
   //print . while arduino is not connected to car
   while(!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " ")) {
-    Serial.println("MQTT Connected: " + mqtt.connected());
+    if(mqtt.connected()){
+      Serial.println("MQTT Connection: ACTIVE");
+    }
+    else{return;}
     Serial.println(".");
     delay(1000);
   }
@@ -96,6 +102,7 @@ void setup() {
   //on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message){
     if(topic == "/smartcar/control/drive"){
+      control.setSpeed(message.toInt());
       //enter commands interpret received commands
     }
   });
