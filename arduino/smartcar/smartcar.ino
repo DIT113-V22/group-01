@@ -2,6 +2,7 @@
 #include <vector>
 #include <MQTT.h>
 #include <WiFi.h>
+#include <OV767X.h>
 
 MQTTClient mqtt;
 WiFiClient net;
@@ -25,14 +26,44 @@ const String IR_TOPIC = MAINMQTT_TOPIC + "sensor/ir";
 const String ULTRASONIC_TOPIC = MAINMQTT_TOPIC + "sensor/ultrasonic";
 const String GYROSCOPE_TOPIC = MAINMQTT_TOPIC + "sensor/gyroscope";
 const String ODOMETER_TOPIC = MAINMQTT_TOPIC + "sensor/odometer";
-const String CAMERA_TOPIC = MAINMQTT_TOPIC + "sensor/camera";
+const char CAMERA_TOPIC[] = "smartcar/sensor/camera";
 //status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
+const int MAX_DISTANCE = 80;
+const int TRIGGER_PIN = 6;
+const int ECHO_PIN = 7;
 
+const unsigned long PULSES_PER_M = 400;
+
+ArduinoRuntime arduinoRuntime;
+//Motors
+BrushedMotor leftMotor(arduinoRuntime,smartcarlib::pins::v2::leftMotorPins);
+BrushedMotor rightMotor(arduinoRuntime,smartcarlib::pins::v2::rightMotorPins);
+DifferentialControl control(rightMotor, leftMotor);
+
+//Sensors
+SR04 frontUltrasonic(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+GP2Y0A21 frontIR(arduinoRuntime, 0);
+GY50 gyroscope(arduinoRuntime, 0, 100UL);
+DirectionlessOdometer leftOdometer(arduinoRuntime, 
+                                  smartcarlib::pins::v2::leftOdometerPin, 
+                                  []() { leftOdometer.update(); }, PULSES_PER_M);
+DirectionlessOdometer rightOdometer(arduinoRuntime, 
+                                  smartcarlib::pins::v2::rightOdometerPin, 
+                                  []() { leftOdometer.update(); }, PULSES_PER_M);
+
+//For the camera
+std::vector<char> frameBuffer;
 
 void setup() {
   Serial.begin(9600);
+
+  //camera is initialized with a frame buffer
+  // should be RGB888 so if something breaks start here
+  Camera.begin(QVGA, RGB565, 15);
+  frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+  
 
   //starts wifi connection to localhost
   WiFi.begin(ssid, pass);
