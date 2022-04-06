@@ -50,10 +50,10 @@ GP2Y0A21 frontIR(arduinoRuntime, 0);
 GY50 gyroscope(arduinoRuntime, 0, 100UL);
 DirectionlessOdometer leftOdometer(arduinoRuntime, 
                                   smartcarlib::pins::v2::leftOdometerPin, 
-                                  []() { leftOdometer.update(); }, PULSES_PER_M);
+                                  []() { leftOdometer.update();}, PULSES_PER_M);
 DirectionlessOdometer rightOdometer(arduinoRuntime, 
                                   smartcarlib::pins::v2::rightOdometerPin, 
-                                  []() { leftOdometer.update(); }, PULSES_PER_M);
+                                  []() { leftOdometer.update();}, PULSES_PER_M);
 
 //For the camera
 std::vector<char> frameBuffer;
@@ -106,7 +106,6 @@ void setup() {
       //enter commands interpret received commands
     }
   });
-
 }
 
 void loop() {
@@ -115,5 +114,13 @@ void loop() {
     mqtt.loop();
     //delay to not overload the CPU
     delay(1);
+
+  //publishing requires the value to be parsed to a String before sending
+    const auto ir_distance = String(frontIR.getDistance());
+    mqtt.publish("/smartcar/sensor/ir", ir_distance);
+
+    //cant really get the pulses but can only get speed and distance
+    const auto odometer = String(leftOdometer.getDistance());
+    mqtt.publish("/smartcar/sensor/odometer", ir_distance);
   }
 }
