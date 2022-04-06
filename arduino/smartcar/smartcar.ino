@@ -26,19 +26,18 @@ void loop() {
 void obstacleAvoidance(){
   //since if the sensors pick up nothing the distance is 0
   /**
-   * @brief if the distance is greater than 0 and less than 35
-   * meaning it has picked up an obstacle but waits until it has reached
-   * a point before crashing, then it stops.
-   *
-   * Value for min distance to obstalce = 35;
+   * @if if the distance is greater than 0,
+   * meaning it has picked up an obstacle, it stops.
    * 
    * @else drive normally
    * 
    */
-  if(frontUltraSonic.getDistance() > 0 && frontUltraSonic.getDistance() < 70){
+  auto distance = frontUltraSonic.getDistance();
+  if(distance > 0 && distance < 60){
     control.setSpeed(0);
+    delay(100);
   }
   else{
-    control.setSpeed(40);
+    control.setSpeed(20);
   }
 }
