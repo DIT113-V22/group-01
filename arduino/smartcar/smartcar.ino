@@ -26,11 +26,11 @@ void loop() {
 void obstacleAvoidance(){
   //since if the sensors pick up nothing the distance is 0
   /**
-   * @brief if the distance is greater than 0 and less than 30
+   * @brief if the distance is greater than 0 and less than 35
    * meaning it has picked up an obstacle but waits until it has reached
    * a point before crashing, then it stops.
    *
-   * Value for min distance to obstalce = 30;
+   * Value for min distance to obstalce = 35;
    * 
    * @else drive normally
    * 
