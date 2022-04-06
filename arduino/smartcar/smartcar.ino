@@ -35,10 +35,10 @@ void obstacleAvoidance(){
    * @else drive normally
    * 
    */
-  if(frontUltraSonic.getDistance() > 0 && frontUltraSonic.getDistance() > 35){
+  if(frontUltraSonic.getDistance() > 0 && frontUltraSonic.getDistance() < 70){
     control.setSpeed(0);
   }
   else{
-    control.setSpeed(60);
+    control.setSpeed(40);
   }
 }
