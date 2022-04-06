@@ -19,6 +19,7 @@ void setup() {
 }
 
 void loop() {
+  Serial.println(frontUltraSonic.getDistance());
   obstacleAvoidance();
 }
 
@@ -34,13 +35,10 @@ void obstacleAvoidance(){
    * @else drive normally
    * 
    */
-  if(frontUltraSonic.getDistance() > 0 && frontUltraSonic.getDistance() < 30){
+  if(frontUltraSonic.getDistance() > 0 && frontUltraSonic.getDistance() > 35){
     control.setSpeed(0);
-    delay(100);
-    control.setSpeed(-30);
-    control.setAngle(30);
   }
   else{
-    control.setSpeed(30);
+    control.setSpeed(60);
   }
 }
