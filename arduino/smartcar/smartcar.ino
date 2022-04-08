@@ -32,6 +32,10 @@ const char CAMERA_TOPIC[] = "smartcar/sensor/camera";
 //status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
+//calculated data
+const String ODOMETER_DISTANCE = MAINMQTT_TOPIC + "status/odometer/distance";
+const String ODOMETER_SPEED = MAINMQTT_TOPIC + "status/odometer/speed";
+
 const int MAX_DISTANCE = 80;
 const int TRIGGER_PIN = 6;
 const int ECHO_PIN = 7;
@@ -81,7 +85,7 @@ void setup() {
     wifiStatus = WiFi.status();
   }
 
-  //begin broker on localhost at port 1883  
+  //begin broker on localhost at port 1883 
   mqtt.begin("127.0.0.1", 1883, net);
 
   //print . while arduino is not connected to car
@@ -115,12 +119,41 @@ void loop() {
     //delay to not overload the CPU
     delay(1);
 
-  //publishing requires the value to be parsed to a String before sending
-    const auto ir_distance = String(frontIR.getDistance());
-    mqtt.publish("/smartcar/sensor/ir", ir_distance);
+    const auto currentTime = millis();
+    
+    /**
+     * @brief if the it has been 1 second since the last transmission
+     * it will publish all topic below to the broker
+     */
+    static auto previousTransmission = 0UL;
+    if(currentTime - previousTransmission >= 1000UL){
+      //Publishing IR sensor
+      const auto ir_distance = String(frontIR.getDistance());
+      mqtt.publish(IR_TOPIC, ir_distance);
 
-    //cant really get the pulses but can only get speed and distance
-    const auto odometer = String(leftOdometer.getDistance());
-    mqtt.publish("/smartcar/sensor/odometer", ir_distance);
+      //Publishing average distance travelled via both Odometers
+      const auto avg_distance = String((leftOdometer.getDistance() 
+                                        + rightOdometer.getDistance()) / 2);
+      mqtt.publish(ODOMETER_DISTANCE, avg_distance);
+
+      //Publishing average speed of the car via both Odometers
+      const auto avg_speed = String((leftOdometer.getSpeed() 
+                                     + rightOdometer.getSpeed()) / 2);
+      mqtt.publish(ODOMETER_SPEED, avg_speed);
+    }
+
+    /**
+     * @brief every 65 milliseconds, it will publish the data from the frame
+     * that was captured by the camera and the frame's size
+     */
+    #ifdef __SMCE__
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 65) {
+      previousFrame = currentTime;
+      Camera.readFrame(frameBuffer.data());
+      mqtt.publish(CAMERA_TOPIC, frameBuffer.data(), frameBuffer.size(),
+                   false, 0);
+    }
+    #endif
   }
 }

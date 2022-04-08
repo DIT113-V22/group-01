@@ -68,3 +68,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Visual Studio Code
+.vscode/arduino.json
+.vscode/c_cpp_properties.json
