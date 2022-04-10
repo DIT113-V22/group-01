@@ -6,6 +6,7 @@
 MQTTClient mqtt;
 WiFiClient net;
 
+
 //wifi SSID and password defined below
 //empty ssid and pass means connect to localhost (only change for physical car)
 const char ssid[] = " ";
@@ -31,10 +32,10 @@ const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
 
 
-const int fSpeed   = 70;  // 70% of the full speed forward
-const int bSpeed   = -70; // 70% of the full speed backward
-const int lDegrees = -75; // degrees to turn left
-const int rDegrees = 75;  // degrees to turn right
+const int fSpeed   = 50;  // 70% of the full speed forward
+const int bSpeed   = -50; // 70% of the full speed backward
+const int lDegrees = -45; // degrees to turn left
+const int rDegrees = 45;  // degrees to turn right
 
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
@@ -95,46 +96,5 @@ void loop() {
     mqtt.loop();
     //delay to not overload the CPU
     delay(1);
-  }
-}
-
-void handleInput() {  
-  if (Serial.available()) {
-    char input = Serial.read();
-
-    switch (input) {  
-      case 'l':
-        car.setSpeed(fSpeed);
-        car.setAngle(lDegrees);
-        break;
-
-      case 'r':
-          car.setSpeed(fSpeed);
-          car.setAngle(rDegrees);
-          break;
-
-      case 'f':
-          car.setSpeed(fSpeed);
-          car.setAngle(0);
-          break;
-
-      case 'b':
-          car.setSpeed(bSpeed);
-          car.setAngle(0);
-          break;
-
-      default:
-          car.setSpeed(0);
-          car.setAngle(0);
-    }
-  }
-}
-
-void obsticleAviodance() {
-  int distance = front.getDistance();
-  if (distance != 0 && distance < 70) {
-    car.setSpeed(0);
-  } else {
-    car.setSpeed(fSpeed);
   }
 }
