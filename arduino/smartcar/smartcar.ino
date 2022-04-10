@@ -82,9 +82,13 @@ void setup() {
   //subscribe to main topic w/ wildcard attached
   mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
   //on specific topics, it will do certain things
-  mqtt.onMessage([](String topic, String message){
-    if(topic == "/smartcar/control/drive"){
-      //enter commands interpret received commands
+  mqtt.onMessage([](String topic, String message) {
+    if (topic == THROTTLE_TOPIC) {
+      car.setSpeed(message.toInt());
+    } else if (topic == STEERING_TOPIC) {
+      car.setAngle(message.toInt());
+    } else {
+      Serial.println(topic + " " + message);
     }
   });
 
