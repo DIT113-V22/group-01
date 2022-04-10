@@ -29,7 +29,12 @@ const String CAMERA_TOPIC = MAINMQTT_TOPIC + "sensor/camera";
 //status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
-
+ArduinoRuntime arduinoRuntime;
+//Motors
+BrushedMotor leftMotor(arduinoRuntime,smartcarlib::pins::v2::leftMotorPins);
+BrushedMotor rightMotor(arduinoRuntime,smartcarlib::pins::v2::rightMotorPins);
+DifferentialControl control(rightMotor, leftMotor);
+SmartCar smartCar(control);
 
 void setup() {
   Serial.begin(9600);
@@ -66,10 +71,16 @@ void setup() {
   mqtt.onMessage([](String topic, String message){
     if(topic == "/smartcar/control/drive"){
       //enter commands interpret received commands
+    //When emergency stop topic message is recieved, car speed is set to 0. 
+    } else if (topic == ESTOP_TOPIC) {
+      smartCar.setSpeed(0);
+      mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
     }
   });
 
 }
+
+
 
 void loop() {
   //when connected, keep checking for messages
