@@ -113,6 +113,7 @@ void setup() {
 }
 
 void loop() {
+  control.setSpeed(20);
   //when connected, keep checking for messages
   if (mqtt.connected()) {
     mqtt.loop();
@@ -132,11 +133,13 @@ void loop() {
       mqtt.publish(IR_TOPIC, ir_distance);
 
       //Publishing average distance travelled via both Odometers
+      // (distance logged is in centimeters)
       const auto avg_distance = String((leftOdometer.getDistance() 
                                         + rightOdometer.getDistance()) / 2);
       mqtt.publish(ODOMETER_DISTANCE, avg_distance);
 
       //Publishing average speed of the car via both Odometers
+      // (speed logged is in meters per second)
       const auto avg_speed = String((leftOdometer.getSpeed() 
                                      + rightOdometer.getSpeed()) / 2);
       mqtt.publish(ODOMETER_SPEED, avg_speed);
