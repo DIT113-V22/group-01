@@ -17,10 +17,3 @@ jobs:
       - name: Execute Gradle Build
         working-directory: ./SmartCarMQTTApp
         run: ./gradlew build
-
-        with:
-          gradle-version: current
-          wrapper-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
-          arguments: assembleRelease
