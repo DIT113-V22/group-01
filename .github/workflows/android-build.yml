@@ -1,0 +1,23 @@
+name: Android CI
+
+on: [push]
+
+jobs:
+  build-sketch:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v2
+      - name: Set up our JDK environment
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 1.8
+      - name: Build all artifacts
+        id: buildAllApks
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          gradle-version: current
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+          arguments: assembleRelease
