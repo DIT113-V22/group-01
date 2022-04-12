@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.Callable;
 
 @RunWith(AndroidJUnit4.class)
-public class MqttCarUnitTest {
+public class MqttCarTest {
 
     /**
      * Intervals in ms.
