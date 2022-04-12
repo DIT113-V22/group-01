@@ -26,7 +26,7 @@ public class IntegrationTestUtils {
     public static final int interval = 500;
 
     /**
-     * Checks of a value is within a acceptable range of the expected value.
+     * Checks if a value is within a acceptable range of the expected value.
      *
      * @param value the value to check
      * @param expected the expected value
