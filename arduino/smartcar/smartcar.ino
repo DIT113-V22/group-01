@@ -90,11 +90,7 @@ void setup() {
 
   //print . while arduino is not connected to car
   while(!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " ")) {
-    if(mqtt.connected()){
-      Serial.println("MQTT Connection: ACTIVE");
-    }
-    else{return;}
-    Serial.println(".");
+    Serial.println("MQTT Connecting...");
     delay(1000);
   }
   if(mqtt.connected()) {
@@ -102,7 +98,7 @@ void setup() {
   }
 
   //subscribe to main topic w/ wildcard attached
-  mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
+  mqtt.subscribe(THROTTLE_TOPIC, 1);
   //on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message){
     if(topic == "/smartcar/control/drive"){
@@ -123,9 +119,8 @@ void loop() {
     const auto currentTime = millis();
     
     /**
-     * @brief if the it has been 1 second since the last transmission
-     * it will publish all topic below to the broker
-     */
+    * @brief if the it has been 1 second since the last transmission
+    */ 
     static auto previousTransmission = 0UL;
     if(currentTime - previousTransmission >= 1000UL){
       //Publishing IR sensor
@@ -158,5 +153,4 @@ void loop() {
                    false, 0);
     }
     #endif
-  }
 }
