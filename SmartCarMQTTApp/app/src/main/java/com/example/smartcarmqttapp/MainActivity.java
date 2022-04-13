@@ -92,30 +92,39 @@ public class MainActivity extends AppCompatActivity {
                     isConnected = false;
                     System.out.println("Connection to MQTT broker lost");
                 }
-
+                /**
+                 * This method is called when a message is received from the broker
+                 * @param topic from which the message was received
+                 * @param message received
+                 * @throws Exception
+                 * 
+                 * @switch statement to determine which topic the message was received from
+                 * and does the appropriate action
+                 */
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
                     //Here subscribed topics are handled
                     //Upon an asynchronous message arrival, depending on the
                     //topic, the message is handled accordingly
-                    if(topic.equals(IR_TOPIC)){
-                        System.out.println("IR Sensor: " + message.toString());
-                    }
-                    else if(topic.equals(CAMERA_TOPIC)){
-                        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
 
-                        final byte[] payload = message.getPayload();
-                        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
-                        for (int ci = 0; ci < colors.length; ++ci) {
-                            final byte r = payload[3 * ci];
-                            final byte g = payload[3 * ci + 1];
-                            final byte b = payload[3 * ci + 2];
-                            colors[ci] = Color.rgb(r, g, b);
-                        }
-                        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-                        mCameraView.setImageBitmap(bm);
+                    switch(String){
+                        case IR_TOPIC:
+                            System.out.println("IR Sensor: " + message.toString());
+                            break;
+                        case CAMERA_TOPIC:
+                            cameraRendering();
+                            break;
+                        case ODOMETER_DISTANCE:
+                            System.out.println("Distance (cm): " + message.toString());
+                            break;
+                        case ODOMETER_SPEED:
+                            System.out.println("Speed (m/s): " + message.toString());
+                            break;
+                        default:
+                            //log topic and message
+                            System.out.println("MQTT Topic: " + topic + " | Message: " + message);
+                            break;
                     }
-                    System.out.println("MQTT Topic: " + topic + " | Message: " + message);
                 }
 
                 @Override
@@ -124,5 +133,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+    
+    private void cameraRendering(){
+        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
+
+        final byte[] payload = message.getPayload();
+        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
+        for (int ci = 0; ci < colors.length; ++ci) {
+            final byte r = payload[3 * ci];
+            final byte g = payload[3 * ci + 1];
+            final byte b = payload[3 * ci + 2];
+            colors[ci] = Color.rgb(r, g, b);
+        }
+        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        mCameraView.setImageBitmap(bm);
     }
 }
