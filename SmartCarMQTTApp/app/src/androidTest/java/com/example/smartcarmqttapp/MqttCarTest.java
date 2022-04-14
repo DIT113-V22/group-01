@@ -49,28 +49,41 @@ public class MqttCarTest {
     public void GivenAStandingCar_WhenSpeedingFully_ThenTheSpeedShouldMatch() throws Exception {
         // Given:
         final double standingSpeed = 0;
-        car.changeSpeed(standingSpeed);
-        assertEventually(
-                "Given: A standing car",
-                () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
-                Timeout.Long
-        );
+        try {
+            car.changeSpeed(standingSpeed);
+            assertEventually(
+                    "Given: A standing car",
+                    () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
+                    Timeout.Long
+            );
+        }
+        catch (Exception ex) {
+            assertTrue("Given: A standing car", false);
+            throw ex;
+        }
 
         // When:
-        final double expectedSpeed = 0.5;
+        final double expectedSpeed = 1.0;
         try {
             car.changeSpeed(expectedSpeed);
             assertTrue("When: Speeding fully", true);
         }
         catch (Exception ex) {
             assertTrue("When: Speeding fully", false);
+            throw ex;
         }
 
         // Then:
         assertEventually(
-                "Then: the speed should match",
+                "Then: The speed should match",
                 () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
                 Timeout.Long
         );
     }
+
+    @Test
+    public void GivenAStandingCar_WhenSpeedingBackwards_ThenTheSpeedShouldMatch() throws Exception {
+        
+    }
+    //Test 0, test backwards, test 0.3
 }
