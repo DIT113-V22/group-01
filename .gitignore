@@ -70,3 +70,4 @@ google-services.json
 *.hprof
 
 .vscode
+.DS_STORE
