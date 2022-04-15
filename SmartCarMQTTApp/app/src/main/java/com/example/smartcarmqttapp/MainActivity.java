@@ -2,7 +2,9 @@ package com.example.smartcarmqttapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+<<<<<<< HEAD
 
 import javax.swing.text.html.ImageView;
 
@@ -11,10 +13,14 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+=======
+import android.os.Handler;
+>>>>>>> 685258c502cafc5f31f8c5501e1b5708b6963161
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class MainActivity extends AppCompatActivity {
+<<<<<<< HEAD
 
     //calculated data
     public final String ODOMETER_DISTANCE = MAINMQTT_TOPIC + 
@@ -29,19 +35,29 @@ public class MainActivity extends AppCompatActivity {
     private MQTTFacade controller;
     private boolean isConnected = false;
     public MqttCar controller;
+=======
+    public static final int DELAY_MILLIS = 2500;
+
+>>>>>>> 685258c502cafc5f31f8c5501e1b5708b6963161
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        controller = new MqttCar(getApplicationContext(), () -> {
-            try {
-                controller.changeSpeed(0.5);
-            } catch (MqttException ex) {
-                ex.printStackTrace();
+        if(getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent in = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(in);
+                finish();
             }
-        });
+        }, DELAY_MILLIS);
+
     }
     
     private void cameraRendering(){
