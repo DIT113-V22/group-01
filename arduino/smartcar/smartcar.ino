@@ -79,7 +79,7 @@ void setup() {
   }
 
   //subscribe to main topic w/ wildcard attached
-  mqtt.subscribe(THROTTLE_TOPIC, 1);
+  mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
   //on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message) {
     if (topic == THROTTLE_TOPIC) {
