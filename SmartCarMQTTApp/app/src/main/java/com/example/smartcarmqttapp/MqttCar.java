@@ -3,6 +3,13 @@ package com.example.smartcarmqttapp;
 import android.content.Context;
 
 import androidx.databinding.ObservableField;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -48,6 +55,11 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             public static final String Throttle = Controls.base + "/throttle";
             public static final String EmergencyStop = Controls.base + "/stop";
         }
+
+        //Camera Config
+        private final int IMAGE_HEIGHT = 320;
+        private final int IMAGE_WIDTH = 240;
+        private ImageView imageView;
     }
 
     private final MqttAndroidClient mqtt;
@@ -56,6 +68,8 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
 
     // ToDo: Add a field for your sensor data here as an observable field
     public final ObservableField<Double> speed = new ObservableField<>(-1.0);
+    public final ObservableField<Double> distance = new ObservableField<>(-1.0);
+    public final ObservableField<Double> ir_distance  = new ObservableField<>(-1.0);
 
     /**
      * Connects to a car over mqtt.
@@ -152,6 +166,15 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                 case Topics.DerivedData.Speed:
                     this.speed.set(Double.parseDouble(data));
                     break;
+                case Topics.DerivedData.Distance:
+                    this.distance.set(Double.parseDouble(data));
+                    break;
+                case Topics.Sensors.Infrared:
+                    this.ir_distance.set(Double.parseDouble(data));
+                    break;
+                case Topics.Sensors.Camera:
+                    cameraRendering();
+                    break;
             }
         }
         catch (NumberFormatException ex) {
@@ -188,5 +211,20 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      */
     public void changeSpeed(double speed) throws MqttException {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
+    }
+
+    private void cameraRendering(){
+        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
+
+        final byte[] payload = message.getPayload();
+        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
+        for (int ci = 0; ci < colors.length; ++ci) {
+            final byte r = payload[3 * ci];
+            final byte g = payload[3 * ci + 1];
+            final byte b = payload[3 * ci + 2];
+            colors[ci] = Color.rgb(r, g, b);
+        }
+        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        imageView.setImageBitmap(bm);
     }
 }
