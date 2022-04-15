@@ -55,12 +55,11 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             public static final String Throttle = Controls.base + "/throttle";
             public static final String EmergencyStop = Controls.base + "/stop";
         }
-
-        //Camera Config
-        private final int IMAGE_HEIGHT = 320;
-        private final int IMAGE_WIDTH = 240;
-        private ImageView imageView;
     }
+    //Camera Config
+    private final int IMAGE_HEIGHT = 320;
+    private final int IMAGE_WIDTH = 240;
+    private ImageView imageView;
 
     private final MqttAndroidClient mqtt;
     private final Logger logger;
@@ -117,6 +116,9 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             // ToDo: Subscribe your topic here
             this.logger.info("Subscribing...");
             mqtt.subscribe(Topics.DerivedData.Speed, QoS);
+            mqtt.subscribe(Topics.DerivedData.Distance, QoS);
+            mqtt.subscribe(Topics.Sensors.Infrared, QoS);
+            mqtt.subscribe(Topics.Sensors.Odometer, QoS);
         } catch (MqttException ex) {
             ex.printStackTrace();
         }
@@ -164,16 +166,18 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                 // Todo: Listen for your sensor topic here and set your field accordingly
 
                 case Topics.DerivedData.Speed:
+                    //speed in m/s
                     this.speed.set(Double.parseDouble(data));
                     break;
                 case Topics.DerivedData.Distance:
+                    //distance in cm
                     this.distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Infrared:
                     this.ir_distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Camera:
-                    cameraRendering();
+                    cameraRendering(message);
                     break;
             }
         }
@@ -213,7 +217,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
     }
 
-    private void cameraRendering(){
+    private void cameraRendering(MqttMessage message){
         final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
 
         final byte[] payload = message.getPayload();

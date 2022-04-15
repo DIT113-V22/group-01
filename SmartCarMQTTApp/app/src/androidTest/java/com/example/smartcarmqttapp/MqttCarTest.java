@@ -73,4 +73,36 @@ public class MqttCarTest {
                 Timeout.Long
         );
     }
+
+    //Testing for distance might be setting speed for a while and then checking distance
+    @Test
+    public void GivenAMovingCar_WhenSpeedingForSomeTime_ThenTheDistanceShouldMatch() throws Exception {
+        // Given:
+        final double movingSpeed = 0.2; //0.5 m/s == 50 cm/s
+        car.changeSpeed(movingSpeed);
+        assertEventually(
+                "Given: A standing car",
+                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
+
+        // When:
+        Utils.sleep(1000); //Travels for 1 second
+        final double expectedDistance = 20; //Travelled 1 second == distance travelled: 50 cm
+        try {
+            car.changeSpeed(0);
+            assertTrue("When: Speeding for some time", true);
+        }
+        catch (Exception ex) {
+            assertTrue("When: Speeding for some time", false);
+        }
+
+        // Then:
+        assertEventually(
+                "Then: the distance should match",
+                () -> acceptable(car.distance.get(), expectedDistance, FaultTolerance.Speed),
+                Timeout.Long
+        );
+    }
+
 }
