@@ -191,6 +191,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     }
 
     public void emergencyStop() throws MqttException{
-        mqtt.publish(Topics.Controls.EmergencyStop, new MqttMessage(""));
+        String message = "";
+        mqtt.publish(Topics.Controls.EmergencyStop, new MqttMessage(message.getBytes()));
     }
 }
