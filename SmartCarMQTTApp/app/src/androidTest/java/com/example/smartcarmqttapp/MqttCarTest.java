@@ -23,6 +23,8 @@ public class MqttCarTest {
      */
     public static final class FaultTolerance {
         public static final double Speed = 0.01;
+        public static final double Distance = 0.1;
+        public static final double Ir_Distance = 4;
     }
 
     private static Context appContext;
@@ -81,7 +83,7 @@ public class MqttCarTest {
         final double movingSpeed = 0.2; //0.5 m/s == 50 cm/s
         car.changeSpeed(movingSpeed);
         assertEventually(
-                "Given: A standing car",
+                "Given: A moving car",
                 () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
                 Timeout.Long
         );
@@ -100,7 +102,36 @@ public class MqttCarTest {
         // Then:
         assertEventually(
                 "Then: the distance should match",
-                () -> acceptable(car.distance.get(), expectedDistance, FaultTolerance.Speed),
+                () -> acceptable(car.distance.get(), expectedDistance, FaultTolerance.Distance),
+                Timeout.Long
+        );
+    }
+
+    @Test
+    public void GivenAMovingCar_WhenWallIsHit_ThenIRDistanceShouldChange() throws Exception {
+        //Given:
+        final double movingSpeed = 0.2;
+        car.changeSpeed(movingSpeed);
+        assertEventually(
+                "Given: A moving car",
+                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
+
+        //When:
+        final double objectMinDistance = 6; //values go from 50 to ~6 cm)
+        try{
+            car.changeSpeed(0);
+            assertTrue("When: Wall is hit", true);
+        }
+        catch (Exception ex){
+            assertTrue("When: Wall is hit", false);
+        }
+
+        //Then:
+        assertEventually(
+                "Then: the distance should match",
+                () -> acceptable(car.ir_distance.get(), objectMinDistance, FaultTolerance.Ir_Distance),
                 Timeout.Long
         );
     }
