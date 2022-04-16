@@ -175,8 +175,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                     break;
                 case Topics.Sensors.Camera:
                     //Camera topic
-                    HomeActivity a = new HomeActivity();
-                    a.cameraRendering(message);
+                    //Display camera view on home screen
                     break;
             }
         }

@@ -22,7 +22,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        imageView = findViewById(R.id.imageView);
 
         controller = new MqttCar(getApplicationContext(), () -> {
             try {
@@ -33,6 +32,12 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * @param message of frames to be rendered
+     * This should be called upon received a message on the Camera Topic
+     * and should then update the ImageView displayed on the current screen
+     */
     public void cameraRendering(MqttMessage message){
         final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
 

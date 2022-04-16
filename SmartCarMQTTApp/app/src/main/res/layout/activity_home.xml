@@ -6,18 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="369dp"
-        android:layout_height="403dp"
-        android:translationX="20dp"
-        android:translationY="150dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
