@@ -56,10 +56,6 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             public static final String EmergencyStop = Controls.base + "/stop";
         }
     }
-    //Camera Config
-    private final int IMAGE_HEIGHT = 320;
-    private final int IMAGE_WIDTH = 240;
-    private ImageView imageView;
 
     private final MqttAndroidClient mqtt;
     private final Logger logger;
@@ -119,6 +115,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             mqtt.subscribe(Topics.DerivedData.Distance, QoS);
             mqtt.subscribe(Topics.Sensors.Infrared, QoS);
             mqtt.subscribe(Topics.Sensors.Odometer, QoS);
+            mqtt.subscribe(Topics.Sensors.Camera, QoS);
         } catch (MqttException ex) {
             ex.printStackTrace();
         }
@@ -177,7 +174,9 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                     this.ir_distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Camera:
-                    cameraRendering(message);
+                    //Camera topic
+                    HomeActivity a = new HomeActivity();
+                    a.cameraRendering(message);
                     break;
             }
         }
@@ -215,20 +214,5 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      */
     public void changeSpeed(double speed) throws MqttException {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
-    }
-
-    private void cameraRendering(MqttMessage message){
-        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
-
-        final byte[] payload = message.getPayload();
-        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
-        for (int ci = 0; ci < colors.length; ++ci) {
-            final byte r = payload[3 * ci];
-            final byte g = payload[3 * ci + 1];
-            final byte b = payload[3 * ci + 2];
-            colors[ci] = Color.rgb(r, g, b);
-        }
-        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        imageView.setImageBitmap(bm);
     }
 }

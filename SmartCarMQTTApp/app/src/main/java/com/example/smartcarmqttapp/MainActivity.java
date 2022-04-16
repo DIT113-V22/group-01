@@ -16,10 +16,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean isConnected = false;
     public MqttCar controller;
     public static final int DELAY_MILLIS = 2500;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

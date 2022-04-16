@@ -28,7 +28,7 @@ const String IR_TOPIC = MAINMQTT_TOPIC + "sensor/ir";
 const String ULTRASONIC_TOPIC = MAINMQTT_TOPIC + "sensor/ultrasonic";
 const String GYROSCOPE_TOPIC = MAINMQTT_TOPIC + "sensor/gyroscope";
 const String ODOMETER_TOPIC = MAINMQTT_TOPIC + "sensor/odometer";
-const char CAMERA_TOPIC[] = "smartcar/sensor/camera";
+const char CAMERA_TOPIC[] = "/smartcar/sensor/camera";
 // status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
