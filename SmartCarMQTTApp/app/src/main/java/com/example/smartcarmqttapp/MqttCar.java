@@ -189,4 +189,8 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     public void changeSpeed(double speed) throws MqttException {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
     }
+
+    public void emergencyStop() throws MqttException{
+        mqtt.publish(Topics.Controls.EmergencyStop);
+    }
 }

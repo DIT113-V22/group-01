@@ -37,6 +37,7 @@ DifferentialControl control(rightMotor, leftMotor);
 SimpleCar car(control);
 
 void setup() {
+  car.setSpeed(10);
   Serial.begin(9600);
 
   //starts wifi connection to localhost
@@ -65,7 +66,7 @@ void setup() {
   }
 
   //subscribe to main topic w/ wildcard attached
-  mqtt.subscribe(THROTTLE_TOPIC, 1);
+  mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
   //on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message){
     if(topic == "/smartcar/control/drive"){
@@ -74,6 +75,7 @@ void setup() {
     } else if (topic == ESTOP_TOPIC) {
       car.setSpeed(0);
       mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
+      Serial.println("Car has stopped");
     }
   });
 
@@ -87,6 +89,6 @@ void loop() {
     mqtt.loop();
     //delay to not overload the CPU
     delay(100);
-    mqtt.publish("/smartcar/derivedData/speed", speed);
+    mqtt.publish("/smartcar/derivedData/speed");
   }
 }

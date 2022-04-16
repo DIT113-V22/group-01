@@ -73,4 +73,36 @@ public class MqttCarTest {
                 Timeout.Long
         );
     }
+
+    @Test
+    public void GivenAMovingCar_WhenEmergencyStopEngaged_ThenSpeedIsZero(){
+        //Given:
+        car.changeSpeed(5);
+        assertEventually(
+            "Given: A Moving Car",
+            () -> acceptable(car.speed.get(), 5, FaultTolerance.Speed),
+            Timeout.Medium
+        );
+
+        //When:
+        try {
+            car.emergencyStop();
+            assertTrue(
+                "Car has stopped.", true
+            );
+        } catch (Exception e) {
+            //TODO: handle exception
+            assertTrue(
+                "Car has stopped.", false
+            );
+        }
+
+        //Then:
+        assertEventually(
+            "Then: Car has stopped.",
+            () -> acceptable(car.speed.get(), 0, 0),
+            Timeout.Short
+        );
+    }
+
 }
