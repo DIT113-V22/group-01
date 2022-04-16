@@ -153,8 +153,8 @@ void loop()
       mqtt.publish(ODOMETER_SPEED, avg_speed);
 
       // Publish heading angle (degrees: [0, 360]) using gyroscope
-      const auto currentHeading = String(gyroscope.getHeading());
-      mqtt.publish(GYROSCOPE_TOPIC, currentHeading);
+      const auto currentHeading = gyroscope.getHeading();
+      mqtt.publish(GYROSCOPE_TOPIC, String(currentHeading));
 
       // Publish distance to front (cm: [0, MAX_DISTANCE]) using front ultrasonic
       const auto frontDistance = String(frontUltrasonic.getDistance());
