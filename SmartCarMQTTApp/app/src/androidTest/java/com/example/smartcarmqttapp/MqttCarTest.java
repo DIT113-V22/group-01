@@ -89,7 +89,7 @@ public class MqttCarTest {
         );
 
         // When:
-        Utils.sleep(1000); //Travels for 1 second
+        Thread.sleep(1000); //Travels for 1 second
         final double expectedDistance = 20; //Travelled 1 second == distance travelled: 50 cm
         try {
             car.changeSpeed(0);
