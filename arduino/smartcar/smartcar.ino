@@ -135,6 +135,7 @@ void loop()
      * @brief if the it has been 1 second since the last transmission
      */
     static auto previousTransmission = 0UL;
+    static auto previousHeading = 0;
     if (currentTime - previousTransmission >= 1000UL)
     {
       // Publishing IR sensor
@@ -152,14 +153,25 @@ void loop()
       mqtt.publish(ODOMETER_SPEED, avg_speed);
 
       // Publish heading angle (degrees: [0, 360]) using gyroscope
-      const auto rotationAngle = String(gyroscope.getHeading());
-      mqtt.publish(GYROSCOPE_TOPIC, rotationAngle);
+      const auto currentHeading = String(gyroscope.getHeading());
+      mqtt.publish(GYROSCOPE_TOPIC, currentHeading);
 
       // Publish distance to front (cm: [0, MAX_DISTANCE]) using front ultrasonic
       const auto frontDistance = String(frontUltrasonic.getDistance());
       mqtt.publish(ULTRASONIC_TOPIC, frontDistance);
 
+      if(currentHeading > previousHeading) {
+        mqtt.publish(BLINKERS_TOPIC, "L");
+      }else if(currentHeading < previousHeading) {
+        mqtt.publish(BLINKERS_TOPIC, "R");
+      }else{
+        mqtt.publish(BLINKERS_TOPIC, "F");
+      }
+      previousHeading = currentHeading;
+
       // Brushed motor (throttle, direction) readings omitted
+
+      previousTransmission = currentTime;
     }
 
 /**
