@@ -42,6 +42,8 @@ const int ECHO_PIN = 7;
 
 const unsigned long PULSES_PER_M = 400;
 
+String blinkerStatus = "off";
+
 ArduinoRuntime arduinoRuntime;
 // Motors
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
@@ -108,18 +110,49 @@ void setup()
   }
 
   // subscribe to main topic w/ wildcard attached
-  mqtt.subscribe(THROTTLE_TOPIC, 1);
+  mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
   // on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message)
                  {
     if(topic == "/smartcar/control/drive"){
       control.setSpeed(message.toInt());
       //enter commands interpret received commands
+    }else if(topic == "/smartcar/status/blinkers"){
+      if(message == "left"){
+        Serial.println("Blinker to left");
+        blinkerStatus = "left";
+      }else if(message == "right"){
+        Serial.println("Blinker to right");
+        blinkerStatus = "right";
+      }else if(message == "off"){
+        blinkerStatus = "off";
+      }
     } });
+}
+
+void handleInput()
+{
+  if (Serial.available())
+  {
+    char input = Serial.read();
+    switch (input)
+    {
+    case 'l':
+      control.setAngle(10);
+      break;
+    case 'r':
+      control.setAngle(-10);
+      break;
+    default:
+      control.setAngle(0);
+      break;
+    }
+  }
 }
 
 void loop()
 {
+  handleInput();
   gyroscope.update();
   control.setSpeed(20);
   // when connected, keep checking for messages
@@ -160,12 +193,15 @@ void loop()
       const auto frontDistance = String(frontUltrasonic.getDistance());
       mqtt.publish(ULTRASONIC_TOPIC, frontDistance);
 
-      if(currentHeading > previousHeading) {
-        mqtt.publish(BLINKERS_TOPIC, "L");
-      }else if(currentHeading < previousHeading) {
-        mqtt.publish(BLINKERS_TOPIC, "R");
-      }else{
-        mqtt.publish(BLINKERS_TOPIC, "F");
+      if (currentHeading > previousHeading && blinkerStatus == "right")
+      {
+        mqtt.publish(BLINKERS_TOPIC, "off");
+        blinkerStatus = "off";
+      }
+      else if (currentHeading < previousHeading && blinkerStatus == "left")
+      {
+        mqtt.publish(BLINKERS_TOPIC, "off");
+        blinkerStatus = "off";
       }
       previousHeading = currentHeading;
 
