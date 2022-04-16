@@ -34,7 +34,7 @@ ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime,smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime,smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(rightMotor, leftMotor);
-SmartCar smartCar(control);
+SimpleCar car(control);
 
 void setup() {
   Serial.begin(9600);
@@ -57,8 +57,7 @@ void setup() {
 
   //print . while arduino is not connected to car
   while(!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " ")) {
-    Serial.println("MQTT Connected: " + mqtt.connected());
-    Serial.println(".");
+    Serial.println("MQTT Connecting...");
     delay(1000);
   }
   if(mqtt.connected()) {
@@ -66,14 +65,14 @@ void setup() {
   }
 
   //subscribe to main topic w/ wildcard attached
-  mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
+  mqtt.subscribe(THROTTLE_TOPIC, 1);
   //on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message){
     if(topic == "/smartcar/control/drive"){
       //enter commands interpret received commands
     //When emergency stop topic message is recieved, car speed is set to 0. 
     } else if (topic == ESTOP_TOPIC) {
-      smartCar.setSpeed(0);
+      car.setSpeed(0);
       mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
     }
   });
@@ -87,6 +86,7 @@ void loop() {
   if (mqtt.connected()) {
     mqtt.loop();
     //delay to not overload the CPU
-    delay(1);
+    delay(100);
+    mqtt.publish("/smartcar/derivedData/speed", speed);
   }
 }
