@@ -5,6 +5,7 @@ import static com.example.smartcarmqttapp.IntegrationTestUtils.*;
 
 import android.content.Context;
 
+import androidx.databinding.ObservableField;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -43,7 +44,64 @@ public class MqttCarTest {
         }
     }
 
-    // ToDo: Add tests for the mqtt car here
+    @Test
+    public void GivenAMovingCar_WhenSteering_ThenTheAngleShouldMatch() throws Exception {
+        // Given:
+        final double movingSpeed = 20;
+        car.changeSpeed(movingSpeed);
+        assertEventually(
+                "Given: A moving car",
+                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
+
+        // When:
+        final double expectedAngle = 10;
+        try {
+            car.steerCar(Double.toString(expectedAngle));
+            assertTrue("When: Steering", true);
+        }
+        catch (Exception ex) {
+            assertTrue("When: Steering", false);
+        }
+
+        // Then:
+        assertEventually(
+                "Then: the angle should match",
+                () -> acceptable(car.speed.get(), expectedAngle, FaultTolerance.Speed),
+                Timeout.Long
+        );
+    }
+
+    @Test
+    public void GivenAStandingCar_WhenSteering_ThenTheAngleShouldMatch() throws Exception {
+        // Given:
+        final double standingSpeed = 0;
+        car.changeSpeed(standingSpeed);
+        assertEventually(
+                "Given: A standing car",
+                () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
+
+        // When:
+        final double expectedAngle = 10;
+        try {
+            car.steerCar(Double.toString(expectedAngle));
+            assertTrue("When: Steering", true);
+        }
+        catch (Exception ex) {
+            assertTrue("When: Steering", false);
+        }
+
+        // Then:
+        assertEventually(
+                "Then: nothing should happen",
+                () -> acceptable(car.speed.get(), expectedAngle, FaultTolerance.Speed),
+                Timeout.Long
+        );
+    }
+
 
     @Test
     public void GivenAStandingCar_WhenSpeedingFully_ThenTheSpeedShouldMatch() throws Exception {
