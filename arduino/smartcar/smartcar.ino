@@ -18,7 +18,7 @@ const char pass[] = " ";
 // Identifying tag
 const String ID_TAG = "MQTTSmartCar";
 // main topic to derive others from
-const String MAINMQTT_TOPIC = "/smartCar/";
+const String MAINMQTT_TOPIC = "/smartcar/";
 // control topics
 const String STEERING_TOPIC = MAINMQTT_TOPIC + "controls/steering";
 const String THROTTLE_TOPIC = MAINMQTT_TOPIC + "controls/throttle";
@@ -29,7 +29,7 @@ const String IR_TOPIC = MAINMQTT_TOPIC + "sensor/ir";
 const String ULTRASONIC_TOPIC = MAINMQTT_TOPIC + "sensor/ultrasonic";
 const String GYROSCOPE_TOPIC = MAINMQTT_TOPIC + "sensor/gyroscope";
 const String ODOMETER_TOPIC = MAINMQTT_TOPIC + "sensor/odometer";
-const char CAMERA_TOPIC[] = "/smartCar/sensor/camera";
+const char CAMERA_TOPIC[] = "/smartcar/sensor/camera";
 // status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
