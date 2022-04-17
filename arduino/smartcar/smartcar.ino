@@ -16,9 +16,9 @@ const char ssid[] = " ";
 const char pass[] = " ";
 
 // Identifying tag
-const String ID_TAG = "MQTTSmartsmartCar";
+const String ID_TAG = "MQTTSmartCar";
 // main topic to derive others from
-const String MAINMQTT_TOPIC = "/smartsmartCar/";
+const String MAINMQTT_TOPIC = "/smartCar/";
 // control topics
 const String STEERING_TOPIC = MAINMQTT_TOPIC + "controls/steering";
 const String THROTTLE_TOPIC = MAINMQTT_TOPIC + "controls/throttle";
@@ -29,7 +29,7 @@ const String IR_TOPIC = MAINMQTT_TOPIC + "sensor/ir";
 const String ULTRASONIC_TOPIC = MAINMQTT_TOPIC + "sensor/ultrasonic";
 const String GYROSCOPE_TOPIC = MAINMQTT_TOPIC + "sensor/gyroscope";
 const String ODOMETER_TOPIC = MAINMQTT_TOPIC + "sensor/odometer";
-const char CAMERA_TOPIC[] = "/smartsmartCar/sensor/camera";
+const char CAMERA_TOPIC[] = "/smartCar/sensor/camera";
 // status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
@@ -93,7 +93,7 @@ void setup() {
   mqtt.begin("127.0.0.1", 1883, net);
 
   // print . while arduino is not connected to smartCar
-  while (!mqtt.connect("SmartsmartCarMQTT", "SmartsmartCarMQTT", " ")) {
+  while (!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " ")) {
     Serial.println("MQTT Connecting...");
     delay(1000);
   }
