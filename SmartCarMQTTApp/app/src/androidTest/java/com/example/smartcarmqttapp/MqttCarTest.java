@@ -10,22 +10,56 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Tests for checking if the communication with the car works.
  */
 @RunWith(AndroidJUnit4.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MqttCarTest {
+
+    public static final Map<Double, Double> ThrottleSpeedMap = new HashMap<>();
+
+    static {
+        ThrottleSpeedMap.put(  0.0, 0.0);
+        ThrottleSpeedMap.put( 10.0, 0.138);
+        ThrottleSpeedMap.put( 20.0, 0.326);
+        ThrottleSpeedMap.put( 30.0, 0.510);
+        ThrottleSpeedMap.put( 40.0, 0.703);
+        ThrottleSpeedMap.put( 50.0, 0.889);
+        ThrottleSpeedMap.put( 60.0, 1.083);
+        ThrottleSpeedMap.put( 70.0, 1.270);
+        ThrottleSpeedMap.put( 80.0, 1.464);
+        ThrottleSpeedMap.put( 90.0, 1.651);
+        ThrottleSpeedMap.put(100.0, 1.846);
+        ThrottleSpeedMap.put(  -0.0, 0.0);
+        ThrottleSpeedMap.put( -10.0, 0.138);
+        ThrottleSpeedMap.put( -20.0, 0.326);
+        ThrottleSpeedMap.put( -30.0, 0.510);
+        ThrottleSpeedMap.put( -40.0, 0.703);
+        ThrottleSpeedMap.put( -50.0, 0.889);
+        ThrottleSpeedMap.put( -60.0, 1.083);
+        ThrottleSpeedMap.put( -70.0, 1.270);
+        ThrottleSpeedMap.put( -80.0, 1.464);
+        ThrottleSpeedMap.put( -90.0, 1.651);
+        ThrottleSpeedMap.put(-100.0, 1.846);
+    }
+
     /**
      * Fault tolerance (absolute values)
      */
     public static final class FaultTolerance {
         public static final double Speed = 0.01;
         public static final double Distance = 0.1;
-        public static final double Ir_Distance = 4;
+        public static final double Heading = 3.6;
     }
 
     private static Context appContext;
@@ -46,74 +80,45 @@ public class MqttCarTest {
         }
     }
 
+    //Testing for distance might be setting speed for a while and then checking distance
     @Test
-    public void GivenAMovingCar_WhenSteering_ThenTheAngleShouldMatch() throws Exception {
+    public void _01_GivenAMovingCar_WhenSpeedingForSomeTime_ThenTheDistanceShouldMatch() throws Exception {
         // Given:
-        final double movingSpeed = 20;
+        final double movingSpeed = 100;
         car.changeSpeed(movingSpeed);
         assertEventually(
                 "Given: A moving car",
-                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
 
         // When:
-        final double expectedAngle = 10;
+        final double expectedDistance = ThrottleSpeedMap.get(movingSpeed) * 100 /* cm */;
         try {
-            car.steerCar(Double.toString(expectedAngle));
-            assertTrue("When: Steering", true);
+            car.changeSpeed(0);
+            assertTrue("When: Speeding for some time", true);
         }
         catch (Exception ex) {
-            assertTrue("When: Steering", false);
+            assertTrue("When: Speeding for some time", false);
         }
 
         // Then:
         assertEventually(
-                "Then: the angle should match",
-                () -> acceptable(car.speed.get(), expectedAngle, FaultTolerance.Speed),
-                Timeout.Long
+            "Then: the distance should match",
+            () -> car.distance.get() > expectedDistance,
+            Timeout.Short
         );
     }
 
     @Test
-    public void GivenAStandingCar_WhenSteering_ThenTheAngleShouldMatch() throws Exception {
-        // Given:
-        final double standingSpeed = 0;
-        car.changeSpeed(standingSpeed);
-        assertEventually(
-                "Given: A standing car",
-                () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
-                Timeout.Long
-        );
-
-        // When:
-        final double expectedAngle = 10;
-        try {
-            car.steerCar(Double.toString(expectedAngle));
-            assertTrue("When: Steering", true);
-        }
-        catch (Exception ex) {
-            assertTrue("When: Steering", false);
-        }
-
-        // Then:
-        assertEventually(
-                "Then: nothing should happen",
-                () -> acceptable(car.speed.get(), expectedAngle, FaultTolerance.Speed),
-                Timeout.Long
-        );
-    }
-
-
-    @Test
-    public void GivenAStandingCar_WhenSpeedingFully_ThenTheSpeedShouldMatch() throws Exception {
+    public void _02_GivenAStandingCar_WhenSpeedingFully_ThenTheSpeedShouldMatch() throws Exception {
         // Given:
         final double standingSpeed = 0;
         try {
             car.changeSpeed(standingSpeed);
             assertEventually(
                     "Given: A standing car",
-                    () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
+                    () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(standingSpeed), FaultTolerance.Speed),
                     Timeout.Long
             );
         }
@@ -123,7 +128,7 @@ public class MqttCarTest {
         }
 
         // When:
-        final double expectedSpeed = 1.0;
+        final double expectedSpeed = 100;
         try {
             car.changeSpeed(expectedSpeed);
             assertTrue("When: Speeding fully", true);
@@ -136,50 +141,20 @@ public class MqttCarTest {
         // Then:
         assertEventually(
                 "Then: The speed should match",
-                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(expectedSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
     }
 
     @Test
-    public void GivenAMovingCar_WhenEmergencyStopEngaged_ThenSpeedIsZero(){
-        //Given:
-        car.changeSpeed(5);
-        assertEventually(
-            "Given: A Moving Car",
-            () -> acceptable(car.speed.get(), 5, FaultTolerance.Speed),
-            Timeout.Medium
-        );
-
-        //When:
-        try {
-            car.emergencyStop();
-            assertTrue(
-                "Car has stopped.", true
-            );
-        } catch (Exception e) {
-            assertTrue(
-                "Car has stopped.", false
-            );
-
-        }
-
-        //Then:
-        assertEventually(
-            "Then: Car has stopped.",
-            () -> acceptable(car.speed.get(), 0, 0),
-            Timeout.Short
-        );
-    }
-
-    public void GivenAStandingCar_WhenSpeedingBackwards_ThenTheSpeedShouldMatch() throws Exception {
+    public void _03_GivenAStandingCar_WhenSpeedingBackwards_ThenTheSpeedShouldMatch() throws Exception {
         // Given:
         final double standingSpeed = 0.0;
         try {
             car.changeSpeed(standingSpeed);
             assertEventually(
                     "Given: A standing car",
-                    () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
+                    () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(standingSpeed), FaultTolerance.Speed),
                     Timeout.Long
             );
         }
@@ -189,7 +164,7 @@ public class MqttCarTest {
         }
 
         // When:
-        final double expectedSpeed = -1.0;
+        final double expectedSpeed = -100;
         try {
             car.changeSpeed(expectedSpeed);
             assertTrue("When: Speeding fully backwards", true);
@@ -202,20 +177,20 @@ public class MqttCarTest {
         // Then:
         assertEventually(
                 "Then: The speed should match",
-                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(expectedSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
     }
 
     @Test
-    public void GivenAMovingCar_WhenSlowingDown_ThenTheSpeedShouldMatch() throws Exception {
+    public void _04_GivenAMovingCar_WhenSlowingDown_ThenTheSpeedShouldMatch() throws Exception {
         // Given:
-        final double movingSpeed = 0.8;
+        final double movingSpeed = 80;
         try {
             car.changeSpeed(movingSpeed);
             assertEventually(
                     "Given: A moving car",
-                    () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                    () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
                     Timeout.Long
             );
         }
@@ -225,7 +200,7 @@ public class MqttCarTest {
         }
 
         // When:
-        final double expectedSpeed = 0.3;
+        final double expectedSpeed = 30;
         try {
             car.changeSpeed(expectedSpeed);
             assertTrue("When: Slowing down", true);
@@ -238,20 +213,20 @@ public class MqttCarTest {
         // Then:
         assertEventually(
                 "Then: The speed should match",
-                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(expectedSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
     }
 
     @Test
-    public void GivenAMovingCar_WhenAccelerating_ThenTheSpeedShouldMatch() throws Exception {
+    public void _05_GivenAMovingCar_WhenAccelerating_ThenTheSpeedShouldMatch() throws Exception {
         // Given:
-        final double movingSpeed = 0.2;
+        final double movingSpeed = 20;
         try {
             car.changeSpeed(movingSpeed);
             assertEventually(
                     "Given: A moving car",
-                    () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                    () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
                     Timeout.Long
             );
         }
@@ -261,7 +236,7 @@ public class MqttCarTest {
         }
 
         // When:
-        final double expectedSpeed = 0.7;
+        final double expectedSpeed = 70;
         try {
             car.changeSpeed(expectedSpeed);
             assertTrue("When: Accelerating", true);
@@ -274,119 +249,155 @@ public class MqttCarTest {
         // Then:
         assertEventually(
                 "Then: The speed should match",
-                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(expectedSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
     }
 
-    //Testing for distance might be setting speed for a while and then checking distance
     @Test
-    public void GivenAMovingCar_WhenSpeedingForSomeTime_ThenTheDistanceShouldMatch() throws Exception {
+    public void _06_GivenAMovingCar_WhenSteering_ThenTheAngleShouldMatch() throws Exception {
         // Given:
-        final double movingSpeed = 0.2; //0.5 m/s == 50 cm/s
+        final double movingSpeed = 20;
         car.changeSpeed(movingSpeed);
         assertEventually(
                 "Given: A moving car",
-                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
 
         // When:
-        Thread.sleep(1000); //Travels for 1 second
-        final double expectedDistance = 20; //Travelled 1 second == distance travelled: 50 cm
+        final double expectedAngle = 10;
         try {
-            car.changeSpeed(0);
-            assertTrue("When: Speeding for some time", true);
+            car.steerCar(expectedAngle);
+            assertTrue("When: Steering", true);
         }
         catch (Exception ex) {
-            assertTrue("When: Speeding for some time", false);
+            assertTrue("When: Steering", false);
         }
 
         // Then:
         assertEventually(
-                "Then: the distance should match",
-                () -> acceptable(car.distance.get(), expectedDistance, FaultTolerance.Distance),
+                "Then: the angle should match",
+                () -> {
+                    return acceptable(car.gyroscopeHeading.get(), MqttCar.DEFAULT_HEADING + expectedAngle, FaultTolerance.Heading);
+                },
                 Timeout.Long
         );
+
+        car.steerCar(0);
     }
 
     @Test
-    public void GivenAMovingCar_WhenWallIsHit_ThenIRDistanceShouldChange() throws Exception {
-        //Given:
-        final double movingSpeed = 0.2;
-        car.changeSpeed(movingSpeed);
+    public void _07_GivenAStandingCar_WhenSteering_ThenTheAngleShouldMatch() throws Exception {
+        // Given:
+        final double standingSpeed = 0;
+        car.changeSpeed(standingSpeed);
         assertEventually(
-                "Given: A moving car",
-                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                "Given: A standing car",
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(standingSpeed), FaultTolerance.Speed),
                 Timeout.Long
         );
 
-        //When:
-        final double objectMinDistance = 6; //values go from 50 to ~6 cm)
-        try{
-            car.changeSpeed(0);
-            assertTrue("When: Wall is hit", true);
-        }
-        catch (Exception ex){
-            assertTrue("When: Wall is hit", false);
+        // When:
+        final double angle = 10;
+        try {
+            car.steerCar(angle);
+            assertTrue("When: Steering", true);
+        } catch (Exception ex) {
+            assertTrue("When: Steering", false);
         }
 
+        // Then:
+        final double initialAngle = 0;
+        assertEventually(
+                "Then: nothing should happen",
+                () -> acceptable(car.gyroscopeHeading.get(), MqttCar.DEFAULT_HEADING + initialAngle, FaultTolerance.Heading),
+                Timeout.Long
+        );
+
+        car.steerCar(0);
+    }
+
+    @Test
+    public void _08_GivenAMovingCar_WhenWallIsHit_ThenIRDistanceShouldChange() throws Exception {
+        //Given:
+        final double movingSpeed = 100;
+        car.changeSpeed(movingSpeed);
+        assertEventually(
+                "Given: A moving car",
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
+                Timeout.Long
+        );
+
+        //When: Wall is hit (basically just takes some time)
+        
         //Then:
         assertEventually(
-            "Then: the distance should match",
-            () -> acceptable(car.ir_distance.get(), objectMinDistance, FaultTolerance.Ir_Distance),
+            "Then: the distance should change",
+            () -> car.ir_distance.get() != 0.0,
             Timeout.Long
         );
     }
 
-    public void GivenAMovingCar_WhenWheelsRotate_ThenGyroscopeHeadingShouldChange() throws Exception {
-        //Given:
-        final double movingSpeed = 0.2;
-        car.changeSpeed(movingSpeed);
-        assertEventually(
-                "Given: A moving car",
-                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
-                Timeout.Long);
-
-        //When:
-        final double rotationAngle = 30;
-        try{
-            car.changeAngle(rotationAngle);
-            assertTrue("When: wheel rotates", true);
-        }catch(Exception ex) {
-            assertTrue("When: wheel rotates", false);
-        }
-        //Then:
-        assertEventually("Then: the heading should change",
-        () -> acceptable(car.gyroscopeHeading.get(), rotationAngle, 10), // relation between angle and heading needed
-        Timeout.Long
-        );
-    }
-    
-
     @Test
-    public void GivenAMovingCar_WhenDirectionChanges_ThenBlinkerShouldStop() throws Exception {
+    public void _09_GivenAMovingCar_WhenDirectionChanges_ThenBlinkerShouldStop() throws Exception {
         //Given:
-        final double movingSpeed = 0.2;
+        final double movingSpeed = 20;
         car.changeSpeed(movingSpeed);
-        car.blinkDirection("right");
+        car.blinkDirection(MqttCar.BlinkerDirection.Right);
         assertEventually(
-                "Given: A moving car",
-                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
-                Timeout.Long
-                );
+            "Given: A moving car",
+            () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
+            Timeout.Long
+        );
+
         //When:
         final double rotationAngle = 30;
         try{
-            car.changeAngle(30);
+            car.steerCar(rotationAngle);
             assertTrue("When: direction changes", true);
-        }catch(Exception ex) {
+        } catch(Exception ex) {
             assertTrue("When: direction changes", false);
         }
+
         //Then:
         assertEventually("Then: blinker should switch off",
-        () -> assertTrue(car.blinkerStatus.get(), "off"),
-        Timeout.Long
+            () -> car.blinkerStatus.get() == MqttCar.BlinkerDirection.Off,
+            Timeout.Long
+        );
+
+        car.steerCar(0);
+    }
+
+    @Test
+    public void _10_GivenAMovingCar_WhenEmergencyStopEngaged_ThenSpeedIsZero() throws Exception {
+        //Given:
+        final double movingSpeed = 20;
+        car.changeSpeed(movingSpeed);
+        assertEventually(
+                "Given: A Moving Car",
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(movingSpeed), FaultTolerance.Speed),
+                Timeout.Long
+        );
+
+        //When:
+        try {
+            car.emergencyStop();
+            assertTrue(
+                    "Car has stopped.", true
+            );
+        } catch (Exception e) {
+            assertTrue(
+                    "Car has stopped.", false
+            );
+        }
+
+        //Then:
+        final double standingSpeed = 0;
+        assertEventually(
+                "Then: Car has stopped.",
+                () -> acceptable(car.speed.get(), ThrottleSpeedMap.get(standingSpeed), FaultTolerance.Speed),
+                Timeout.Long
         );
     }
 }

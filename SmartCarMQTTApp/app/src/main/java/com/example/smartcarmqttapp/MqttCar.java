@@ -43,11 +43,11 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         public static final class Status {
             public static final String base = Topics.base + "/status";
             public static final String Blinkers = Status.base + "/blinkers";
-        }
-        public static final class DerivedData {
-            public static final String base = Topics.base + "/derivedData";
-            public static final String Speed = DerivedData.base + "/speed";
-            public static final String Distance = DerivedData.base + "/distance";
+            public static final class Odometer {
+                public static final String base = Status.base + "/odometer";
+                public static final String Speed = Odometer.base + "/speed";
+                public static final String Distance = Odometer.base + "/distance";
+            }
         }
         public static final class Controls {
             public static final String base = Topics.base + "/controls";
@@ -57,18 +57,25 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         }
     }
 
+    public enum BlinkerDirection {
+        Left,
+        Right, 
+        Off
+    }
+
     private final MqttAndroidClient mqtt;
     private final Logger logger;
     private final Runnable onConnected;
 
+    public final static double DEFAULT_HEADING = 180.0;
+
     // ToDo: Add a field for your sensor data here as an observable field
-    public final ObservableField<Double> speed = new ObservableField<>(-1.0);
-    public final ObservableField<Double> distance = new ObservableField<>(-1.0);
-    public final ObservableField<Double> ir_distance  = new ObservableField<>(-1.0);
-    
-    public final ObservableField<Double> ultrasoundDistance = new ObservableField<>(-1.0);
-    public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(-1.0);
-    public final ObservableField<Double> blinkerStatus = new ObservableField<>(-1.0);
+    public final ObservableField<Double> speed = new ObservableField<>(0.0);
+    public final ObservableField<Double> distance = new ObservableField<>(0.0);
+    public final ObservableField<Double> ir_distance  = new ObservableField<>(0.0);
+    public final ObservableField<Double> ultrasoundDistance = new ObservableField<>(0.0);
+    public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(DEFAULT_HEADING);
+    public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
 
     /**
      * Connects to a car over mqtt.
@@ -115,13 +122,12 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         try {
             // ToDo: Subscribe your topic here
             this.logger.info("Subscribing...");
-            mqtt.subscribe(Topics.DerivedData.Speed, QoS);
-            mqtt.subscribe(Topics.DerivedData.Distance, QoS);
+            mqtt.subscribe(Topics.Status.Odometer.Speed, QoS);
+            mqtt.subscribe(Topics.Status.Odometer.Distance, QoS);
             mqtt.subscribe(Topics.Sensors.Infrared, QoS);
             mqtt.subscribe(Topics.Sensors.Odometer, QoS);
             mqtt.subscribe(Topics.Sensors.Camera, QoS);
-
-            mqtt.subscribe(Topics.Sensors.Gyropscope, QoS);
+            mqtt.subscribe(Topics.Sensors.Gyroscope, QoS);
             mqtt.subscribe(Topics.Sensors.Ultrasonic, QoS);
             mqtt.subscribe(Topics.Status.Blinkers, QoS);
         } catch (MqttException ex) {
@@ -170,11 +176,11 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             switch (topic) {
                 // Todo: Listen for your sensor topic here and set your field accordingly
 
-                case Topics.DerivedData.Speed:
+                case Topics.Status.Odometer.Speed:
                     //speed in m/s
                     this.speed.set(Double.parseDouble(data));
                     break;
-                case Topics.DerivedData.Distance:
+                case Topics.Status.Odometer.Distance:
                     //distance in cm
                     this.distance.set(Double.parseDouble(data));
                     break;
@@ -189,7 +195,19 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                     this.gyroscopeHeading.set(Double.parseDouble(data));
                     break;
                 case Topics.Status.Blinkers:
-                    this.blinkerStatus.set(data);
+                    switch (data) {
+                        case "left":
+                            this.blinkerStatus.set(BlinkerDirection.Left);
+                            break;
+                        
+                        case "right":
+                            this.blinkerStatus.set(BlinkerDirection.Right);
+                            break;
+
+                        case "off":
+                            this.blinkerStatus.set(BlinkerDirection.Off);
+                            break;
+                    }
                     break;
                 case Topics.Sensors.Ultrasonic:
                     this.ultrasoundDistance.set(Double.parseDouble(data));
@@ -221,26 +239,27 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     }
 
 
-    /**
-     * Direct the car by publishing a message in a specified topic
-     * @param message the received message
-     * @throws MqttException when the message fails to be transferred successfully to the broker
-     */
-    public void steerCar(String message) throws MqttException {
-        MqttMessage mqttMessage = new MqttMessage();
-        mqttMessage.setPayload(message.getBytes());
-        mqttMessage.setQos(1);
-        mqtt.publish(Topics.Controls.Steering, mqttMessage);
-    }
 
     /**
      * Changes the car speed.
      *
-     * @param speed in percentage (between 0 and 1)
+     * @param speed in percentage (between 0 and 100)
      * @throws MqttException when the message cannot be sent to the car
      */
     public void changeSpeed(double speed) throws MqttException {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
+    }
+
+    /**
+     * Direct the car by publishing a message in a specified topic
+     * @param angle the angle of attack
+     * @throws MqttException when the message fails to be transferred successfully to the broker
+     */
+    public void steerCar(double angle) throws MqttException {
+        MqttMessage mqttMessage = new MqttMessage();
+        mqttMessage.setPayload(Double.toString(angle).getBytes());
+        mqttMessage.setQos(1);
+        mqtt.publish(Topics.Controls.Steering, mqttMessage);
     }
 
     public void emergencyStop() throws MqttException {
@@ -248,11 +267,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         mqtt.publish(Topics.Controls.EmergencyStop, new MqttMessage(message.getBytes()));
     }
 
-    public void changeAngle(double angle) throws MqttException {
-        mqtt.publish(Topics.Controls.Steering, new MqttMessage(Double.toString(angle).getBytes()));
-    }
-
-    public void blinkDirection(String direction) throws MqttException {
-        mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.getBytes()));
+    public void blinkDirection(BlinkerDirection direction) throws MqttException {
+        mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.toString().toLowerCase().getBytes()));
     }
 }
