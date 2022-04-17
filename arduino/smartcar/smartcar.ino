@@ -29,7 +29,12 @@ const String CAMERA_TOPIC = MAINMQTT_TOPIC + "sensor/camera";
 //status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
-String speed = "-1.0";
+ArduinoRuntime arduinoRuntime;
+//Motors
+BrushedMotor leftMotor(arduinoRuntime,smartcarlib::pins::v2::leftMotorPins);
+BrushedMotor rightMotor(arduinoRuntime,smartcarlib::pins::v2::rightMotorPins);
+DifferentialControl control(rightMotor, leftMotor);
+SimpleCar car(control);
 
 void setup() {
   Serial.begin(9600);
@@ -63,10 +68,11 @@ void setup() {
   mqtt.subscribe(THROTTLE_TOPIC, 1);
   //on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message){
-    Serial.println(topic + ": " + message);
-
-    if(topic == "/smartcar/controls/throttle") {
-      speed = message;
+    if(topic == THROTTLE_TOPIC){
+      car.setSpeed(message.toInt());
+      //enter commands interpret received commands
+    } else {
+      Serial.println("invalid topic: " + topic + ": " + message);
     }
   });
 
