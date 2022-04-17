@@ -3,6 +3,13 @@ package com.example.smartcarmqttapp;
 import android.content.Context;
 
 import androidx.databinding.ObservableField;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -56,6 +63,12 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
 
     // ToDo: Add a field for your sensor data here as an observable field
     public final ObservableField<Double> speed = new ObservableField<>(-1.0);
+    public final ObservableField<Double> distance = new ObservableField<>(-1.0);
+    public final ObservableField<Double> ir_distance  = new ObservableField<>(-1.0);
+    
+    public final ObservableField<Double> ultrasoundDistance = new ObservableField<>(-1.0);
+    public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(-1.0);
+    public final ObservableField<Double> blinkerStatus = new ObservableField<>(-1.0);
 
     /**
      * Connects to a car over mqtt.
@@ -103,6 +116,14 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             // ToDo: Subscribe your topic here
             this.logger.info("Subscribing...");
             mqtt.subscribe(Topics.DerivedData.Speed, QoS);
+            mqtt.subscribe(Topics.DerivedData.Distance, QoS);
+            mqtt.subscribe(Topics.Sensors.Infrared, QoS);
+            mqtt.subscribe(Topics.Sensors.Odometer, QoS);
+            mqtt.subscribe(Topics.Sensors.Camera, QoS);
+
+            mqtt.subscribe(Topics.Sensors.Gyropscope, QoS);
+            mqtt.subscribe(Topics.Sensors.Ultrasonic, QoS);
+            mqtt.subscribe(Topics.Status.Blinkers, QoS);
         } catch (MqttException ex) {
             ex.printStackTrace();
         }
@@ -150,7 +171,28 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                 // Todo: Listen for your sensor topic here and set your field accordingly
 
                 case Topics.DerivedData.Speed:
+                    //speed in m/s
                     this.speed.set(Double.parseDouble(data));
+                    break;
+                case Topics.DerivedData.Distance:
+                    //distance in cm
+                    this.distance.set(Double.parseDouble(data));
+                    break;
+                case Topics.Sensors.Infrared:
+                    this.ir_distance.set(Double.parseDouble(data));
+                    break;
+                case Topics.Sensors.Camera:
+                    //Camera topic
+                    //Display camera view on home screen
+                    break;
+                case Topics.Sensors.Gyroscope:
+                    this.gyroscopeHeading.set(Double.parseDouble(data));
+                    break;
+                case Topics.Status.Blinkers:
+                    this.blinkerStatus.set(data);
+                    break;
+                case Topics.Sensors.Ultrasonic:
+                    this.ultrasoundDistance.set(Double.parseDouble(data));
                     break;
             }
         }
@@ -188,5 +230,13 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      */
     public void changeSpeed(double speed) throws MqttException {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
+    }
+
+    public void changeAngle(double angle) throws MqttException {
+        mqtt.publish(Topics.Controls.Steering, new MqttMessage(Double.toString(angle).getBytes()));
+    }
+
+    public void blinkDirection(String direction) throws MqttException {
+        mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.getBytes()));
     }
 }
