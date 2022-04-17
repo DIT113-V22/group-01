@@ -67,7 +67,6 @@ DirectionlessOdometer rightOdometer(
 std::vector<char> frameBuffer;
 
 void setup() {
-  car.setSpeed(10);
   Serial.begin(9600);
 
 // camera is initialized with a frame buffer
