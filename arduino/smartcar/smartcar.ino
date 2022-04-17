@@ -127,6 +127,8 @@ void setup()
       }else if(message == "off"){
         blinkerStatus = "off";
       }
+    }else if(topic == "/smartcar/controls/steering"){
+      control.setAngle(message.toInt());
     } });
 }
 
@@ -208,6 +210,7 @@ void loop()
       // Brushed motor (throttle, direction) readings omitted
 
       previousTransmission = currentTime;
+      
     }
 
 /**

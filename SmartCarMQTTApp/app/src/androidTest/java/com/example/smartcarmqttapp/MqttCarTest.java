@@ -136,4 +136,54 @@ public class MqttCarTest {
         );
     }
 
+    public void GivenAMovingCar_WhenWheelsRotate_ThenGyroscopeHeadingShouldChange() throws Exception {
+        //Given:
+        final double movingSpeed = 0.2;
+        car.changeSpeed(movingSpeed);
+        assertEventually(
+                "Given: A moving car",
+                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                Timeout.Long);
+
+        //When:
+        final double rotationAngle = 30;
+        try{
+            car.changeAngle(rotationAngle);
+            assertTrue("When: wheel rotates", true);
+        }catch(Exception ex) {
+            assertTrue("When: wheel rotates", false);
+        }
+        //Then:
+        assertEventually("Then: the heading should change",
+        () -> acceptable(car.gyroscopeHeading.get(), rotationAngle, 10), // relation between angle and heading needed
+        Timeout.Long
+        );
+    }
+    
+
+    @Test
+    public void GivenAMovingCar_WhenDirectionChanges_ThenBlinkerShouldStop() throws Exception {
+        //Given:
+        final double movingSpeed = 0.2;
+        car.changeSpeed(movingSpeed);
+        car.blinkDirection("right");
+        assertEventually(
+                "Given: A moving car",
+                () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                Timeout.Long
+                );
+        //When:
+        final double rotationAngle = 30;
+        try{
+            car.changeAngle(30);
+            assertTrue("When: direction changes", true);
+        }catch(Exception ex) {
+            assertTrue("When: direction changes", false);
+        }
+        //Then:
+        assertEventually("Then: blinker should switch off",
+        () -> assertTrue(car.blinkerStatus.get(), "off"),
+        Timeout.Long
+        );
+    }
 }
