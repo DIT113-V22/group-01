@@ -32,6 +32,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      */
     public static final class Topics {
         public static final String base = "/smartcar";
+
         public static final class Sensors {
             public static final String base = Topics.base + "/sensor";
             public static final String Infrared = Sensors.base + "/ir";
@@ -40,15 +41,18 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
             public static final String Gyroscope = Sensors.base + "/gyroscope";
             public static final String Camera = Sensors.base + "/camera";
         }
+
         public static final class Status {
             public static final String base = Topics.base + "/status";
             public static final String Blinkers = Status.base + "/blinkers";
         }
+
         public static final class DerivedData {
             public static final String base = Topics.base + "/derivedData";
             public static final String Speed = DerivedData.base + "/speed";
             public static final String Distance = DerivedData.base + "/distance";
         }
+
         public static final class Controls {
             public static final String base = Topics.base + "/controls";
             public static final String Steering = Controls.base + "/steering";
@@ -64,12 +68,12 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     // ToDo: Add a field for your sensor data here as an observable field
     public final ObservableField<Double> speed = new ObservableField<>(-1.0);
     public final ObservableField<Double> distance = new ObservableField<>(-1.0);
-    public final ObservableField<Double> ir_distance  = new ObservableField<>(-1.0);
+    public final ObservableField<Double> ir_distance = new ObservableField<>(-1.0);
 
     /**
      * Connects to a car over mqtt.
      *
-     * @param context unfortunately required for the MqttAndroidClient to work
+     * @param context     unfortunately required for the MqttAndroidClient to work
      * @param onConnected since the connection is async, this callback is
      *                    fired when the connection successfully completed
      */
@@ -92,8 +96,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         try {
             mqtt.setCallback(this);
             mqtt.connect(options, null, this);
-        }
-        catch (MqttException ex) {
+        } catch (MqttException ex) {
             ex.printStackTrace();
         }
     }
@@ -127,7 +130,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      * Fires when the MqttAndroidClient failed to connect.
      *
      * @param asyncActionToken not relevant, MqttAndroidClient stuff
-     * @param exception the reason for the failed connection.
+     * @param exception        the reason for the failed connection.
      */
     @Override
     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
@@ -151,7 +154,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      * Updates the cars' observable fields.
      * Fires when the MqttAndroidClient receives a message.
      *
-     * @param topic the topic at which the message is received
+     * @param topic   the topic at which the message is received
      * @param message the received message
      */
     @Override
@@ -163,23 +166,22 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                 // Todo: Listen for your sensor topic here and set your field accordingly
 
                 case Topics.DerivedData.Speed:
-                    //speed in m/s
+                    // speed in m/s
                     this.speed.set(Double.parseDouble(data));
                     break;
                 case Topics.DerivedData.Distance:
-                    //distance in cm
+                    // distance in cm
                     this.distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Infrared:
                     this.ir_distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Camera:
-                    //Camera topic
-                    //Display camera view on home screen
+                    // Camera topic
+                    // Display camera view on home screen
                     break;
             }
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             logger.info("Unable to parse incoming data from " + topic + ", data: " + data);
         }
     }
@@ -213,5 +215,9 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      */
     public void changeSpeed(double speed) throws MqttException {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
+    }
+
+    public void changeAngle(double angle) throws MqttException {
+        mqtt.publish(Topics.Controls.Steering, new MqttMessage(Double.toString(angle).getBytes()));
     }
 }
