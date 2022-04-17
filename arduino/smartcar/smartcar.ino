@@ -1,7 +1,8 @@
-#include <Smartcar.h>
-#include <vector>
 #include <MQTT.h>
+#include <Smartcar.h>
 #include <WiFi.h>
+
+#include <vector>
 #ifdef __SMCE__
 #include <OV767X.h>
 #endif
@@ -49,29 +50,23 @@ ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(rightMotor, leftMotor);
+SimpleCar car(control);
 
 // Sensors
 SR04 frontUltrasonic(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 GP2Y0A21 frontIR(arduinoRuntime, 0);
 GY50 gyroscope(arduinoRuntime, 0, 100UL);
 DirectionlessOdometer leftOdometer(
-    arduinoRuntime,
-    smartcarlib::pins::v2::leftOdometerPin,
-    []()
-    { leftOdometer.update(); },
-    PULSES_PER_M);
+    arduinoRuntime, smartcarlib::pins::v2::leftOdometerPin,
+    []() { leftOdometer.update(); }, PULSES_PER_M);
 DirectionlessOdometer rightOdometer(
-    arduinoRuntime,
-    smartcarlib::pins::v2::rightOdometerPin,
-    []()
-    { leftOdometer.update(); },
-    PULSES_PER_M);
+    arduinoRuntime, smartcarlib::pins::v2::rightOdometerPin,
+    []() { leftOdometer.update(); }, PULSES_PER_M);
 
 // For the camera
 std::vector<char> frameBuffer;
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
 
 // camera is initialized with a frame buffer
@@ -88,8 +83,7 @@ void setup()
   // checks wifistatus to display if its not connected to either
   //   the localhost or to actual WiFi
   //
-  while (wifiStatus != WL_CONNECTED && wifiStatus != WL_NO_SHIELD)
-  {
+  while (wifiStatus != WL_CONNECTED && wifiStatus != WL_NO_SHIELD) {
     Serial.println(wifiStatus);
     delay(1000);
     wifiStatus = WiFi.status();
@@ -99,67 +93,43 @@ void setup()
   mqtt.begin("127.0.0.1", 1883, net);
 
   // print . while arduino is not connected to car
-  while (!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " "))
-  {
+  while (!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " ")) {
     Serial.println("MQTT Connecting...");
     delay(1000);
   }
-  if (mqtt.connected())
-  {
+  if (mqtt.connected()) {
     Serial.println("Connected to MQTT Broker");
   }
 
   // subscribe to main topic w/ wildcard attached
   mqtt.subscribe(MAINMQTT_TOPIC + "#", 1);
   // on specific topics, it will do certain things
-  mqtt.onMessage([](String topic, String message)
-                 {
-    if(topic == "/smartcar/control/drive"){
-      control.setSpeed(message.toInt());
-      //enter commands interpret received commands
-    }else if(topic == "/smartcar/status/blinkers"){
-      if(message == "left"){
+  mqtt.onMessage([](String topic, String message) {
+    if (topic == THROTTLE_TOPIC) {
+      car.setSpeed(message.toInt());
+      // enter commands interpret received commands
+    } else if (topic == "/smartcar/status/blinkers") {
+      if (message == "left") {
         Serial.println("Blinker to left");
         blinkerStatus = "left";
-      }else if(message == "right"){
+      } else if (message == "right") {
         Serial.println("Blinker to right");
         blinkerStatus = "right";
-      }else if(message == "off"){
+      } else if (message == "off") {
         blinkerStatus = "off";
       }
-    }else if(topic == "/smartcar/controls/steering"){
+    } else if (topic == "/smartcar/controls/steering") {
       control.setAngle(message.toInt());
-    } });
-}
-
-void handleInput()
-{
-  if (Serial.available())
-  {
-    char input = Serial.read();
-    switch (input)
-    {
-    case 'l':
-      control.setAngle(10);
-      break;
-    case 'r':
-      control.setAngle(-10);
-      break;
-    default:
-      control.setAngle(0);
-      break;
+    } else {
+      Serial.println("invalid topic: " + topic + ": " + message);
     }
-  }
+  });
 }
 
-void loop()
-{
-  handleInput();
+void loop() {
   gyroscope.update();
-  control.setSpeed(20);
   // when connected, keep checking for messages
-  if (mqtt.connected())
-  {
+  if (mqtt.connected()) {
     mqtt.loop();
     // delay to not overload the CPU
     delay(1);
@@ -171,37 +141,36 @@ void loop()
      */
     static auto previousTransmission = 0UL;
     static auto previousHeading = 0;
-    if (currentTime - previousTransmission >= 1000UL)
-    {
+    if (currentTime - previousTransmission >= 1000UL) {
       // Publishing IR sensor
       const auto ir_distance = String(frontIR.getDistance());
       mqtt.publish(IR_TOPIC, ir_distance);
 
       // Publishing average distance travelled via both Odometers
       //  (distance logged is in centimeters)
-      const auto avg_distance = String((leftOdometer.getDistance() + rightOdometer.getDistance()) / 2);
+      const auto avg_distance = String(
+          (leftOdometer.getDistance() + rightOdometer.getDistance()) / 2);
       mqtt.publish(ODOMETER_DISTANCE, avg_distance);
 
       // Publishing average speed of the car via both Odometers
       //  (speed logged is in meters per second)
-      const auto avg_speed = String((leftOdometer.getSpeed() + rightOdometer.getSpeed()) / 2);
+      const auto avg_speed =
+          String((leftOdometer.getSpeed() + rightOdometer.getSpeed()) / 2);
       mqtt.publish(ODOMETER_SPEED, avg_speed);
 
       // Publish heading angle (degrees: [0, 360]) using gyroscope
       const auto currentHeading = gyroscope.getHeading();
       mqtt.publish(GYROSCOPE_TOPIC, String(currentHeading));
 
-      // Publish distance to front (cm: [0, MAX_DISTANCE]) using front ultrasonic
+      // Publish distance to front (cm: [0, MAX_DISTANCE]) using front
+      // ultrasonic
       const auto frontDistance = String(frontUltrasonic.getDistance());
       mqtt.publish(ULTRASONIC_TOPIC, frontDistance);
 
-      if (currentHeading > previousHeading && blinkerStatus == "right")
-      {
+      if (currentHeading > previousHeading && blinkerStatus == "right") {
         mqtt.publish(BLINKERS_TOPIC, "off");
         blinkerStatus = "off";
-      }
-      else if (currentHeading < previousHeading && blinkerStatus == "left")
-      {
+      } else if (currentHeading < previousHeading && blinkerStatus == "left") {
         mqtt.publish(BLINKERS_TOPIC, "off");
         blinkerStatus = "off";
       }
@@ -210,7 +179,6 @@ void loop()
       // Brushed motor (throttle, direction) readings omitted
 
       previousTransmission = currentTime;
-      
     }
 
 /**
@@ -219,12 +187,11 @@ void loop()
  */
 #ifdef __SMCE__
     static auto previousFrame = 0UL;
-    if (currentTime - previousFrame >= 65)
-    {
+    if (currentTime - previousFrame >= 65) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
-      mqtt.publish(CAMERA_TOPIC, frameBuffer.data(), frameBuffer.size(),
-                   false, 0);
+      mqtt.publish(CAMERA_TOPIC, frameBuffer.data(), frameBuffer.size(), false,
+                   0);
     }
 #endif
   }
