@@ -1,5 +1,5 @@
 #include <MQTT.h>
-#include <Smartcar.h>
+#include <SmartCar.h>
 #include <WiFi.h>
 
 #include <vector>
@@ -11,14 +11,14 @@ MQTTClient mqtt;
 WiFiClient net;
 
 // wifi SSID and password defined below
-// empty ssid and pass means connect to localhost (only change for physical car)
+// empty ssid and pass means connect to localhost (only change for physical smartCar)
 const char ssid[] = " ";
 const char pass[] = " ";
 
 // Identifying tag
-const String ID_TAG = "MQTTSmartCar";
+const String ID_TAG = "MQTTSmartsmartCar";
 // main topic to derive others from
-const String MAINMQTT_TOPIC = "/smartcar/";
+const String MAINMQTT_TOPIC = "/smartsmartCar/";
 // control topics
 const String STEERING_TOPIC = MAINMQTT_TOPIC + "controls/steering";
 const String THROTTLE_TOPIC = MAINMQTT_TOPIC + "controls/throttle";
@@ -29,7 +29,7 @@ const String IR_TOPIC = MAINMQTT_TOPIC + "sensor/ir";
 const String ULTRASONIC_TOPIC = MAINMQTT_TOPIC + "sensor/ultrasonic";
 const String GYROSCOPE_TOPIC = MAINMQTT_TOPIC + "sensor/gyroscope";
 const String ODOMETER_TOPIC = MAINMQTT_TOPIC + "sensor/odometer";
-const char CAMERA_TOPIC[] = "/smartcar/sensor/camera";
+const char CAMERA_TOPIC[] = "/smartsmartCar/sensor/camera";
 // status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
 
@@ -50,8 +50,6 @@ ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(rightMotor, leftMotor);
-SimpleCar car(control);
-
 // Sensors
 SR04 frontUltrasonic(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 GP2Y0A21 frontIR(arduinoRuntime, 0);
@@ -62,6 +60,8 @@ DirectionlessOdometer leftOdometer(
 DirectionlessOdometer rightOdometer(
     arduinoRuntime, smartcarlib::pins::v2::rightOdometerPin,
     []() { leftOdometer.update(); }, PULSES_PER_M);
+
+SmartCar smartCar(arduinoRuntime, control, gyroscope,leftOdometer, rightOdometer);
 
 // For the camera
 std::vector<char> frameBuffer;
@@ -92,8 +92,8 @@ void setup() {
   // begin broker on localhost at port 1883
   mqtt.begin("127.0.0.1", 1883, net);
 
-  // print . while arduino is not connected to car
-  while (!mqtt.connect("SmartCarMQTT", "SmartCarMQTT", " ")) {
+  // print . while arduino is not connected to smartCar
+  while (!mqtt.connect("SmartsmartCarMQTT", "SmartsmartCarMQTT", " ")) {
     Serial.println("MQTT Connecting...");
     delay(1000);
   }
@@ -106,14 +106,14 @@ void setup() {
   // on specific topics, it will do certain things
   mqtt.onMessage([](String topic, String message) {
     if (topic == THROTTLE_TOPIC) {
-      car.setSpeed(message.toInt());
+      smartCar.setSpeed(message.toInt());
       // enter commands interpret received commands
     } else if (topic == STEERING_TOPIC) {
-      car.setAngle(message.toInt());
+      smartCar.setAngle(message.toInt());
     } else if (topic == ESTOP_TOPIC) {
-      car.setSpeed(0);
+      smartCar.setSpeed(0);
       mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
-      Serial.println("Car has stopped");
+      Serial.println("smartCar has stopped");
     } else if (topic == BLINKERS_TOPIC) {
       if (message == "left") {
         Serial.println("Blinker to left");
@@ -150,25 +150,21 @@ void loop() {
 
       // Publishing average distance travelled via both Odometers
       //  (distance logged is in centimeters)
-      const auto avg_distance = String(
-          (leftOdometer.getDistance() + rightOdometer.getDistance()) / 2);
-      mqtt.publish(ODOMETER_DISTANCE, avg_distance);
+      mqtt.publish(ODOMETER_DISTANCE, String(smartCar.getDistance()));
 
-      // Publishing average speed of the car via both Odometers
+      // Publishing average speed of the smartCar via both Odometers
       //  (speed logged is in meters per second)
-      const auto avg_speed =
-          String((leftOdometer.getSpeed() + rightOdometer.getSpeed()) / 2);
-      mqtt.publish(ODOMETER_SPEED, avg_speed);
+      mqtt.publish(ODOMETER_SPEED, String(smartCar.getSpeed()));
 
       // Publish heading angle (degrees: [0, 360]) using gyroscope
-      const auto currentHeading = gyroscope.getHeading();
-      mqtt.publish(GYROSCOPE_TOPIC, String(currentHeading));
+      mqtt.publish(GYROSCOPE_TOPIC, String(smartCar.getHeading()));
 
       // Publish distance to front (cm: [0, MAX_DISTANCE]) using front
       // ultrasonic
       const auto frontDistance = String(frontUltrasonic.getDistance());
       mqtt.publish(ULTRASONIC_TOPIC, frontDistance);
 
+      const auto currentHeading = smartCar.getHeading();
       if (currentHeading > previousHeading && blinkerStatus == "right") {
         mqtt.publish(BLINKERS_TOPIC, "off");
         blinkerStatus = "off";
