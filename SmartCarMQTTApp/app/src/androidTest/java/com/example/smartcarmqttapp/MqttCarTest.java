@@ -84,6 +84,36 @@ public class MqttCarTest {
     }
 
     @Test
+    public void GivenAMovingCar_WhenEmergencyStopEngaged_ThenSpeedIsZero(){
+        //Given:
+        car.changeSpeed(5);
+        assertEventually(
+            "Given: A Moving Car",
+            () -> acceptable(car.speed.get(), 5, FaultTolerance.Speed),
+            Timeout.Medium
+        );
+
+        //When:
+        try {
+            car.emergencyStop();
+            assertTrue(
+                "Car has stopped.", true
+            );
+        } catch (Exception e) {
+            assertTrue(
+                "Car has stopped.", false
+            );
+
+        }
+
+        //Then:
+        assertEventually(
+            "Then: Car has stopped.",
+            () -> acceptable(car.speed.get(), 0, 0),
+            Timeout.Short
+        );
+    }
+
     public void GivenAStandingCar_WhenSpeedingBackwards_ThenTheSpeedShouldMatch() throws Exception {
         // Given:
         final double standingSpeed = 0.0;
@@ -245,9 +275,9 @@ public class MqttCarTest {
 
         //Then:
         assertEventually(
-                "Then: the distance should match",
-                () -> acceptable(car.ir_distance.get(), objectMinDistance, FaultTolerance.Ir_Distance),
-                Timeout.Long
+            "Then: the distance should match",
+            () -> acceptable(car.ir_distance.get(), objectMinDistance, FaultTolerance.Ir_Distance),
+            Timeout.Long
         );
     }
 

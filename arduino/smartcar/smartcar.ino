@@ -108,7 +108,11 @@ void setup() {
     if (topic == THROTTLE_TOPIC) {
       car.setSpeed(message.toInt());
       // enter commands interpret received commands
-    } else if (topic == "/smartcar/status/blinkers") {
+    } else if (topic == ESTOP_TOPIC) {
+      car.setSpeed(0);
+      mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
+      Serial.println("Car has stopped");
+    } else if (topic == BLINKERS_TOPIC) {
       if (message == "left") {
         Serial.println("Blinker to left");
         blinkerStatus = "left";

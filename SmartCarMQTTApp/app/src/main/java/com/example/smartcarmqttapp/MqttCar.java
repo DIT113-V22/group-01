@@ -232,6 +232,11 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         mqtt.publish(Topics.Controls.Throttle, new MqttMessage(Double.toString(speed).getBytes()));
     }
 
+    public void emergencyStop() throws MqttException {
+        String message = "";
+        mqtt.publish(Topics.Controls.EmergencyStop, new MqttMessage(message.getBytes()));
+    }
+
     public void changeAngle(double angle) throws MqttException {
         mqtt.publish(Topics.Controls.Steering, new MqttMessage(Double.toString(angle).getBytes()));
     }
