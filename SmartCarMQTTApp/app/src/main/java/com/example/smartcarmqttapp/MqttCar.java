@@ -57,6 +57,9 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         }
     }
 
+    /**
+     * Constants for communicating the direction of the blinker over MQTT
+     */
     public enum BlinkerDirection {
         Left,
         Right, 
@@ -67,9 +70,11 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     private final Logger logger;
     private final Runnable onConnected;
 
+    /**
+     * Default heading inside the SMCE emulator, figured out by testing
+     */
     public final static double DEFAULT_HEADING = 180.0;
 
-    // ToDo: Add a field for your sensor data here as an observable field
     public final ObservableField<Double> speed = new ObservableField<>(0.0);
     public final ObservableField<Double> distance = new ObservableField<>(0.0);
     public final ObservableField<Double> ir_distance  = new ObservableField<>(0.0);
@@ -120,7 +125,6 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         int QoS = 1;
 
         try {
-            // ToDo: Subscribe your topic here
             this.logger.info("Subscribing...");
             mqtt.subscribe(Topics.Status.Odometer.Speed, QoS);
             mqtt.subscribe(Topics.Status.Odometer.Distance, QoS);
@@ -174,8 +178,6 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
 
         try {
             switch (topic) {
-                // Todo: Listen for your sensor topic here and set your field accordingly
-
                 case Topics.Status.Odometer.Speed:
                     //speed in m/s
                     this.speed.set(Double.parseDouble(data));
@@ -251,7 +253,8 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     }
 
     /**
-     * Direct the car by publishing a message in a specified topic
+     * Direct the car by publishing a message in a specified topic.
+     *
      * @param angle the angle of attack
      * @throws MqttException when the message fails to be transferred successfully to the broker
      */
@@ -262,11 +265,21 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         mqtt.publish(Topics.Controls.Steering, mqttMessage);
     }
 
+    /**
+     * Immediately stops the car.
+     * @throws MqttException when the message fails to be transferred successfully to the broker
+     */
     public void emergencyStop() throws MqttException {
         String message = "";
         mqtt.publish(Topics.Controls.EmergencyStop, new MqttMessage(message.getBytes()));
     }
 
+    /**
+     * Starts the blinker for the given direction.
+     *
+     * @param direction The direction to blink at
+     * @throws MqttException when the message fails to be transferred successfully to the broker
+     */
     public void blinkDirection(BlinkerDirection direction) throws MqttException {
         mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.toString().toLowerCase().getBytes()));
     }

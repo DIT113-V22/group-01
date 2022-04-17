@@ -26,6 +26,9 @@ import java.util.logging.Logger;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MqttCarTest {
 
+    /**
+     * Constants for mapping throttle percentage to car speed in the SMCE emulator, figured out by testing.
+     */
     public static final Map<Double, Double> ThrottleSpeedMap = new HashMap<>();
 
     static {
@@ -80,7 +83,6 @@ public class MqttCarTest {
         }
     }
 
-    //Testing for distance might be setting speed for a while and then checking distance
     @Test
     public void _01_GivenAMovingCar_WhenSpeedingForSomeTime_ThenTheDistanceShouldMatch() throws Exception {
         // Given:
