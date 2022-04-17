@@ -66,11 +66,6 @@ DirectionlessOdometer rightOdometer(
 // For the camera
 std::vector<char> frameBuffer;
 
-const int fSpeed   = 50;  // 70% of the full speed forward
-const int bSpeed   = -50; // 70% of the full speed backward
-const int lDegrees = -45; // degrees to turn left
-const int rDegrees = 45;  // degrees to turn right
-
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
