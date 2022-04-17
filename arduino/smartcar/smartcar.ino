@@ -66,6 +66,19 @@ DirectionlessOdometer rightOdometer(
 // For the camera
 std::vector<char> frameBuffer;
 
+ArduinoRuntime arduinoRuntime;
+BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
+BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
+DifferentialControl control(leftMotor, rightMotor);
+
+SimpleCar car(control);
+
+const int triggerPin           = 6; // D6
+const int echoPin              = 7; // D7
+const unsigned int maxDistance = 100;
+
+SR04 front{arduinoRuntime, triggerPin, echoPin, maxDistance};
+
 void setup() {
   Serial.begin(9600);
 
@@ -108,6 +121,8 @@ void setup() {
     if (topic == THROTTLE_TOPIC) {
       car.setSpeed(message.toInt());
       // enter commands interpret received commands
+    } else if (topic == STEERING_TOPIC) {
+      car.setAngle(message.toInt());
     } else if (topic == ESTOP_TOPIC) {
       car.setSpeed(0);
       mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
@@ -122,10 +137,6 @@ void setup() {
       } else if (message == "off") {
         blinkerStatus = "off";
       }
-    } else if (topic == "/smartcar/controls/steering") {
-      control.setAngle(message.toInt());
-    } else {
-      Serial.println("invalid topic: " + topic + ": " + message);
     }
   });
 }

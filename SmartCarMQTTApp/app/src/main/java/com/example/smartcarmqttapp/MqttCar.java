@@ -220,7 +220,18 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         return this.mqtt.isConnected();
     }
 
-    // ToDo: Add publish methods here
+
+    /**
+     * Direct the car by publishing a message in a specified topic
+     * @param message the received message
+     * @throws MqttException when the message fails to be transferred successfully to the broker
+     */
+    public void steerCar(String message) throws MqttException {
+        MqttMessage mqttMessage = new MqttMessage();
+        mqttMessage.setPayload(message.getBytes());
+        mqttMessage.setQos(1);
+        mqtt.publish(Topics.Controls.Steering, mqttMessage);
+    }
 
     /**
      * Changes the car speed.
