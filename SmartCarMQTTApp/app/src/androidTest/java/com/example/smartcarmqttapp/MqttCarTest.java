@@ -83,7 +83,109 @@ public class MqttCarTest {
 
     @Test
     public void GivenAStandingCar_WhenSpeedingBackwards_ThenTheSpeedShouldMatch() throws Exception {
-        
+        // Given:
+        final double standingSpeed = 0.0;
+        try {
+            car.changeSpeed(standingSpeed);
+            assertEventually(
+                    "Given: A standing car",
+                    () -> acceptable(car.speed.get(), standingSpeed, FaultTolerance.Speed),
+                    Timeout.Long
+            );
+        }
+        catch (Exception e) {
+            assertTrue("Given: A standing car", false);
+            throw e;
+        }
+
+        // When:
+        final double expectedSpeed = -1.0;
+        try {
+            car.changeSpeed(expectedSpeed);
+            assertTrue("When: Speeding fully backwards", true);
+        }
+        catch (Exception e) {
+            assertTrue("When: Speeding fully backwards", false);
+            throw e;
+        }
+
+        // Then:
+        assertEventually(
+                "Then: The speed should match",
+                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
     }
-    //Test 0, test backwards, test 0.3
+
+    @Test
+    public void GivenAMovingCar_WhenSlowingDown_ThenTheSpeedShouldMatch() throws Exception {
+        // Given:
+        final double movingSpeed = 0.8;
+        try {
+            car.changeSpeed(movingSpeed);
+            assertEventually(
+                    "Given: A moving car",
+                    () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                    Timeout.Long
+            );
+        }
+        catch (Exception e) {
+            assertTrue("Given: A moving car", false);
+            throw e;
+        }
+
+        // When:
+        final double expectedSpeed = 0.3;
+        try {
+            car.changeSpeed(expectedSpeed);
+            assertTrue("When: Slowing down", true);
+        }
+        catch (Exception e) {
+            assertTrue("When: Slowing down", false);
+            throw e;
+        }
+
+        // Then:
+        assertEventually(
+                "Then: The speed should match",
+                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
+    }
+
+    @Test
+    public void GivenAMovingCar_WhenAccelerating_ThenTheSpeedShouldMatch() throws Exception {
+        // Given:
+        final double movingSpeed = 0.2;
+        try {
+            car.changeSpeed(movingSpeed);
+            assertEventually(
+                    "Given: A moving car",
+                    () -> acceptable(car.speed.get(), movingSpeed, FaultTolerance.Speed),
+                    Timeout.Long
+            );
+        }
+        catch (Exception e) {
+            assertTrue("Given: A moving car", false);
+            throw e;
+        }
+
+        // When:
+        final double expectedSpeed = 0.7;
+        try {
+            car.changeSpeed(expectedSpeed);
+            assertTrue("When: Accelerating", true);
+        }
+        catch (Exception e) {
+            assertTrue("When: Accelerating", false);
+            throw e;
+        }
+
+        // Then:
+        assertEventually(
+                "Then: The speed should match",
+                () -> acceptable(car.speed.get(), expectedSpeed, FaultTolerance.Speed),
+                Timeout.Long
+        );
+    }
 }
