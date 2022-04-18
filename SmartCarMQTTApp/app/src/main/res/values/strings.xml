@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SmartCarMQTTApp</string>
-</resources>
+    <string name="whoWeAre">We are the Crushers Group and we are Students at the University of Gothenburg studying Software Engineering and Management</string>
+    <string name="howToFindUs">Linked below is our GitHub Repository, as well as contact information of our team members</string>
+  </resources>
