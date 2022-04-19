@@ -2,6 +2,7 @@ package com.example.smartcarmqttapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,14 +23,15 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        startActivity(new Intent(HomeActivity.this, ConnectCarActivity.class));
 
-        controller = new MqttCar(getApplicationContext(), () -> {
-            try {
-                controller.changeSpeed(0.5);
-            } catch (MqttException ex) {
-                ex.printStackTrace();
-            }
-        });
+//        controller = new MqttCar(getApplicationContext(), () -> {
+//            try {
+//                controller.changeSpeed(0.5);
+//            } catch (MqttException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
     }
 
     /**
