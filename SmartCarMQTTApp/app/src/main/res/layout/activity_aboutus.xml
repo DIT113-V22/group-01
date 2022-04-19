@@ -20,27 +20,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/aboutUsHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custombanner"
-                android:fontFamily="serif"
-                android:paddingLeft="1dp"
-                android:paddingRight="1dp"
-                android:text=" About Us"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/black"
-                android:textSize="40sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
                 android:id="@+id/whoHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
-                android:paddingTop="15sp"
+                android:paddingTop="5sp"
                 android:paddingRight="8dp"
                 android:paddingBottom="5dp"
                 android:text="@string/whoWeAre" />
@@ -86,10 +65,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
-                android:paddingTop="15sp"
+                android:paddingTop="5sp"
                 android:paddingRight="8dp"
                 android:paddingBottom="5dp"
-                android:text="We did this project because only 2 members of our group has driving licenses and while other member are trying to get their licenses, they have talked about the difficulty of doing this. Hence we thought about creating an App that universally helps all aspiring drivers to visually learn about driving theory while still having the fun of practicing their new knowledge with a virtual car. " />
+                android:text="@string/whyText" />
 
             <View
                 android:id="@+id/divider"
@@ -123,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
-                android:paddingTop="15dp"
+                android:paddingTop="5dp"
                 android:paddingRight="8dp"
                 android:paddingBottom="5dp"
                 android:text="@string/howToFindUs" />
@@ -187,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
-                    android:paddingTop="15dp"
+                    android:paddingTop="5dp"
                     android:paddingRight="5dp"
                     android:text="@string/emailAddressParagraph" />
 
@@ -198,7 +177,7 @@
                     android:paddingLeft="25dp"
                     android:paddingTop="5dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="5dp"
                     android:text="Georg Zsolnai: guszsoge@student.gu.se" />
 
                 <TextView
@@ -216,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="5dp"
                     android:text="Ivan Vidackovic: gusvidiv@student.gu.se" />
 
                 <TextView
@@ -225,7 +204,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="5dp"
                     android:text="Ansis Plepis: gusplean@student.gu.se" />
 
                 <TextView
@@ -234,7 +213,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="5dp"
                     android:text="Bardia Forooraghi: gusforoba@student.gu.se" />
 
                 <TextView
@@ -274,7 +253,7 @@
                 <ImageView
                     android:id="@+id/logoImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="76dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     app:srcCompat="@drawable/ic_launcher_foreground" />
