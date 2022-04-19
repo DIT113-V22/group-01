@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/connectedCar"
-        android:title="Connected Car"
+        android:title="Car"
         android:icon="@drawable/ic_connected_car_24"/>
 
     <item
         android:id="@+id/practiceDriving"
-        android:title="Practice Driving"
+        android:title="Driving"
         android:icon="@drawable/ic_practice_driving_24"/>
 
     <item
@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/practiceTheory"
-        android:title="Practice Theory"
+        android:title="Theory"
         android:icon="@drawable/ic_practice_theory_24"/>
 
     <item
