@@ -3,5 +3,5 @@
     <string name="whoWeAre">We are the Crushers Group and we are Students at the University of Gothenburg studying Software Engineering and Management</string>
     <string name="howToFindUs">Linked below is our GitHub Repository, as well as contact information of our team members</string>
     <string name="emailAddressParagraph">In case you want to talk to us personally, below are linked our email addresses:</string>
-    <string name="whyText">We did this project because, according to statistics, 59% of Swedes failed their theoretical driving license exam they have talked about the difficulty of doing this. We decided to create an App that helps all aspiring drivers to visually learn about driving theory while still having being able to practice with a virtual car.</string>
+    <string name="whyText">We did this project because, according to statistics, 59% of Swedes failed their theoretical driving license exam in 2021. Hence, we decided to create an App that helps all aspiring drivers to visually learn about driving theory and being able to drive a virtual car.</string>
 </resources>
