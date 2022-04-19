@@ -28,7 +28,7 @@
                 android:paddingRight="8dp"
                 android:text="Who are we?"
                 android:textSize="20sp"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/whoAreWeParagraph"
@@ -58,7 +58,7 @@
                 android:paddingRight="8dp"
                 android:text="Why this Project?"
                 android:textSize="20sp"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/whoAreWeParagraph5"
@@ -95,7 +95,7 @@
                 android:paddingRight="8dp"
                 android:text="How can you find us?"
                 android:textSize="20sp"
-                android:textStyle="italic" />
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/findingUsParagraph"
