@@ -62,6 +62,36 @@
                 android:text="@string/whoWeAre" />
 
             <View
+                android:id="@+id/divider6"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="?android:attr/listDivider"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:paddingRight="5dp" />
+
+            <TextView
+                android:id="@+id/whoHeader4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingTop="10dp"
+                android:paddingRight="8dp"
+                android:text="Why this Project?"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/whoAreWeParagraph5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingTop="15sp"
+                android:paddingRight="8dp"
+                android:paddingBottom="5dp"
+                android:text="We did this project because only 2 members of our group has driving licenses and while other member are trying to get their licenses, they have talked about the difficulty of doing this. Hence we thought about creating an App that universally helps all aspiring drivers to visually learn about driving theory while still having the fun of practicing their new knowledge with a virtual car. " />
+
+            <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
@@ -213,7 +243,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="16dp"
+                    android:paddingBottom="5dp"
                     android:text="John Webb: guswebbjo@student.gu.se" />
 
                 <View
@@ -237,14 +267,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="70dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="5dp"
                     android:paddingRight="40dp"
                     android:text="Thank you for checking out our amazing app!" />
 
                 <ImageView
                     android:id="@+id/logoImage"
                     android:layout_width="match_parent"
-                    android:layout_height="157dp"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     app:srcCompat="@drawable/ic_launcher_foreground" />
@@ -255,6 +285,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="166dp"
                     android:paddingEnd="40dp"
+                    android:paddingBottom="5dp"
                     android:text="Crusher's LLC Inc. "
                     android:textSize="10sp" />
             </LinearLayout>
