@@ -42,7 +42,7 @@
                 android:id="@+id/connectionInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1. broker.\n2. SMCE emulator.\n3. sketch.\n4. button below." />
+                android:text="1. Start your MQTT Broker.\n2. Open the SMCE emulator.\n3. Clicking the '+', find the sketch titled 'smartcar.ino'\n4. Once found, compile your sketch.\n5. Press 'Start' in the emulator to load in the car\n6. Press the button below!" />
 
             <Button
                 android:id="@+id/connectionButton"
@@ -59,7 +59,8 @@
         android:id="@+id/connectedCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:onClick="goToDriving">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,12 +99,22 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/disconnectButtom"
+                android:id="@+id/disconnectButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:onClick="disconnectCar"
                 android:text="💥🚗 Disconnect Car 🚗💥" />
+            <TextView
+                android:id="@+id/hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="8dp"
+                android:paddingLeft="95dp"
+                android:paddingRight="70dp"
+                android:textStyle="italic"
+                android:text="* Clicking the card bring you to manual driving *" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
