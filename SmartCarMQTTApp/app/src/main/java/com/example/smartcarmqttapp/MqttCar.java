@@ -1,8 +1,12 @@
 package com.example.smartcarmqttapp;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.databinding.ObservableField;
+
+import com.example.smartcarmqttapp.state.CarState;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;

@@ -85,17 +85,29 @@
 
                 <TextView
                     android:id="@+id/lastUpdate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="12dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Last Update" />
+                    android:text="Last Update: " />
+
+                <TextView
+                    android:id="@+id/lastUpdateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/timeRunning"
-                    android:layout_width="wrap_content"
+                    android:layout_width="61dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Time Running (s)" />
+                    android:text="Time Running (s): " />
+
+                <TextView
+                    android:id="@+id/timeRunningValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <Button

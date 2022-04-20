@@ -2,23 +2,34 @@ package com.example.smartcarmqttapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.databinding.ObservableField;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.smartcarmqttapp.state.CarState;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+
 public class ConnectCarActivity extends AppCompatActivity {
 
     private boolean isConnected = false;
+    private final LocalTime currentTimeStamp = LocalTime.now();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_car);
         toggleVisibleCard(CarState.instance.isConnected());
+
+
     }
 
     public void connectCar(View view) {
@@ -26,6 +37,7 @@ public class ConnectCarActivity extends AppCompatActivity {
             getBaseContext(),
             () -> { // on connected
                 runOnUiThread(() -> {
+                    timeRunning(view);
                     toggleVisibleCard(true);
                     Toast.makeText(
                         getBaseContext(),
@@ -92,5 +104,55 @@ public class ConnectCarActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG
             ).show();
         }
+    }
+
+
+    public long timeRunning(View view) {
+
+        TextView timeRunningValue = findViewById(R.id.timeRunningValue);
+        TextView lastUpdate = findViewById(R.id.lastUpdateValue);
+
+        //timestamp of when it you gain a connection
+
+
+        /*
+        if (CarState.instance.isConnected()) {
+            //time between current time (doesn't change) and LocalDateTime (changes like a heartbeat)
+            timeRunningValue.setText(Duration.between(currentTime, car.lastHeartbeat.get()));
+            return 1;
+        } else {
+            return 0;
+        }
+        */
+        Thread newThread = new Thread(){
+            @Override
+            public void run(){
+                while(!isInterrupted()){
+                    try{
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                timeRunningValue.setText(Duration.between(currentTimeStamp, LocalTime.now()).toString());
+                                lastUpdate.setText(LocalTime.now().toString());
+                            }
+                        });
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        };
+
+        newThread.start();
+        //while (CarState.instance.isConnected())
+
+            //Duration d = Duration.between(currentTimeStamp, LocalTime.now());
+            //comparing timestamp with current time -> time between == how long connection has been active for
+            //timeRunningValue.setText(Duration.between(currentTimeStamp, LocalTime.now()).toString());
+            //lastUpdate.setText(LocalTime.now().toString());
+        return 0;
     }
 }
