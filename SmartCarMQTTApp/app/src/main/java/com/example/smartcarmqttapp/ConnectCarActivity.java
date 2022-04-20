@@ -107,28 +107,16 @@ public class ConnectCarActivity extends AppCompatActivity {
     }
 
 
-    public long timeRunning(View view) {
+    public void timeRunning(View view) {
 
         TextView timeRunningValue = findViewById(R.id.timeRunningValue);
         TextView lastUpdate = findViewById(R.id.lastUpdateValue);
 
-        //timestamp of when it you gain a connection
-
-
-        /*
-        if (CarState.instance.isConnected()) {
-            //time between current time (doesn't change) and LocalDateTime (changes like a heartbeat)
-            timeRunningValue.setText(Duration.between(currentTime, car.lastHeartbeat.get()));
-            return 1;
-        } else {
-            return 0;
-        }
-        */
-        Thread newThread = new Thread(){
+        Thread newThread = new Thread() {
             @Override
             public void run(){
-                while(!isInterrupted()){
-                    try{
+                while (!isInterrupted()) {
+                    try {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -143,16 +131,7 @@ public class ConnectCarActivity extends AppCompatActivity {
                     }
                 }
             }
-
         };
-
         newThread.start();
-        //while (CarState.instance.isConnected())
-
-            //Duration d = Duration.between(currentTimeStamp, LocalTime.now());
-            //comparing timestamp with current time -> time between == how long connection has been active for
-            //timeRunningValue.setText(Duration.between(currentTimeStamp, LocalTime.now()).toString());
-            //lastUpdate.setText(LocalTime.now().toString());
-        return 0;
     }
 }
