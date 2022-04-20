@@ -1,7 +1,9 @@
 package com.example.smartcarmqttapp;
 
+import android.app.Activity;
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
 /**
  * A facade for interacting with a car over mqtt.
  */
-public class MqttCar implements IMqttActionListener, MqttCallback {
+public class MqttCar implements IMqttActionListener, MqttCallback{
 
     /**
      * Constants for all mqtt car topics.
@@ -81,6 +83,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     public final ObservableField<Double> ultrasoundDistance = new ObservableField<>(0.0);
     public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(DEFAULT_HEADING);
     public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
+    public MqttMessage cameraPayload = new MqttMessage();
 
     /**
      * Connects to a car over mqtt.
@@ -89,6 +92,36 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      * @param onConnected since the connection is async, this callback is
      *                    fired when the connection successfully completed
      */
+
+    HomeActivity home;
+
+    public MqttCar(Context context, Runnable onConnected, HomeActivity home) {
+        this.home = home;
+        this.logger = Logger.getLogger("mqtt");
+        this.onConnected = onConnected;
+
+        // Mqtt Config
+        String clientId = "AndroidApp";
+        String url = "tcp://10.0.2.2:1883"; // localhost on default port
+
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setUserName(clientId);
+        options.setPassword("".toCharArray());
+        options.setAutomaticReconnect(true);
+        options.setCleanSession(true);
+
+        this.mqtt = new MqttAndroidClient(context, url, clientId);
+
+        try {
+            mqtt.setCallback(this);
+            mqtt.connect(options, null, this);
+        }
+        catch (MqttException ex) {
+            ex.printStackTrace();
+        }
+
+
+    }
     public MqttCar(Context context, Runnable onConnected) {
         this.logger = Logger.getLogger("mqtt");
         this.onConnected = onConnected;
@@ -174,6 +207,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      */
     @Override
     public void messageArrived(String topic, MqttMessage message) {
+        System.out.println(topic);
         final String data = new String(message.getPayload());
 
         try {
@@ -190,6 +224,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
                     this.ir_distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Camera:
+                    home.cameraRendering(message);
                     //Camera topic
                     //Display camera view on home screen
                     break;
@@ -283,4 +318,5 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     public void blinkDirection(BlinkerDirection direction) throws MqttException {
         mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.toString().toLowerCase().getBytes()));
     }
+
 }
