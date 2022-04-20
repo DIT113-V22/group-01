@@ -3,6 +3,7 @@ package com.example.smartcarmqttapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -65,5 +66,31 @@ public class ConnectCarActivity extends AppCompatActivity {
         this.isConnected = isConnected;
         CardView visibleCard = this.isConnected ? connectedCard : disconnectedCard;
         visibleCard.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * @param view
+     * @throws InterruptedException
+     * Meant to lead users to the manual driving app via the connection card
+     * that appears upon successfully connecting a car for the first time
+     */
+    public void goToDriving(View view) throws InterruptedException {
+        if(CarState.instance.isConnected()){
+            Toast.makeText(
+                    getBaseContext(),
+                    "🚗 Going to manual driving",
+                    Toast.LENGTH_SHORT
+            ).show();
+            Thread.sleep(1200);
+            //TODO Edit to switch to manual driving screen once we have merged the Code:
+            //startActivity(new Intent(ConnectCarActivity.this, TestManualDriving.class));
+        }
+        else{
+            Toast.makeText(
+                getBaseContext(),
+                "💥 Car not connected 💥",
+                Toast.LENGTH_LONG
+            ).show();
+        }
     }
 }
