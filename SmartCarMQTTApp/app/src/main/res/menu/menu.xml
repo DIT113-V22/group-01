@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/connectedCar"
+        android:title="Car"
+        android:icon="@drawable/ic_connected_car_24"/>
+
+    <item
+        android:id="@+id/practiceDriving"
+        android:title="Driving"
+        android:icon="@drawable/ic_practice_driving_24"/>
+
+    <item
+        android:id="@+id/home"
+        android:title="Home"
+        android:icon="@drawable/ic_home_24"/>
+
+    <item
+        android:id="@+id/practiceTheory"
+        android:title="Theory"
+        android:icon="@drawable/ic_practice_theory_24"/>
+
+    <item
+        android:id="@+id/aboutUs"
+        android:title="About Us"
+        android:icon="@drawable/ic_aboutus_24"/>
+
+</menu>

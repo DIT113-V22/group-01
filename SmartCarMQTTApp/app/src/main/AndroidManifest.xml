@@ -15,6 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCarMQTTApp">
         <activity
+            android:name=".PracticeTheoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PracticeDrivingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConnectedCarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AboutUsActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
 
@@ -28,10 +40,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".AboutusActivity"
-            android:exported="true">
         </activity>
         <meta-data
             android:name="preloaded_fonts"
