@@ -58,18 +58,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     switch (view.getId()){
         // TODO: Add activity class to intent. e.g  case R.id.theoryCard:i = new Intent(this,Driving.class);startActivity(i);
-/*
-        case R.id.theoryCard:i = new Intent();startActivity(i);
+        case R.id.theoryCard:i = new Intent(this,PracticeTheoryActivity.class);startActivity(i);
         break;
-        case R.id.drivingCard:i = new Intent();startActivity(i);
+        case R.id.drivingCard:i = new Intent(this,PracticeDrivingActivity.class);startActivity(i);
         break;
-        case R.id.connectCard:i = new Intent();startActivity(i);
+        case R.id.connectCard:i = new Intent(this,ConnectedCarActivity.class);startActivity(i);
         break;
-        case R.id.supportCard:i = new Intent();startActivity(i);
+        case R.id.supportCard:i = new Intent(this,AboutUsActivity.class);startActivity(i);
         break;
         default:break;
-
- */
     }
     }
 
