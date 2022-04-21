@@ -29,7 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        startActivity(new Intent(HomeActivity.this, ConnectCarActivity.class));
+        startActivity(new Intent(HomeActivity.this, ConnectedCarActivity.class));
 
 //        controller = new MqttCar(getApplicationContext(), () -> {
 //            try {
