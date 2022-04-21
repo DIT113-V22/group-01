@@ -29,7 +29,6 @@
             android:layout_weight="1"
             android:background="@drawable/gradient1"
             android:clickable="true"
-            android:onClick="theoryClick"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardElevation="2dp">
 
@@ -39,7 +38,7 @@
                 android:background="@drawable/gradient1">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/theoryView"
                     android:layout_width="140dp"
                     android:layout_height="90dp"
                     android:layout_marginTop="20dp"
@@ -49,7 +48,7 @@
                     app:srcCompat="@drawable/ic_theory" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/theoryHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -62,7 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/theoryBody"
                     android:layout_width="208dp"
                     android:layout_height="72dp"
                     android:layout_marginStart="10dp"
@@ -73,27 +72,26 @@
                     android:textSize="18sp"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/theoryHeader" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/drivingCard"
             android:layout_width="360dp"
             android:layout_height="90dp"
             android:layout_margin="7dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="drivingClick"
             app:cardElevation="2dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/drivingCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/gradient2">
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/drivingView"
                     android:layout_width="140dp"
                     android:layout_height="90dp"
                     android:layout_marginTop="24dp"
@@ -103,7 +101,7 @@
                     app:srcCompat="@drawable/ic_drive" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/drivingHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -116,7 +114,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/drivingBody"
                     android:layout_width="214dp"
                     android:layout_height="65dp"
                     android:layout_marginStart="10dp"
@@ -126,27 +124,26 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/drivingHeader" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/connectCard"
             android:layout_width="360dp"
             android:layout_height="90dp"
             android:layout_margin="7dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="connectClick"
             app:cardElevation="2dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/connectCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/gradient3">
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/connectView"
                     android:layout_width="140dp"
                     android:layout_height="90dp"
                     android:layout_marginTop="26dp"
@@ -156,7 +153,7 @@
                     app:srcCompat="@drawable/ic_connect" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/connectHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -169,7 +166,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/connectBody"
                     android:layout_width="202dp"
                     android:layout_height="53dp"
                     android:layout_marginStart="10dp"
@@ -179,27 +176,26 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                    app:layout_constraintTop_toBottomOf="@+id/connectHeader" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/supportCard"
             android:layout_width="360dp"
             android:layout_height="90dp"
             android:layout_margin="7dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:onClick="supportClick"
             app:cardElevation="2dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/supportCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/gradient4">
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/supportView"
                     android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="20dp"
@@ -209,7 +205,7 @@
                     app:srcCompat="@drawable/ic_team" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/supportHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -222,7 +218,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView9"
+                    android:id="@+id/supportBody"
                     android:layout_width="208dp"
                     android:layout_height="65dp"
                     android:layout_marginStart="10dp"
@@ -232,7 +228,7 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                    app:layout_constraintTop_toBottomOf="@+id/supportHeader" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
