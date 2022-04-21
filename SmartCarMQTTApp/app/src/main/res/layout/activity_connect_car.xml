@@ -73,8 +73,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:text="Car connected 🎉"
-                android:textColor="@color/teamBlueBlack"
+                android:text="CONNECTED 🎉"
+                android:gravity="center"
+                android:textColor="@color/cadmiumGreen"
                 android:textSize="16sp" />
 
 
@@ -85,29 +86,33 @@
 
                 <TextView
                     android:id="@+id/lastUpdate"
-                    android:layout_width="12dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Last Update: " />
+                    android:text="Last Update: "
+                    android:layout_margin="1sp" />
 
                 <TextView
                     android:id="@+id/lastUpdateValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="1sp"
                     android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/timeRunning"
-                    android:layout_width="61dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="1sp"
                     android:layout_weight="1"
-                    android:text="Time Running (s): " />
+                    android:text="Elapsed(s): " />
 
                 <TextView
                     android:id="@+id/timeRunningValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:layout_margin="1sp"/>
             </LinearLayout>
 
             <Button
