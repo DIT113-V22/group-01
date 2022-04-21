@@ -26,7 +26,7 @@ public class ConnectedCarActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private static boolean isConnected = false;
-    private final LocalTime currentTimeStamp = LocalTime.now();
+    private final static LocalTime currentTimeStamp = LocalTime.now();
     private static Thread newThread;
 
     @Override
@@ -109,11 +109,15 @@ public class ConnectedCarActivity extends AppCompatActivity {
     }
 
     private void toggleVisibleCard(boolean isConnected) {
+
         CardView connectedCard = findViewById(R.id.connectedCard);
         CardView disconnectedCard = findViewById(R.id.disconnectedCard);
         connectedCard.setVisibility(View.GONE);
         disconnectedCard.setVisibility(View.GONE);
 
+        if(isConnected){
+            timeRunning(connectedCard);
+        }
         this.isConnected = isConnected;
         CardView visibleCard = this.isConnected ? connectedCard : disconnectedCard;
         visibleCard.setVisibility(View.VISIBLE);
@@ -159,7 +163,7 @@ public class ConnectedCarActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                timeRunningValue.setText(Duration.between(currentTimeStamp, LocalTime.now()).toString());
+                                timeRunningValue.setText(Duration.between(currentTimeStamp, CarState.instance.getHeartBeat()).toString());
                                 lastUpdate.setText(LocalTime.now().toString());
                             }
                         });

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.example.smartcarmqttapp.MqttCar;
 
+import java.time.LocalDateTime;
+
 public class CarState {
     // singleton
     private CarState() {}
@@ -31,5 +33,9 @@ public class CarState {
 
     public boolean isConnected() {
         return connectedCar != null && connectedCar.isConnected();
+    }
+
+    public LocalDateTime getHeartBeat(){
+        return connectedCar.lastHeartbeat.get();
     }
 }
