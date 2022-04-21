@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -16,7 +18,7 @@ public class AboutUsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_us);
+        setContentView(R.layout.activity_aboutus);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.aboutUs);
@@ -51,5 +53,10 @@ public class AboutUsActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void openGitHub(View view){
+        Intent openBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/DIT113-V22/group-01"));
+        startActivity(openBrowser);
     }
 }
