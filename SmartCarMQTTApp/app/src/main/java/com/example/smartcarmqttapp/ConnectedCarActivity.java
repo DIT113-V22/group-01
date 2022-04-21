@@ -1,11 +1,16 @@
 package com.example.smartcarmqttapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -20,14 +25,15 @@ import java.time.LocalTime;
 public class ConnectedCarActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
-    private boolean isConnected = false;
+    private static boolean isConnected = false;
     private final LocalTime currentTimeStamp = LocalTime.now();
+    private static Thread newThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_car);
-        toggleVisibleCard(CarState.instance.isConnected());
+        toggleVisibleCard(isConnected);
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -120,15 +126,14 @@ public class ConnectedCarActivity extends AppCompatActivity {
      * that appears upon successfully connecting a car for the first time
      */
     public void goToDriving(View view) throws InterruptedException {
-        if(CarState.instance.isConnected()){
+        if(isConnected){
             Toast.makeText(
                     getBaseContext(),
                     "🚗 Going to manual driving",
                     Toast.LENGTH_SHORT
             ).show();
-            Thread.sleep(1200);
-            //TODO Edit to switch to manual driving screen once we have merged the Code:
-            //startActivity(new Intent(ConnectCarActivity.this, TestManualDriving.class));
+            Thread.sleep(1000);
+            startActivity(new Intent(ConnectedCarActivity.this, PracticeDrivingActivity.class));
         }
         else{
             Toast.makeText(
@@ -140,12 +145,12 @@ public class ConnectedCarActivity extends AppCompatActivity {
     }
 
 
-    public void timeRunning(View view) {
+    public final void timeRunning(View view) {
 
         TextView timeRunningValue = findViewById(R.id.timeRunningValue);
         TextView lastUpdate = findViewById(R.id.lastUpdateValue);
 
-        Thread newThread = new Thread() {
+        newThread = new Thread() {
             @Override
             public void run(){
                 while (!isInterrupted()) {
