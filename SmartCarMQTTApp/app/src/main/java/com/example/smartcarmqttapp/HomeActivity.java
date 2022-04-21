@@ -1,5 +1,6 @@
 package com.example.smartcarmqttapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -9,6 +10,8 @@ import android.view.View;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.widget.ImageView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -20,6 +23,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private final int IMAGE_HEIGHT = 320;
     private final int IMAGE_WIDTH = 240;
     public ImageView imageView;
+
+    private BottomNavigationView bottomNavigationView;
 
 
     @Override
