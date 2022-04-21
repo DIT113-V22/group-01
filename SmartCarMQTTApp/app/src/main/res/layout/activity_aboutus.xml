@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/whoHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="8dp"
+                    android:text="Who are we?"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/whoAreWeParagraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="5sp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/whoWeAre" />
+
+                <View
+                    android:id="@+id/divider6"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="?android:attr/listDivider"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="5dp" />
+
+                <TextView
+                    android:id="@+id/whoHeader4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="8dp"
+                    android:text="Why this Project?"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/whoAreWeParagraph5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="5sp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/whyText" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="?android:attr/listDivider"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="5dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/findHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="10sp"
+                    android:paddingRight="8dp"
+                    android:text="How can you find us?"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/findingUsParagraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/howToFindUs" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:onClick="openGitHub"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="Open Our GitHub Repository"
+                    android:textSize="12sp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/copLinkText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Copy this Link:" />
+
+                    <TextView
+                        android:id="@+id/hyperLink"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="https://github.com/DIT113-V22/group-01"
+                        android:textColor="@android:color/holo_blue_dark" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="?android:attr/listDivider"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="10dp"
+                        android:paddingRight="5dp" />
+
+                    <TextView
+                        android:id="@+id/addressesParagraph"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="5dp"
+                        android:text="@string/emailAddressParagraph" />
+
+                    <TextView
+                        android:id="@+id/georgEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="25dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="5dp"
+                        android:text="Georg Zsolnai: guszsoge@student.gu.se" />
+
+                    <TextView
+                        android:id="@+id/lanceEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="5dp"
+                        android:text="Lance Janssen: gusjanssla@student.gu.se" />
+
+                    <TextView
+                        android:id="@+id/ivanEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="5dp"
+                        android:text="Ivan Vidackovic: gusvidiv@student.gu.se" />
+
+                    <TextView
+                        android:id="@+id/ansisEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="5dp"
+                        android:text="Ansis Plepis: gusplean@student.gu.se" />
+
+                    <TextView
+                        android:id="@+id/bardiaEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="5dp"
+                        android:text="Bardia Forooraghi: gusforoba@student.gu.se" />
+
+                    <TextView
+                        android:id="@+id/johnEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp"
+                        android:paddingBottom="5dp"
+                        android:text="John Webb: guswebbjo@student.gu.se" />
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="?android:attr/listDivider"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="20dp"
+                        android:paddingRight="5dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/thankYouMsg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="70dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="40dp"
+                        android:text="Thank you for checking out our amazing app!" />
+
+                    <ImageView
+                        android:id="@+id/logoImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+                    <TextView
+                        android:id="@+id/companyWaterMarkk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="166dp"
+                        android:paddingEnd="40dp"
+                        android:paddingBottom="5dp"
+                        android:text="Crusher's LLC Inc. "
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
