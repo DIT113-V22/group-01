@@ -31,7 +31,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        startActivity(new Intent(HomeActivity.this, ConnectedCarActivity.class));
         theoryCard = (CardView) findViewById(R.id.theoryCard);
         drivingCard = (CardView) findViewById(R.id.drivingCard);
         connectCard = (CardView) findViewById(R.id.connectCard);

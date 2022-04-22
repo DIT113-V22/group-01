@@ -163,7 +163,7 @@ public class ConnectedCarActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                timeRunningValue.setText(Duration.between(currentTimeStamp, CarState.instance.getHeartBeat()).toString());
+                                timeRunningValue.setText(Long.toString(Duration.between(currentTimeStamp, CarState.instance.getHeartBeat()).getSeconds()));
                                 lastUpdate.setText(LocalTime.now().toString());
                             }
                         });
