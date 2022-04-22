@@ -93,10 +93,10 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      *                    fired when the connection successfully completed
      */
 
-    HomeActivity home;
+    PracticeDrivingActivity driving;
 
-    public MqttCar(Context context, Runnable onConnected, HomeActivity home) {
-        this.home = home;
+    public MqttCar(Context context, Runnable onConnected, PracticeDrivingActivity driving) {
+        this.driving = driving;
         this.logger = Logger.getLogger("mqtt");
         this.onConnected = onConnected;
 
@@ -224,7 +224,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
                     this.ir_distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Camera:
-                    home.cameraRendering(message);
+                    driving.cameraRendering(message);
                     //Camera topic
                     //Display camera view on home screen
                     break;
