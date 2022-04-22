@@ -76,7 +76,7 @@ public class MqttCarTest {
     @BeforeClass
     public static void setupCar() throws Exception {
         appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        car = new MqttCar(appContext, () -> {});
+        car = new MqttCar(appContext, () -> {}, () -> {});
 
         if (!eventually(() -> car.isConnected())) {
             throw new Exception("Failed to connect to the car!");
