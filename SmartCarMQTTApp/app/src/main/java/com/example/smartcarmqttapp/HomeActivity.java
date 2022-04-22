@@ -39,6 +39,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         supportCard.setOnClickListener(this);
 
 
+//        controller = new MqttCar(getApplicationContext(), () -> {
+//            try {
+//                controller.changeSpeed(0.5);
+//            } catch (MqttException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
     }
 
     @Override

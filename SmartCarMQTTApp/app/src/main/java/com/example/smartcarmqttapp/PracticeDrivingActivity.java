@@ -9,8 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -79,7 +77,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             } catch (MqttException ex) {
                 ex.printStackTrace();
             }
-        },this);
+        }, this);
 
         imageView = findViewById(R.id.cameraView);
 

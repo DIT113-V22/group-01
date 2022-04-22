@@ -1,17 +1,8 @@
 package com.example.smartcarmqttapp;
 
-import android.app.Activity;
 import android.content.Context;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ObservableField;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -22,6 +13,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 /**
@@ -34,6 +27,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      */
     public static final class Topics {
         public static final String base = "/smartcar";
+        public static final String Heartbeat = Topics.base + "/heartbeat";
         public static final class Sensors {
             public static final String base = Topics.base + "/sensor";
             public static final String Infrared = Sensors.base + "/ir";
@@ -60,7 +54,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
     }
 
     /**
-     * Constants for communicating the direction of the blinker over MQTT
+     * Constants for communicating the direction of the blinker over mqtt.
      */
     public enum BlinkerDirection {
         Left,
@@ -68,20 +62,61 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
         Off
     }
 
-    private final MqttAndroidClient mqtt;
-    private final Logger logger;
-    private final Runnable onConnected;
-
     /**
-     * Default heading inside the SMCE emulator, figured out by testing
+     * Default heading inside the SMCE emulator, figured out by testing.
      */
     public final static double DEFAULT_HEADING = 180.0;
 
+    /**
+     * Connection timeout in seconds.
+     */
+    public final static double CONNECTION_TIMEOUT = 10;
+
+
+    private final MqttAndroidClient mqtt;
+    private final Logger logger;
+    private final Runnable onConnected;
+    private final Runnable onConnectionLost;
+    private boolean heartbeatLost;
+
+    /**
+     * Time the car has been running in ms.
+     */
+    public final ObservableField<Long> timeRunning = new ObservableField<>(0L);
+
+    /**
+     * Datetime of the last received heartbeat.
+     */
+    public final ObservableField<LocalDateTime> lastHeartbeat = new ObservableField<>(LocalDateTime.now());
+
+    /**
+     * Speed in m/s.
+     */
     public final ObservableField<Double> speed = new ObservableField<>(0.0);
+
+    /**
+     * Distance in cm.
+     */
     public final ObservableField<Double> distance = new ObservableField<>(0.0);
+
+    /**
+     * Distance in cm.
+     */
     public final ObservableField<Double> ir_distance  = new ObservableField<>(0.0);
+
+    /**
+     * Distance in cm.
+     */
     public final ObservableField<Double> ultrasoundDistance = new ObservableField<>(0.0);
+
+    /**
+     * Heading in degrees.
+     */
     public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(DEFAULT_HEADING);
+
+    /**
+     * Which blinkers are activated.
+     */
     public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
     public MqttMessage cameraPayload = new MqttMessage();
 
@@ -94,6 +129,35 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      */
 
     PracticeDrivingActivity driving;
+
+    
+    
+    public MqttCar(Context context, Runnable onConnected, Runnable onConnectionLost) {
+        this.logger = Logger.getLogger("mqtt");
+        this.onConnected = onConnected;
+        this.onConnectionLost = onConnectionLost;
+        this.heartbeatLost = false;
+
+        // Mqtt Config
+        String clientId = "AndroidApp";
+        String url = "tcp://10.0.2.2:1883"; // localhost on default port
+
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setUserName(clientId);
+        options.setPassword("".toCharArray());
+        options.setAutomaticReconnect(true);
+        options.setCleanSession(true);
+
+        this.mqtt = new MqttAndroidClient(context, url, clientId);
+
+        try {
+            mqtt.setCallback(this);
+            mqtt.connect(options, null, this);
+        }
+        catch (MqttException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public MqttCar(Context context, Runnable onConnected, PracticeDrivingActivity driving) {
         this.driving = driving;
@@ -121,30 +185,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
         }
 
 
-    }
-    public MqttCar(Context context, Runnable onConnected) {
-        this.logger = Logger.getLogger("mqtt");
-        this.onConnected = onConnected;
-
-        // Mqtt Config
-        String clientId = "AndroidApp";
-        String url = "tcp://10.0.2.2:1883"; // localhost on default port
-
-        MqttConnectOptions options = new MqttConnectOptions();
-        options.setUserName(clientId);
-        options.setPassword("".toCharArray());
-        options.setAutomaticReconnect(true);
-        options.setCleanSession(true);
-
-        this.mqtt = new MqttAndroidClient(context, url, clientId);
-
-        try {
-            mqtt.setCallback(this);
-            mqtt.connect(options, null, this);
-        }
-        catch (MqttException ex) {
-            ex.printStackTrace();
-        }
+        onConnectionLost = null;
     }
 
     /**
@@ -158,7 +199,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
         int QoS = 1;
 
         try {
-            this.logger.info("Subscribing...");
+            mqtt.subscribe(Topics.Heartbeat, QoS);
             mqtt.subscribe(Topics.Status.Odometer.Speed, QoS);
             mqtt.subscribe(Topics.Status.Odometer.Distance, QoS);
             mqtt.subscribe(Topics.Sensors.Infrared, QoS);
@@ -169,6 +210,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
             mqtt.subscribe(Topics.Status.Blinkers, QoS);
         } catch (MqttException ex) {
             ex.printStackTrace();
+            onConnectionLost.run();
         }
 
         this.onConnected.run();
@@ -184,6 +226,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
         // ignore for now
         exception.printStackTrace();
+        onConnectionLost.run();
     }
 
     /**
@@ -196,6 +239,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
     public void connectionLost(Throwable cause) {
         // ignore for now
         cause.printStackTrace();
+        onConnectionLost.run();
     }
 
     /**
@@ -212,12 +256,15 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
 
         try {
             switch (topic) {
+                case Topics.Heartbeat:
+                    this.timeRunning.set(Long.parseLong(data));
+                    this.lastHeartbeat.set(LocalDateTime.now());
+                    break;
+
                 case Topics.Status.Odometer.Speed:
-                    //speed in m/s
                     this.speed.set(Double.parseDouble(data));
                     break;
                 case Topics.Status.Odometer.Distance:
-                    //distance in cm
                     this.distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Infrared:
@@ -272,9 +319,24 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      * @return the MqttAndroidClient connection status
      */
     public boolean isConnected() {
-        return this.mqtt.isConnected();
+        final long secondsSinceLastHeartbeat = Duration.between(lastHeartbeat.get(), LocalDateTime.now()).getSeconds();
+
+        System.out.println(secondsSinceLastHeartbeat);
+
+        if (secondsSinceLastHeartbeat > CONNECTION_TIMEOUT && !heartbeatLost) {
+            heartbeatLost = true;
+            onConnectionLost.run();
+        }
+
+        return this.mqtt.isConnected() && heartbeatLost;
     }
 
+    /**
+     * Disconnects the mqtt connection for communicating with the car.
+     */
+    public void disconnect() {
+        this.mqtt.close();
+    }
 
 
     /**
