@@ -17,6 +17,9 @@ import android.widget.TextView;
 import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.Duration;
+import java.time.LocalTime;
+
 public class PracticeDrivingActivity extends AppCompatActivity {
 
 
@@ -92,39 +95,40 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         TextView gyroHeading = sensorDialog.findViewById(R.id.gyroHeadingField);
         TextView infraredValue = sensorDialog.findViewById(R.id.infraredDistance);
 
-        if (CarState.instance.isConnected()){
-            // Set speed value
-            speedValue.setText(CarState.instance.getSpeed());
 
-            // Set distance
-            distanceValue.setText(CarState.instance.getDistance());
+        Thread newThread = new Thread() {
+            @Override
+            public void run(){
+                while (!isInterrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Set speed value
+                                speedValue.setText(CarState.instance.getSpeed());
 
-            // Set Ultrasound reading
-            USValue.setText(CarState.instance.getUltraSoundDistance());
+                                // Set distance
+                                distanceValue.setText(CarState.instance.getDistance());
 
-            // Set Gyroscope heading
-            gyroHeading.setText(CarState.instance.getGyroHeading());
+                                // Set Ultrasound reading
+                                USValue.setText(CarState.instance.getUltraSoundDistance());
 
-            // Set Infrared reading
-            infraredValue.setText(CarState.instance.getIRDistance());
-        } else {
-            // Set speed value
-            speedValue.setText("NA");
+                                // Set Gyroscope heading
+                                gyroHeading.setText(CarState.instance.getGyroHeading());
 
-            // Set distance
-            distanceValue.setText("NA");
+                                // Set Infrared reading
+                                infraredValue.setText(CarState.instance.getIRDistance());
+                            }
+                        });
 
-            // Set Ultrasound reading
-            USValue.setText("NA");
-
-            // Set Gyroscope heading
-            gyroHeading.setText("NA");
-
-            // Set Infrared reading
-            infraredValue.setText("NA");
-        }
-
-
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        newThread.start();
 
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
