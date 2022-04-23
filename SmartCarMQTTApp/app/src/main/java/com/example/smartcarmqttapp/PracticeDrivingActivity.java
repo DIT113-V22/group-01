@@ -65,7 +65,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             } catch (MqttException ex) {
                 ex.printStackTrace();
             }
-        });
+        }, null);
 
         addEventListenersToObservableFields();
     }
