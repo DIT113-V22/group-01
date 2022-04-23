@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
 import com.example.smartcarmqttapp.state.CarState;
@@ -122,6 +123,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
      * Which blinkers are activated.
      */
     public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
+    public final ObservableField<Double> wheelAngle = new ObservableField<>(0.0);
 
     /**
      * Connects to a car over mqtt.
@@ -155,6 +157,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         catch (MqttException ex) {
             ex.printStackTrace();
         }
+
     }
 
     /**
@@ -347,4 +350,5 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     public void blinkDirection(BlinkerDirection direction) throws MqttException {
         mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.toString().toLowerCase().getBytes()));
     }
+
 }
