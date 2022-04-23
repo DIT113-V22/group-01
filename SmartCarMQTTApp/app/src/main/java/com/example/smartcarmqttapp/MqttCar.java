@@ -2,6 +2,7 @@ package com.example.smartcarmqttapp;
 
 import android.content.Context;
 
+import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -119,6 +120,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      */
     public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
     public MqttMessage cameraPayload = new MqttMessage();
+    public final ObservableField<Double> wheelAngle = new ObservableField<>(0.0);
 
     /**
      * Connects to a car over mqtt.
@@ -157,6 +159,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
         catch (MqttException ex) {
             ex.printStackTrace();
         }
+
     }
 
     public MqttCar(Context context, Runnable onConnected, PracticeDrivingActivity driving) {
