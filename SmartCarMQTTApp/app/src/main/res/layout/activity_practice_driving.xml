@@ -15,8 +15,7 @@
         <ImageView
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@color/teamBlue" />
+            android:layout_height="300dp" />
 
     </LinearLayout>
 
@@ -30,7 +29,9 @@
             android:id="@+id/screenError"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:src="@drawable/screenerror"/>
+            android:src="@drawable/screenerror"
+            android:visibility="gone"
+            />
 
 
     </LinearLayout>

@@ -12,10 +12,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class PracticeDrivingActivity extends AppCompatActivity {
     public MqttCar controller;
@@ -24,9 +27,9 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     private final int IMAGE_HEIGHT = 240;
     private final int IMAGE_WIDTH = 320;
     public ImageView imageView;
-    public LinearLayout webViewLayout, cameraViewLayout;
 
-    public pl.droidsonroids.gif.GifImageView screen_error;
+    public GifImageView screenError;
+
 
 
     private BottomNavigationView bottomNavigationView;
@@ -79,21 +82,21 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             }
         }, this);
 
+
         imageView = findViewById(R.id.cameraView);
 
-        screen_error = findViewById(R.id.screenError);
-        screen_error.setVisibility(View.GONE);
+        //screenError = findViewById(R.id.screenError);
 
-
-        if(controller.isConnected()) {
+        /*
+        if(CarState.instance.isConnected()) {
             imageView.setVisibility(View.VISIBLE);
-            screen_error.setVisibility(View.GONE);
+            //screenError.setVisibility(View.GONE);
         }
         else {
-            screen_error.setVisibility(View.VISIBLE);
-            imageView.setVisibility(View.GONE);
+            imageView.setVisibility(View.INVISIBLE);
+            //screenError.setVisibility(View.VISIBLE);
         }
-
+         */
 
     }
 
