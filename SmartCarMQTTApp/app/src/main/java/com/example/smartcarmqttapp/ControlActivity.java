@@ -46,8 +46,8 @@ public class ControlActivity extends AppCompatActivity {
         public static final double ACCELERATION_FACTOR = 1.1; // multiplication factor for accelerating
         public static final double DECELERATION_FACTOR = 0.9; // multiplication factor for decelerating
 
-        public static final double TURN_LEFT_ANGLE = 7; // addition angle for turning left
-        public static final double TURN_RIGHT_ANGLE = -7; // addition angle for turning right
+        public static final double TURN_LEFT_ANGLE = 10; // addition angle for turning left
+        public static final double TURN_RIGHT_ANGLE = -10; // addition angle for turning right
 
         public static final double MIN_SPEED = 0.05; // threshold for stopping car when decelerating
 
@@ -119,7 +119,8 @@ public class ControlActivity extends AppCompatActivity {
      * Increases (addition) wheel angle of car. Bound to button R.id.leftButton
      */
     public void onClickRotateLeft(View view) throws MqttException {
-        double initialAngle = controller.gyroscopeHeading.get();
+//        double initialAngle = controller.gyroscopeHeading.get();
+        double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
         controller.steerCar(rotatedAngle);
 
@@ -133,7 +134,8 @@ public class ControlActivity extends AppCompatActivity {
      * Decreases (addition) wheel angle of car. Bound to button R.id.rightButton
      */
     public void onClickRotateRight(View view) throws MqttException {
-        double initialAngle = controller.gyroscopeHeading.get();
+//        double initialAngle = controller.gyroscopeHeading.get();
+        double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
         controller.steerCar(rotatedAngle);
 

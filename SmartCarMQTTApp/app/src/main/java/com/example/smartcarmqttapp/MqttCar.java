@@ -82,6 +82,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     public final ObservableField<Double> ultrasoundDistance = new ObservableField<>(0.0);
     public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(DEFAULT_HEADING);
     public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
+    public final ObservableField<Double> wheelAngle = new ObservableField<>(0.0);
 
     /**
      * Connects to a car over mqtt.
