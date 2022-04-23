@@ -25,6 +25,16 @@
             android:layout_height="357dp"
             app:srcCompat="@drawable/ic_aboutus_24" />
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:gravity="center"
+            android:text="SENSOR READINGS:"
+            android:textSize="16sp" />
+
         <View
             android:id="@+id/divider4"
             android:layout_width="match_parent"
@@ -37,7 +47,9 @@
             android:layout_height="76dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:orientation="vertical">
+            android:background="#E1E4E4"
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

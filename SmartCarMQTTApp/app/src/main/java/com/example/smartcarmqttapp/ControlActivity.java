@@ -86,15 +86,15 @@ public class ControlActivity extends AppCompatActivity {
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
      */
     public void onClickAccelerate(View view) throws MqttException {
-        double initialSpeed = controller.speed.get(); // returns 0.18 m/s
-        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed);
+        double initialSpeed = controller.speed.get(); // returns 0.138
+        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed); // returns 10
         double acceleratedSpeed = initialSpeed == 0 ? ControlConstant.STARTING_SPEED : initialSpeed * ControlConstant.ACCELERATION_FACTOR;
         controller.changeSpeed(acceleratedSpeed);
 
         if(FORCE_UPDATE) controller.speed.set(acceleratedSpeed);
 
         // Debugging
-        System.out.println("Accelerating from " + initialSpeed + " m/s to " + acceleratedSpeed + " m/s");
+        System.out.println("Accelerating from " + initialSpeed + " % to " + acceleratedSpeed + " %");
 
         /* unopinionated approach to changing speed and angle by allowing user to select change mode.
         double acceleratedSpeed =
@@ -116,7 +116,7 @@ public class ControlActivity extends AppCompatActivity {
         if(FORCE_UPDATE) controller.speed.set(deceleratedSpeed);
 
         // Debugging
-        System.out.println("Accelerating from " + initialSpeed + " m/s to " + deceleratedSpeed + " m/s");
+        System.out.println("Accelerating from " + initialSpeed + " % to " + deceleratedSpeed + " %");
     }
 
     /**
@@ -205,21 +205,21 @@ public class ControlActivity extends AppCompatActivity {
         controller.speed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                speedView.setText(SensorString.SPEED + controller.speed.get());
+                speedView.setText(SensorString.SPEED + controller.speed.get()); // m/s
             }
         });
 
         controller.distance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                distanceView.setText(SensorString.DISTANCE + controller.distance.get());
+                distanceView.setText(SensorString.DISTANCE + controller.distance.get()); // m
             }
         });
 
         controller.gyroscopeHeading.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                gyroscopeView.setText(SensorString.GYROSCOPE + controller.gyroscopeHeading.get());
+                gyroscopeView.setText(SensorString.GYROSCOPE + controller.gyroscopeHeading.get()); // degrees
             }
         });
 
@@ -233,14 +233,14 @@ public class ControlActivity extends AppCompatActivity {
         controller.ir_distance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                irView.setText(SensorString.INFRARED + controller.ir_distance.get());
+                irView.setText(SensorString.INFRARED + controller.ir_distance.get()); // cm
             }
         });
 
         controller.ultrasoundDistance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                usView.setText(SensorString.ULTRASONIC + controller.ultrasoundDistance.get());
+                usView.setText(SensorString.ULTRASONIC + controller.ultrasoundDistance.get()); // cm
             }
         });
 
