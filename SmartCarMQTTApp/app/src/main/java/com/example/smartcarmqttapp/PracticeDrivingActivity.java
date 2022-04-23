@@ -67,7 +67,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             }
         }, null);
 
-        addEventListenersToObservableFields();
     }
 
     /**
@@ -230,61 +229,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     }
 
     // Utility methods
-
-    public void addEventListenersToObservableFields() {
-
-        // Get all TextViews that hold Sensor readings
-        TextView speedView = findViewById(R.id.speedView);
-        TextView distanceView = findViewById(R.id.distanceView);
-        TextView gyroscopeView = findViewById(R.id.gyroscopeHeading);
-        TextView blinkerView = findViewById(R.id.blinkerStatus);
-        TextView irView = findViewById(R.id.irDistance);
-        TextView usView = findViewById(R.id.usDistance);
-
-        // Add Listeners to ObservableFields; Update TextView on change
-        controller.speed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                speedView.setText(SensorString.SPEED + controller.speed.get()); // m/s
-            }
-        });
-
-        controller.distance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                distanceView.setText(SensorString.DISTANCE + controller.distance.get()); // m
-            }
-        });
-
-        controller.gyroscopeHeading.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                gyroscopeView.setText(SensorString.GYROSCOPE + controller.gyroscopeHeading.get()); // degrees
-            }
-        });
-
-        controller.blinkerStatus.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                blinkerView.setText(SensorString.BLINKER + controller.blinkerStatus.get());
-            }
-        });
-
-        controller.ir_distance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                irView.setText(SensorString.INFRARED + controller.ir_distance.get()); // cm
-            }
-        });
-
-        controller.ultrasoundDistance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                usView.setText(SensorString.ULTRASONIC + controller.ultrasoundDistance.get()); // cm
-            }
-        });
-
-    }
 
     public double getThrottleFromAbsoluteSpeed(double absoluteSpeed) {
         // Throttle and absolute speed are approximately linearly correlated with k=1.8
