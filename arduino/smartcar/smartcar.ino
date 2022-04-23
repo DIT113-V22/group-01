@@ -19,11 +19,11 @@ const char pass[] = " ";
 const String ID_TAG = "MQTTSmartCar";
 // main topic to derive others from
 const String MAINMQTT_TOPIC = "/smartcar/";
+const String HEARTBEAT_TOPIC = MAINMQTT_TOPIC + "heartbeat";
 // control topics
 const String STEERING_TOPIC = MAINMQTT_TOPIC + "controls/steering";
 const String THROTTLE_TOPIC = MAINMQTT_TOPIC + "controls/throttle";
 const String ESTOP_TOPIC = MAINMQTT_TOPIC + "controls/stop";
-
 // sensor topics
 const String IR_TOPIC = MAINMQTT_TOPIC + "sensor/ir";
 const String ULTRASONIC_TOPIC = MAINMQTT_TOPIC + "sensor/ultrasonic";
@@ -32,7 +32,6 @@ const String ODOMETER_TOPIC = MAINMQTT_TOPIC + "sensor/odometer";
 const char CAMERA_TOPIC[] = "/smartcar/sensor/camera";
 // status topics
 const String BLINKERS_TOPIC = MAINMQTT_TOPIC + "status/blinkers";
-
 // calculated data
 const String ODOMETER_DISTANCE = MAINMQTT_TOPIC + "status/odometer/distance";
 const String ODOMETER_SPEED = MAINMQTT_TOPIC + "status/odometer/speed";
@@ -174,7 +173,7 @@ void loop() {
       }
       previousHeading = currentHeading;
 
-      // Brushed motor (throttle, direction) readings omitted
+      mqtt.publish(HEARTBEAT_TOPIC, String(currentTime));
 
       previousTransmission = currentTime;
     }
