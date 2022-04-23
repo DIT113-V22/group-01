@@ -6,6 +6,13 @@ import androidx.databinding.Observable;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,14 +26,26 @@ import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import pl.droidsonroids.gif.GifImageView;
 import java.time.Duration;
 import java.time.LocalTime;
 
 public class PracticeDrivingActivity extends AppCompatActivity {
+    public MqttCar controller;
+
+    //Camera Config
+    private final int IMAGE_HEIGHT = 240;
+    private final int IMAGE_WIDTH = 320;
+    public ImageView imageView;
+
+    public GifImageView screenError;
+
+
 
     private Button sensorDisplayButton;
     private BottomNavigationView bottomNavigationView;
-    private MqttCar controller;
     private Dialog sensorDialog;
     private TextView textView;
 
@@ -84,14 +103,54 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             }
         });
 
+
         controller = new MqttCar(getApplicationContext(), () -> {
             try {
-                controller.changeSpeed(ControlConstant.INITIAL_SPEED);
-                controller.steerCar(ControlConstant.INITIAL_ANGLE);
+                controller.changeSpeed(0.5);
             } catch (MqttException ex) {
                 ex.printStackTrace();
             }
-        }, null);
+        }, this);
+
+
+        imageView = findViewById(R.id.cameraView);
+
+        //screenError = findViewById(R.id.screenError);
+
+        /*
+        if(CarState.instance.isConnected()) {
+            imageView.setVisibility(View.VISIBLE);
+            //screenError.setVisibility(View.GONE);
+        }
+        else {
+            imageView.setVisibility(View.INVISIBLE);
+            //screenError.setVisibility(View.VISIBLE);
+        }
+         */
+
+    }
+
+
+    /**
+     *
+     * @param message of frames to be rendered
+     * This should be called upon received a message on the Camera Topic
+     * and should then update the ImageView displayed on the current screen
+     */
+    public void cameraRendering(MqttMessage message){
+        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
+
+        final byte[] payload = message.getPayload();
+        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
+        for (int ci = 0; ci < colors.length; ++ci) {
+            final byte r = payload[3 * ci ];
+            final byte g = payload[3 * ci + 1];
+            final byte b = payload[3 * ci + 2];
+            colors[ci] = Color.rgb(r, g, b);
+        }
+
+        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+        imageView.setImageBitmap(bm);
 
     }
 
@@ -317,4 +376,5 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         });
 
     }
+
 }
