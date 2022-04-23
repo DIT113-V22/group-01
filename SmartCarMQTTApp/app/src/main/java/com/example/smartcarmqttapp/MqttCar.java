@@ -2,6 +2,7 @@ package com.example.smartcarmqttapp;
 
 import android.content.Context;
 
+import androidx.databinding.Observable;
 import androidx.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -112,6 +113,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
         catch (MqttException ex) {
             ex.printStackTrace();
         }
+
     }
 
     /**
@@ -283,4 +285,5 @@ public class MqttCar implements IMqttActionListener, MqttCallback {
     public void blinkDirection(BlinkerDirection direction) throws MqttException {
         mqtt.publish(Topics.Status.Blinkers, new MqttMessage(direction.toString().toLowerCase().getBytes()));
     }
+
 }

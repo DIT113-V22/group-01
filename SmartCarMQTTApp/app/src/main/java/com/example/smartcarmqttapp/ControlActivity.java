@@ -1,9 +1,11 @@
 package com.example.smartcarmqttapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.Observable;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -24,6 +26,8 @@ public class ControlActivity extends AppCompatActivity {
                 ex.printStackTrace();
             }
         });
+
+        addEventListenersToObservableFields();
     }
 
     /**
@@ -35,15 +39,15 @@ public class ControlActivity extends AppCompatActivity {
             ADDITION, MULTIPLICATION;
         }
 
-        public static final double STARTING_SPEED = 0.5; // new speed of car when accelerating with no speed
+        public static final double STARTING_SPEED = 10; // new speed of car when accelerating with no speed (percentage integer)
         public static final double INITIAL_SPEED = 0; // speed of car upon initialization
         public static final double INITIAL_ANGLE = 0; // angle of car upon initialization
 
         public static final double ACCELERATION_FACTOR = 1.1; // multiplication factor for accelerating
         public static final double DECELERATION_FACTOR = 0.9; // multiplication factor for decelerating
 
-        public static final double TURN_LEFT_ANGLE = 10; // addition angle for turning left
-        public static final double TURN_RIGHT_ANGLE = -10; // addition angle for turning right
+        public static final double TURN_LEFT_ANGLE = 7; // addition angle for turning left
+        public static final double TURN_RIGHT_ANGLE = -7; // addition angle for turning right
 
         public static final double MIN_SPEED = 0.05; // threshold for stopping car when decelerating
 
@@ -52,13 +56,29 @@ public class ControlActivity extends AppCompatActivity {
 
     }
 
-    // ToDo:
-    // Bind buttons to methods
-    // Add method bodies
-    // Update text views
-    // Create UI
-    // If doesn't work, move debugging statements before controller access
-    // Test functionality
+    /**
+     * Prefixes for displaying Sensor readings
+     */
+    public static final class SensorString {
+        public static final String SPEED = "Car Speed: ";
+        public static final String DISTANCE = "Total Distance: ";
+        public static final String GYROSCOPE = "Gyroscope Heading: ";
+        public static final String BLINKER = "Blinker Status: ";
+        public static final String INFRARED = "Infrared Distance: ";
+        public static final String ULTRASONIC = "Ultrasonic Distance: ";
+    }
+
+    public static final boolean FORCE_UPDATE = true; // upon theoretical data change, immediately updates visible fields
+    public static final double GYROSCOPE_OFFSET = 180;
+
+    /* ToDo:
+     * Bind buttons to methods
+     * Add method bodies
+     * Update text views
+     * Create UI
+     * If doesn't work, move debugging statements before controller access
+     * Test functionality
+     */
 
     /**
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
@@ -67,6 +87,8 @@ public class ControlActivity extends AppCompatActivity {
         double initialSpeed = controller.speed.get();
         double acceleratedSpeed = initialSpeed == 0 ? ControlConstant.STARTING_SPEED : initialSpeed * ControlConstant.ACCELERATION_FACTOR;
         controller.changeSpeed(acceleratedSpeed);
+
+        if(FORCE_UPDATE) controller.speed.set(acceleratedSpeed);
 
         // Debugging
         System.out.println("Accelerating from " + initialSpeed + " m/s to " + acceleratedSpeed + " m/s");
@@ -87,6 +109,8 @@ public class ControlActivity extends AppCompatActivity {
         double deceleratedSpeed = initialSpeed > ControlConstant.MIN_SPEED ? initialSpeed * ControlConstant.DECELERATION_FACTOR : 0;
         controller.changeSpeed(deceleratedSpeed);
 
+        if(FORCE_UPDATE) controller.speed.set(deceleratedSpeed);
+
         // Debugging
         System.out.println("Accelerating from " + initialSpeed + " m/s to " + deceleratedSpeed + " m/s");
     }
@@ -98,6 +122,8 @@ public class ControlActivity extends AppCompatActivity {
         double initialAngle = controller.gyroscopeHeading.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
         controller.steerCar(rotatedAngle);
+
+        if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
         // Debugging
         System.out.println("Rotating Right from " + initialAngle + " deg to " + rotatedAngle + " deg");
@@ -111,6 +137,8 @@ public class ControlActivity extends AppCompatActivity {
         double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
         controller.steerCar(rotatedAngle);
 
+        if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
+
         // Debugging
         System.out.println("Rotating Left from " + initialAngle + " deg to " + rotatedAngle + " deg");
     }
@@ -121,6 +149,8 @@ public class ControlActivity extends AppCompatActivity {
      */
     public void onClickBlinkLeft(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Left);
+
+        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Left);
     }
 
     /**
@@ -129,6 +159,8 @@ public class ControlActivity extends AppCompatActivity {
      */
     public void onClickBlinkRight(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Right);
+
+        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
 
     /**
@@ -137,6 +169,8 @@ public class ControlActivity extends AppCompatActivity {
      */
     public void onClickBlinkOff(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Off);
+
+        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Off);
     }
 
     /**
@@ -146,4 +180,60 @@ public class ControlActivity extends AppCompatActivity {
     public void onClickEmergencyStop(View view) throws MqttException {
         controller.emergencyStop();
     }
+
+    public void addEventListenersToObservableFields() {
+
+        // Get all TextViews that hold Sensor readings
+        TextView speedView = findViewById(R.id.speedView);
+        TextView distanceView = findViewById(R.id.distanceView);
+        TextView gyroscopeView = findViewById(R.id.gyroscopeHeading);
+        TextView blinkerView = findViewById(R.id.blinkerStatus);
+        TextView irView = findViewById(R.id.irDistance);
+        TextView usView = findViewById(R.id.usDistance);
+
+        // Add Listeners to ObservableFields; Update TextView on change
+        controller.speed.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                speedView.setText(SensorString.SPEED + controller.speed.get());
+            }
+        });
+
+        controller.distance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                distanceView.setText(SensorString.DISTANCE + controller.distance.get());
+            }
+        });
+
+        controller.gyroscopeHeading.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                gyroscopeView.setText(SensorString.GYROSCOPE + controller.gyroscopeHeading.get());
+            }
+        });
+
+        controller.blinkerStatus.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                blinkerView.setText(SensorString.BLINKER + controller.blinkerStatus.get());
+            }
+        });
+
+        controller.ir_distance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                irView.setText(SensorString.INFRARED + controller.ir_distance.get());
+            }
+        });
+
+        controller.ultrasoundDistance.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                usView.setText(SensorString.ULTRASONIC + controller.ultrasoundDistance.get());
+            }
+        });
+
+    }
+
 }
