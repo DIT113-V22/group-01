@@ -7,16 +7,9 @@
     tools:context=".PracticeDrivingActivity">
 
     <LinearLayout
+        android:id="@+id/cameraViewLayout"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:orientation="vertical"
-        android:id="@+id/cameraViewLayout">
-        android:id="@+id/mainLayout"
-        android:layout_width="413dp"
-        android:layout_height="556dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,25 +23,36 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/webViewLayout"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:orientation="vertical"
-        android:id="@+id/webViewLayout">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/screenError"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:src="@drawable/screenerror"
-            android:visibility="gone"
-            />
-
+            android:visibility="gone" />
 
     </LinearLayout>
 
-
-            android:layout_height="357dp"
-            app:srcCompat="@drawable/ic_aboutus_24" />
+    <LinearLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="413dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="1dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_aboutus_24">
 
         <View
             android:id="@+id/divider4"

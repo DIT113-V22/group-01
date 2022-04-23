@@ -46,7 +46,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
 
     private Button sensorDisplayButton;
     private BottomNavigationView bottomNavigationView;
-    private MqttCar controller;
     private Dialog sensorDialog;
     private TextView textView;
 
