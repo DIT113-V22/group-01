@@ -68,7 +68,7 @@ public class ControlActivity extends AppCompatActivity {
         public static final String ULTRASONIC = "Ultrasonic Distance: ";
     }
 
-    public static final boolean FORCE_UPDATE = true; // upon theoretical data change, immediately updates visible fields
+    public static final boolean FORCE_UPDATE = false; // upon theoretical data change, immediately updates visible fields
     public static final double GYROSCOPE_OFFSET = 180;
 
     /* ToDo:
@@ -78,13 +78,16 @@ public class ControlActivity extends AppCompatActivity {
      * Create UI
      * If doesn't work, move debugging statements before controller access
      * Test functionality
+     * VERY IMPORTANT: #changeSpeed takes throttle percentage integer (20), but speed.get() returns m/s.
+     * When calculating accelerated speed, use map for (speed in m/s) -> (speed in %) to throttle properly.
      */
 
     /**
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
      */
     public void onClickAccelerate(View view) throws MqttException {
-        double initialSpeed = controller.speed.get();
+        double initialSpeed = controller.speed.get(); // returns 0.18 m/s
+        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed);
         double acceleratedSpeed = initialSpeed == 0 ? ControlConstant.STARTING_SPEED : initialSpeed * ControlConstant.ACCELERATION_FACTOR;
         controller.changeSpeed(acceleratedSpeed);
 
@@ -106,6 +109,7 @@ public class ControlActivity extends AppCompatActivity {
      */
     public void onClickDecelerate(View view) throws MqttException {
         double initialSpeed = controller.speed.get();
+        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed);
         double deceleratedSpeed = initialSpeed > ControlConstant.MIN_SPEED ? initialSpeed * ControlConstant.DECELERATION_FACTOR : 0;
         controller.changeSpeed(deceleratedSpeed);
 
@@ -123,6 +127,7 @@ public class ControlActivity extends AppCompatActivity {
         double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
         controller.steerCar(rotatedAngle);
+        controller.wheelAngle.set(rotatedAngle);
 
         if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
@@ -138,6 +143,7 @@ public class ControlActivity extends AppCompatActivity {
         double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
         controller.steerCar(rotatedAngle);
+        controller.wheelAngle.set(rotatedAngle);
 
         if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
@@ -182,6 +188,8 @@ public class ControlActivity extends AppCompatActivity {
     public void onClickEmergencyStop(View view) throws MqttException {
         controller.emergencyStop();
     }
+
+    // Utility methods
 
     public void addEventListenersToObservableFields() {
 
@@ -237,5 +245,12 @@ public class ControlActivity extends AppCompatActivity {
         });
 
     }
+
+    public double getThrottleFromAbsoluteSpeed(double absoluteSpeed) {
+        // Throttle and absolute speed are approximately linearly correlated with k=1.8
+        // To obtain percentage integer from ratio, multiply by 100
+        return absoluteSpeed / 1.8 * 100;
+    }
+
 
 }
