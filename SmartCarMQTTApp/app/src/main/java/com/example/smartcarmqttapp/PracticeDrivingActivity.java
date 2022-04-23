@@ -85,6 +85,8 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         sensorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         sensorDialog.show();
         ImageView closeDialog = sensorDialog.findViewById(R.id.closeDialog);
+        TextView txtView = sensorDialog.findViewById(R.id.goog);
+        txtView.setText("Horay it worksed");
 
 
 
