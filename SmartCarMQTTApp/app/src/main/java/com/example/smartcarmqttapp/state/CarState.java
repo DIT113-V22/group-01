@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class CarState {
     // singleton
-    private CarState() {}
+    protected CarState() {}
     public static final CarState instance = new CarState();
 
     private MqttCar connectedCar;
@@ -38,4 +38,20 @@ public class CarState {
     public LocalDateTime getHeartBeat(){
         return connectedCar.lastHeartbeat.get();
     }
+
+    public double getSpeed(){
+        return connectedCar.speed.get();
+    }
+
+    public double getDistance(){
+        return connectedCar.distance.get();
+    }
+
+    public double getIRDistance(){return connectedCar.ir_distance.get();}
+
+    public double getGyroHeading(){return connectedCar.gyroscopeHeading.get();}
+
+    public double getUltraSoundDistance(){return connectedCar.ultrasoundDistance.get();}
+
+    
 }

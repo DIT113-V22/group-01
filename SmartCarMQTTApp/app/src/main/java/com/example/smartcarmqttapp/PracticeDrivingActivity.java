@@ -3,20 +3,47 @@ package com.example.smartcarmqttapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PracticeDrivingActivity extends AppCompatActivity {
 
+
+    private Button sensorDisplayButton;
     private BottomNavigationView bottomNavigationView;
+    private Dialog sensorDialog;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
+
+        sensorDisplayButton = findViewById(R.id.sensorDataButton);
+        sensorDialog = new Dialog(this);
+
+
+
+
+        sensorDisplayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                openSensorDialog();
+            }
+
+        });
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceDriving);
@@ -51,5 +78,22 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void openSensorDialog() {
+        sensorDialog.setContentView(R.layout.sensor_dialog);
+        sensorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        sensorDialog.show();
+        ImageView closeDialog = sensorDialog.findViewById(R.id.closeDialog);
+
+
+
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sensorDialog.dismiss();
+            }
+        });
+
     }
 }
