@@ -39,19 +39,19 @@ public class CarState {
         return connectedCar.lastHeartbeat.get();
     }
 
-    public double getSpeed(){
-        return connectedCar.speed.get();
+    public String getSpeed(){
+        return connectedCar.speed.get().toString();
     }
 
-    public double getDistance(){
-        return connectedCar.distance.get();
+    public String getDistance(){
+        return connectedCar.distance.get().toString();
     }
 
-    public double getIRDistance(){return connectedCar.ir_distance.get();}
+    public String getIRDistance(){return connectedCar.ir_distance.get().toString();}
 
-    public double getGyroHeading(){return connectedCar.gyroscopeHeading.get();}
+    public String getGyroHeading(){return connectedCar.gyroscopeHeading.get().toString();}
 
-    public double getUltraSoundDistance(){return connectedCar.ultrasoundDistance.get();}
+    public String getUltraSoundDistance(){return connectedCar.ultrasoundDistance.get().toString();}
 
     
 }

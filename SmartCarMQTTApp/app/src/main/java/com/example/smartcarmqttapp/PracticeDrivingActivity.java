@@ -85,8 +85,44 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         sensorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         sensorDialog.show();
         ImageView closeDialog = sensorDialog.findViewById(R.id.closeDialog);
-        TextView txtView = sensorDialog.findViewById(R.id.goog);
-        txtView.setText("Horay it worksed");
+
+        TextView speedValue = sensorDialog.findViewById(R.id.speedField);
+        TextView distanceValue = sensorDialog.findViewById(R.id.distanceField);
+        TextView USValue = sensorDialog.findViewById(R.id.ultrasoundField);
+        TextView gyroHeading = sensorDialog.findViewById(R.id.gyroHeadingField);
+        TextView infraredValue = sensorDialog.findViewById(R.id.infraredDistance);
+
+        if (CarState.instance.isConnected()){
+            // Set speed value
+            speedValue.setText(CarState.instance.getSpeed());
+
+            // Set distance
+            distanceValue.setText(CarState.instance.getDistance());
+
+            // Set Ultrasound reading
+            USValue.setText(CarState.instance.getUltraSoundDistance());
+
+            // Set Gyroscope heading
+            gyroHeading.setText(CarState.instance.getGyroHeading());
+
+            // Set Infrared reading
+            infraredValue.setText(CarState.instance.getIRDistance());
+        } else {
+            // Set speed value
+            speedValue.setText("NA");
+
+            // Set distance
+            distanceValue.setText("NA");
+
+            // Set Ultrasound reading
+            USValue.setText("NA");
+
+            // Set Gyroscope heading
+            gyroHeading.setText("NA");
+
+            // Set Infrared reading
+            infraredValue.setText("NA");
+        }
 
 
 
