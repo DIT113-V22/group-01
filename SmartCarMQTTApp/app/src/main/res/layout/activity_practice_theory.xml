@@ -7,15 +7,30 @@
     tools:context=".PracticeTheoryActivity">
 
     <TextView
+        android:id="@+id/timerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is practice theory"
-        android:textSize="30dp"
         android:layout_centerInParent="true"
+        android:text="Press To Commence Quiz"
+        android:textSize="30dp"
+        android:translationY="-300dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/goToQuiz"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignStart="@+id/timerText"
+        android:layout_alignEnd="@+id/timerText"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="79dp"
+        android:layout_marginEnd="112dp"
+        android:layout_marginBottom="501dp"
+        android:text="Go To Quiz" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
