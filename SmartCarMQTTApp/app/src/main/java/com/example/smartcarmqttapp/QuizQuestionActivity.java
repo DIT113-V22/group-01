@@ -23,9 +23,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     private TextView questionCount;
     private TextView questionsLeft;
+    private TextView scoreText;
     private TextView timer;
     private ImageView questionImage;
     private TextView explanationText;
+    private static int scoreNumber = 0;
 
     //Radio buttons
     private RadioGroup radioGroup;
@@ -37,6 +39,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
     //correct answer choice from radio group (1,2,3, or 4)
     private int correctAnswer;
 
+    private Drawable right;
+    private Drawable wrong;
 
     private BottomNavigationView bottomNavigationView;
 
@@ -46,8 +50,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_question);
 
+        right = getDrawable(R.drawable.correct_border);
+        wrong = getDrawable(R.drawable.wrong_border);
+
         questionCount = findViewById(R.id.questionCount);
         questionsLeft = findViewById(R.id.questionsLeft);
+        scoreText = findViewById(R.id.score);
+        scoreText.setText(Integer.toString(scoreNumber));
         timer = findViewById(R.id.timerText);
         questionImage = findViewById(R.id.questionImage);
         explanationText = findViewById(R.id.explanationText);
@@ -116,7 +125,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                 //switch case for setting style of correct answer
                 if(radioGroup.getCheckedRadioButtonId() == correctAnswer){
-                    //score++
+                    scoreNumber++;
                 }
 
                 explanationText.setText("Explanation why right/wrong");
@@ -127,22 +136,18 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                 switch(radioGroup.getCheckedRadioButtonId()) {
                     case option1:
-                        correctOption1();
+                        withBorderOpt1();
+                        break;
                     case option2:
-                        correctOption2();
+                        withBorderOpt2();
+                        break;
                     case option3:
-                        correctOption3();
+                        withBorderOpt3();
+                        break;
                     case option4:
-                        correctOption4();
+                        withBorderOpt4();
+                        break;
                 }
-
-                /*OnClick
-
-                set the all buttons except the correct ones red and correct == bold and green
-                add explanation why correct answer is chosen
-                if radio button selected == correct answer
-                    score++
-                 */
 
                 //When the amount of questions finish
                 if (questionCount.getText().equals(questionsLeft.getText())) {
@@ -150,52 +155,43 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     startActivity(new Intent());
                     //TODO: call results screen and set the back or exit button to go back to home screen
                 }
-
-                /*
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                //load in another question
-                //for debugging below
-                startActivity(new Intent(QuizQuestionActivity.this, PracticeTheoryActivity.class));
-
-                 */
             }
         });
     }
 
-    public void correctOption1(){
-        option1.setTextColor(Color.GREEN);
+    public void withBorderOpt1(){
+
+        option1.setBackground(right);
         option1.setTypeface(null, Typeface.BOLD);
-        option2.setTextColor(Color.RED);
-        option3.setTextColor(Color.RED);
-        option4.setTextColor(Color.RED);
+        option2.setBackground(wrong);
+        option3.setBackground(wrong);
+        option4.setBackground(wrong);
     }
 
-    public void correctOption2(){
-        option2.setTextColor(Color.GREEN);
+    public void withBorderOpt2(){
+
+        option1.setBackground(wrong);
+        option2.setBackground(right);
         option2.setTypeface(null, Typeface.BOLD);
-        option1.setTextColor(Color.RED);
-        option3.setTextColor(Color.RED);
-        option4.setTextColor(Color.RED);
+        option3.setBackground(wrong);
+        option4.setBackground(wrong);
     }
 
-    public void correctOption3(){
-        option3.setTextColor(Color.GREEN);
+    public void withBorderOpt3(){
+
+        option1.setBackground(wrong);
+        option2.setBackground(wrong);
+        option3.setBackground(right);
         option3.setTypeface(null, Typeface.BOLD);
-        option1.setTextColor(Color.RED);
-        option2.setTextColor(Color.RED);
-        option4.setTextColor(Color.RED);
+        option4.setBackground(wrong);
     }
 
-    public void correctOption4(){
-        option4.setTextColor(Color.GREEN);
+    public void withBorderOpt4(){
+
+        option1.setBackground(wrong);
+        option2.setBackground(wrong);
+        option3.setBackground(wrong);
+        option4.setBackground(right);
         option4.setTypeface(null, Typeface.BOLD);
-        option1.setTextColor(Color.RED);
-        option2.setTextColor(Color.RED);
-        option3.setTextColor(Color.RED);
     }
 }

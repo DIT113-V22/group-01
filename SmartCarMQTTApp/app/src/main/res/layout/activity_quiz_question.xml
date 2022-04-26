@@ -17,36 +17,35 @@
 
             <TextView
                 android:id="@+id/explanationText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="---"
+                android:layout_width="226dp"
+                android:layout_height="62dp"
+                android:text="----Explanation Below---"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.097"
+                app:layout_constraintHorizontal_bias="0.054"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.856" />
+                app:layout_constraintVertical_bias="0.925" />
 
             <Button
                 android:id="@+id/nextQuestionBTN"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="155dp"
+                android:layout_height="49dp"
                 android:text="Next Question"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.957"
+                app:layout_constraintHorizontal_bias="0.988"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/questionImage"
-                app:layout_constraintVertical_bias="0.867" />
+                app:layout_constraintVertical_bias="0.907" />
 
             <ImageView
                 android:id="@+id/questionImage"
-                android:layout_width="match_parent"
-                android:layout_height="268dp"
+                android:layout_width="404dp"
+                android:layout_height="263dp"
                 android:translationY="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
@@ -79,11 +78,23 @@
                     android:layout_height="wrap_content"
                     android:text="insert option 1" />
 
+                <View
+                    android:id="@+id/divider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
                 <RadioButton
                     android:id="@+id/option2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="insert option 2" />
+
+                <View
+                    android:id="@+id/divider9"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
                 <RadioButton
                     android:id="@+id/option3"
@@ -91,11 +102,23 @@
                     android:layout_height="wrap_content"
                     android:text="insert option 3" />
 
+                <View
+                    android:id="@+id/divider10"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
                 <RadioButton
                     android:id="@+id/option4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="insert option 4" />
+
+                <View
+                    android:id="@+id/divider11"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
             </RadioGroup>
 
             <TextView
@@ -108,21 +131,22 @@
                 android:textSize="20dp"
                 app:layout_constraintBottom_toTopOf="@+id/nextQuestionBTN"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.933"
+                app:layout_constraintHorizontal_bias="0.897"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.048" />
+                app:layout_constraintVertical_bias="0.06" />
 
             <LinearLayout
-                android:layout_width="236dp"
-                android:layout_height="42dp"
+                android:layout_width="243dp"
+                android:layout_height="43dp"
+                android:background="@drawable/button_border"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/nextQuestionBTN"
                 app:layout_constraintEnd_toStartOf="@+id/timerText"
-                app:layout_constraintHorizontal_bias="0.225"
+                app:layout_constraintHorizontal_bias="0.227"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.049">
+                app:layout_constraintVertical_bias="0.046">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,20 +160,30 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:text="Questions Left:"
-                        android:textSize="12dp" />
+                        android:textSize="14dp"
+                        android:translationX="5dp" />
 
                     <TextView
                         android:id="@+id/questionCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="current q" />
+                        android:text="current q"
+                        android:translationX="10dp" />
+
+                    <TextView
+                        android:id="@+id/separator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/"
+                        android:translationX="10dp" />
 
                     <TextView
                         android:id="@+id/questionsLeft"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="q left" />
+                        android:layout_weight="0"
+                        android:text="q left"
+                        android:translationX="10dp" />
 
                 </LinearLayout>
 
@@ -166,8 +200,8 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:text="Score:"
-                        android:textSize="12dp"
-                        android:translationX="0dp"
+                        android:textSize="14dp"
+                        android:translationX="5dp"
                         android:translationY="0dp" />
 
                     <TextView
@@ -175,7 +209,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="insert score here"
-                        android:translationX="5dp" />
+                        android:translationX="10dp" />
 
                 </LinearLayout>
 
