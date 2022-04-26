@@ -3,6 +3,7 @@ package com.example.smartcarmqttapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.TooltipCompat;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -41,6 +42,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     private Drawable right;
     private Drawable wrong;
+
+    private TooltipCompat tooltipCompat;
 
     private BottomNavigationView bottomNavigationView;
 
@@ -109,6 +112,16 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     public void onNextQuestionButtonClicked() {
         Button finishQuizButton = findViewById(R.id.nextQuestionBTN);
+        correctAnswer = option1.getId();
+
+        //TODO: set the correct answer, based on query, to have onclick listener with explanation
+        option1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                option1.setTooltipText("Ipsum lorens, this should explain the nature of why the chosen option is correct");
+            }
+        });
+
         finishQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,7 +134,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 finishQuizButton.setBackground(drawable);
 
                 //for testing option 1 is correct
-                correctAnswer = option1.getId();
 
                 //switch case for setting style of correct answer
                 if(radioGroup.getCheckedRadioButtonId() == correctAnswer){
@@ -129,22 +141,22 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 }
 
                 explanationText.setText("Explanation why right/wrong");
-                final int option1 = R.id.option1;
-                final int option2 = R.id.option2;
-                final int option3 = R.id.option3;
-                final int option4 = R.id.option4;
+                final int option1ID = R.id.option1;
+                final int option2ID = R.id.option2;
+                final int option3ID = R.id.option3;
+                final int option4ID = R.id.option4;
 
                 switch(radioGroup.getCheckedRadioButtonId()) {
-                    case option1:
+                    case option1ID:
                         withBorderOpt1();
                         break;
-                    case option2:
+                    case option2ID:
                         withBorderOpt2();
                         break;
-                    case option3:
+                    case option3ID:
                         withBorderOpt3();
                         break;
-                    case option4:
+                    case option4ID:
                         withBorderOpt4();
                         break;
                 }
