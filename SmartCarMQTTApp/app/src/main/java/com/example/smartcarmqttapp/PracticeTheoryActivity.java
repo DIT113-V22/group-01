@@ -62,6 +62,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //go to quiz screen
+                //TODO: reset Quiz State
                 startActivity(new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class));
             }
         });

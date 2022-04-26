@@ -19,7 +19,7 @@
                 android:id="@+id/explanationText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Insert Explanation Text"
+                android:text="---"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.097"
@@ -142,7 +142,7 @@
                         android:id="@+id/questionCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="insert current q" />
+                        android:text="current q" />
 
                     <TextView
                         android:id="@+id/questionsLeft"
