@@ -16,28 +16,39 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/explanationText"
-                android:layout_width="226dp"
-                android:layout_height="62dp"
-                android:text="----Explanation Below---"
+                android:id="@+id/areYouSure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.054"
+                app:layout_constraintHorizontal_bias="0.895"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.925" />
+                app:layout_constraintVertical_bias="0.83" />
 
             <Button
                 android:id="@+id/nextQuestionBTN"
-                android:layout_width="155dp"
-                android:layout_height="49dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Next Question"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.988"
+                app:layout_constraintHorizontal_bias="0.883"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/questionImage"
-                app:layout_constraintVertical_bias="0.907" />
+                app:layout_constraintVertical_bias="0.893" />
+
+            <Button
+                android:id="@+id/checkAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check Answer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.099"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.892" />
 
             <ImageView
                 android:id="@+id/questionImage"
@@ -122,7 +133,7 @@
             </RadioGroup>
 
             <TextView
-                android:id="@+id/timerText"
+                android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -142,7 +153,7 @@
                 android:background="@drawable/button_border"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/nextQuestionBTN"
-                app:layout_constraintEnd_toStartOf="@+id/timerText"
+                app:layout_constraintEnd_toStartOf="@+id/header"
                 app:layout_constraintHorizontal_bias="0.227"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

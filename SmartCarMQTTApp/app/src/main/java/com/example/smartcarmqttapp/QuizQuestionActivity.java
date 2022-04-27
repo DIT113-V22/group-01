@@ -2,11 +2,9 @@ package com.example.smartcarmqttapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.TooltipCompat;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -39,6 +37,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     //correct answer choice from radio group (1,2,3, or 4)
     private int correctAnswer;
+    private int clicks = 0;
 
     private Drawable right;
     private Drawable wrong;
@@ -60,9 +59,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         questionsLeft = findViewById(R.id.questionsLeft);
         scoreText = findViewById(R.id.score);
         scoreText.setText(Integer.toString(scoreNumber));
-        timer = findViewById(R.id.timerText);
+        timer = findViewById(R.id.header);
         questionImage = findViewById(R.id.questionImage);
-        explanationText = findViewById(R.id.explanationText);
 
         //Radio buttons
         option1 = findViewById(R.id.option1);
@@ -78,6 +76,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         //TODO for @Lancear: Add a listener/if statement that essentially asks the user whether they are sure
         //TODO for @Lancear: Add dialog box with 2 buttons: yes -> driving theory screen, no -> back to current question
+        //TODO for @Lancear: Decide where exactly dialog comes up: clicking bottom navigation bar, ... or another quit button at each question?
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -112,6 +111,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     public void onNextQuestionButtonClicked() {
         Button finishQuizButton = findViewById(R.id.nextQuestionBTN);
+        Button checkAnswerBtn = findViewById(R.id.checkAnswer);
         correctAnswer = option1.getId();
 
         //TODO: set the correct answer, based on query, to have onclick listener with explanation
@@ -122,16 +122,18 @@ public class QuizQuestionActivity extends AppCompatActivity {
             }
         });
 
-        finishQuizButton.setOnClickListener(new View.OnClickListener() {
+        checkAnswerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //After confirmation of answer, cant select any other question
                 option1.setClickable(false);
                 option2.setClickable(false);
                 option3.setClickable(false);
                 option4.setClickable(false);
 
                 Drawable drawable = getDrawable(R.drawable.button_border);
-                finishQuizButton.setBackground(drawable);
+                checkAnswerBtn.setBackground(drawable);
 
                 //for testing option 1 is correct
 
@@ -140,32 +142,51 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     scoreNumber++;
                 }
 
-                explanationText.setText("Explanation why right/wrong");
-                final int option1ID = R.id.option1;
-                final int option2ID = R.id.option2;
-                final int option3ID = R.id.option3;
-                final int option4ID = R.id.option4;
-
                 switch(radioGroup.getCheckedRadioButtonId()) {
-                    case option1ID:
+                    case R.id.option1:
                         withBorderOpt1();
                         break;
-                    case option2ID:
+                    case R.id.option2:
                         withBorderOpt2();
                         break;
-                    case option3ID:
+                    case R.id.option3:
                         withBorderOpt3();
                         break;
-                    case option4ID:
+                    case R.id.option4:
                         withBorderOpt4();
                         break;
                 }
+            }
+        });
 
-                //When the amount of questions finish
-                if (questionCount.getText().equals(questionsLeft.getText())) {
-                    //when the question count finished, go to the results screen
-                    startActivity(new Intent());
-                    //TODO: call results screen and set the back or exit button to go back to home screen
+        finishQuizButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //if radio buttons are disabled or there were two clicks on next question button (skip)
+                if(!option1.isClickable() || clicks == 1){
+                    clicks = 0;
+                    startActivity(new Intent(QuizQuestionActivity.this, PracticeTheoryActivity.class));
+                    //When the amount of questions finish
+                    if (questionCount.getText().equals(questionsLeft.getText())) {
+                        //when the question count finished, go to the results screen
+                        startActivity(new Intent());
+                        //TODO: call results screen and set the back or exit button to go back to home screen
+                    }
+
+                    if (timer.getText().equals("0:00")){
+                        //TODO for @Lancear: add logic for when the timer reaches zero -> goes to result screen
+                        //TODO for @Lancear: move this in a method where it loops, checking timer until it reaches zero (talk to ivan about it)
+                    }
+
+                    //go to next question
+                    //after checks for timer and
+                }
+                else{
+                    //Set text to say: please confirm an answer or click again to skip
+                    TextView areYouSure = findViewById(R.id.areYouSure);
+                    areYouSure.setText("Are you sure you want to skip?");
+                    clicks++;
                 }
             }
         });
