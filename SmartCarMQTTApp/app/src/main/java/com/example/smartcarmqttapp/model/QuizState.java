@@ -1,3 +1,7 @@
+package com.example.smartcarmqttapp.model;
+
+import java.util.List;
+
 // Class for defining the current state of the quiz: in particular what questions are part of the quiz and what answers have been accumulated, as well as the current score.
 public class QuizState {
 
@@ -44,7 +48,7 @@ public class QuizState {
 
     private void incrementCurrentPointer() {
         this.currentPointer++;
-        if (this.currentPointer == this.questions.size())
+        if (this.currentPointer + 1 == this.questions.size())
             finishQuiz();
         // Made method separate in case UI actions needed
     }

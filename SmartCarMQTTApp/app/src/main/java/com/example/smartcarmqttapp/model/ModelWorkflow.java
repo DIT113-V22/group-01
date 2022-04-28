@@ -1,4 +1,7 @@
-import java.time.LocalDate;
+package com.example.smartcarmqttapp.model;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 public class ModelWorkflow {
 

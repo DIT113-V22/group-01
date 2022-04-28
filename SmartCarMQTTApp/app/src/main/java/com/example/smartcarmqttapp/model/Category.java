@@ -1,3 +1,5 @@
+package com.example.smartcarmqttapp.model;
+
 // Class for creating categories, into which Questions are grouped
 public class Category {
 
@@ -19,6 +21,11 @@ public class Category {
     // Empty constructor
     public Category() {
 
+    }
+
+    public void addQuestionToReview(Question question) {
+        // ToDo: Uncomment when model agreed
+//        if(isReview) this.questions.add(question);
     }
 
     /**
@@ -53,8 +60,8 @@ public class Category {
     public String toString() {
         return "{" +
                 " name='" + getName() + "'" +
-                ", isReview='" + isIsReview() + "'" +
-                ", isExam='" + isIsExam() + "'" +
+                ", isReview='" + getIsReview() + "'" +
+                ", isExam='" + getIsExam() + "'" +
                 "}";
     }
 

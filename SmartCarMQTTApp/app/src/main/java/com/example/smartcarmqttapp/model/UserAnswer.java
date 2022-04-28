@@ -1,3 +1,4 @@
+package com.example.smartcarmqttapp.model;
 import java.time.LocalDateTime;
 
 // Class for creating each possible answer
@@ -54,7 +55,7 @@ public class UserAnswer {
     public String toString() {
         return "{" +
                 " index='" + getIndex() + "'" +
-                ", isCorrect='" + isIsCorrect() + "'" +
+                ", isCorrect='" + getIsCorrect() + "'" +
                 ", time='" + getTime() + "'" +
                 "}";
     }

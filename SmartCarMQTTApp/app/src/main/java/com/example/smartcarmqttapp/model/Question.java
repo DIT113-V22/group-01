@@ -1,3 +1,6 @@
+package com.example.smartcarmqttapp.model;
+import java.util.List;
+import java.util.Map;
 
 // Class for creating each possible question and the answers & explanations to them
 public class Question {
@@ -6,7 +9,7 @@ public class Question {
     private String explanation;
     private Map<Integer, String> possibleAnswers; // key: index and value: answer
     /*
-     * PROPOSITION: make Question store index and UserAnswer have content
+     * ToDo: make Question store index and UserAnswer have content
      * (Swap index to String content in UserAnswer)
      * private Map<Integer, UserAnswer> possibleAnswers;
      */
@@ -34,6 +37,15 @@ public class Question {
     // Empty constructor
     public Question() {
 
+    }
+
+    public UserAnswer getCorrectAnswerFromIndex() throws RuntimeException {
+        // Uncomment once possibleAnswers holds list/map of UserAnswer objs
+        // for (UserAnswer answer : this.possibleAnswers) {
+        // if (answer.getIndex() == correctIndex)
+        // return answer;
+        // }
+        throw new RuntimeException("Question: " + this.question + " does not have correct answer.");
     }
 
     /**
@@ -71,7 +83,7 @@ public class Question {
         this.explanation = explanation;
     }
 
-    public void setPossibleAnswers(String possibleAnswers) {
+    public void setPossibleAnswers(Map<Integer, String> possibleAnswers) {
         this.possibleAnswers = possibleAnswers;
     }
 
