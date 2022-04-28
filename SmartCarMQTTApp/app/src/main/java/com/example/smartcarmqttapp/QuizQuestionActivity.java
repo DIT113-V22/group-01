@@ -276,6 +276,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     public void resetRadioButtons(){
+        option1.setClickable(true);
+        option2.setClickable(true);
+        option3.setClickable(true);
+        option4.setClickable(true);
+        
         option1.setBackground(null);
         option1.setTypeface(null, Typeface.NORMAL);
         option2.setBackground(null);
