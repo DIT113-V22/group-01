@@ -181,21 +181,6 @@
                         android:text="current q"
                         android:translationX="10dp" />
 
-                    <TextView
-                        android:id="@+id/separator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:translationX="10dp" />
-
-                    <TextView
-                        android:id="@+id/questionsLeft"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:text="q left"
-                        android:translationX="10dp" />
-
                 </LinearLayout>
 
                 <LinearLayout
