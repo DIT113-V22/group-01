@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/practiceExam"
             android:layout_width="140dp"
             android:layout_height="284dp"
             android:text="Practice Exam"
@@ -23,7 +23,7 @@
             app:layout_constraintVertical_bias="0.427" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/practiceQuiz"
             android:layout_width="141dp"
             android:layout_height="286dp"
             android:text="Practice Quiz"
@@ -81,22 +81,11 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.508"
+            app:layout_constraintHorizontal_bias="0.245"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.885" />
+            app:layout_constraintVertical_bias="0.813" />
 
-        <Button
-            android:id="@+id/goToQuiz"
-            android:layout_width="wrap_content"
-            android:layout_height="65dp"
-            android:text="Go To Quiz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.839" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -57,12 +57,13 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     }
 
     public void goToQuiz(){
-        Button button = findViewById(R.id.goToQuiz);
+        Button button = findViewById(R.id.practiceQuiz);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //go to quiz screen
-                //TODO: reset Quiz State
+                //TODO: start the Quiz State
+                //QuizState.instance.startQuiz();
                 startActivity(new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class));
             }
         });
