@@ -46,6 +46,7 @@ public class QuizState {
         // Made method separate in case UI actions needed
     }
 
+    // Moves one question up (we don't need moving down)
     private void incrementCurrentPointer() {
         this.currentPointer++;
         if (this.currentPointer + 1 == this.questions.size())
@@ -73,10 +74,6 @@ public class QuizState {
     /**
      * Getters and Setters
      */
-
-    public boolean isIsTakingQuiz() {
-        return this.isTakingQuiz;
-    }
 
     public boolean getIsTakingQuiz() {
         return this.isTakingQuiz;
@@ -120,13 +117,12 @@ public class QuizState {
 
     @Override
     public String toString() {
-        return "{" +
-                " isTakingQuiz='" + isIsTakingQuiz() + "'" +
-                ", questions='" + getQuestions() + "'" +
-                ", currentAnswers='" + getCurrentAnswers() + "'" +
-                ", score='" + getScore() + "'" +
-                ", currentPointer='" + getCurrentPointer() + "'" +
-                "}";
+        return "QuizState{" +
+                "isTakingQuiz=" + isTakingQuiz +
+                ", questions=" + questions +
+                ", currentAnswers=" + currentAnswers +
+                ", score=" + score +
+                ", currentPointer=" + currentPointer +
+                '}';
     }
-
 }

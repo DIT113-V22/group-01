@@ -6,7 +6,6 @@ public class Category {
     private String name;
     private boolean isReview; // category for incorrectly answered questions
     private boolean isExam;
-    // List<Question> questions; // would be nicer
 
     // Constructor with all fields
     public Category(
@@ -24,8 +23,7 @@ public class Category {
     }
 
     public void addQuestionToReview(Question question) {
-        // ToDo: Uncomment when model agreed
-//        if(isReview) this.questions.add(question);
+        // ToDo: Make Question review-able
     }
 
     /**
@@ -58,11 +56,10 @@ public class Category {
 
     @Override
     public String toString() {
-        return "{" +
-                " name='" + getName() + "'" +
-                ", isReview='" + getIsReview() + "'" +
-                ", isExam='" + getIsExam() + "'" +
-                "}";
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", isReview=" + isReview +
+                ", isExam=" + isExam +
+                '}';
     }
-
 }

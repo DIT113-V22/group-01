@@ -1,34 +1,36 @@
 package com.example.smartcarmqttapp.model;
 import java.util.List;
-import java.util.Map;
 
 // Class for creating each possible question and the answers & explanations to them
 public class Question {
 
     private String question;
     private String explanation;
-    private Map<Integer, String> possibleAnswers; // key: index and value: answer
-    /*
-     * ToDo: make Question store index and UserAnswer have content
-     * (Swap index to String content in UserAnswer)
-     * private Map<Integer, UserAnswer> possibleAnswers;
-     */
+    private String firstAnswer;
+    private String secondAnswer;
+    private String thirdAnswer;
+    private String fourthAnswer;
     private int correctIndex;
     private List<UserAnswer> previousAnswers;
-    private Category category; // not in Acceptance Criteria but required (good to have just 1 category)
-    // or perhaps have only Categories hold Questions.
+    private Category category;
 
     // Constructor with all fields
     public Question(
             String question,
             String explanation,
-            Map<Integer, String> possibleAnswers,
+            String firstAnswer,
+            String secondAnswer,
+            String thirdAnswer,
+            String fourthAnswer,
             int correctIndex,
             List<UserAnswer> previousAnswers,
             Category category) {
         this.question = question;
         this.explanation = explanation;
-        this.possibleAnswers = possibleAnswers;
+        this.firstAnswer = firstAnswer;
+        this.secondAnswer = secondAnswer;
+        this.thirdAnswer = thirdAnswer;
+        this.fourthAnswer = fourthAnswer;
         this.correctIndex = correctIndex;
         this.previousAnswers = previousAnswers;
         this.category = category;
@@ -39,60 +41,95 @@ public class Question {
 
     }
 
-    public UserAnswer getCorrectAnswerFromIndex() throws RuntimeException {
-        // Uncomment once possibleAnswers holds list/map of UserAnswer objs
-        // for (UserAnswer answer : this.possibleAnswers) {
-        // if (answer.getIndex() == correctIndex)
-        // return answer;
-        // }
-        throw new RuntimeException("Question: " + this.question + " does not have correct answer.");
+    /**
+     * Getters and Setters
+     */
+
+    public String getCorrectAnswerFromIndex() throws RuntimeException {
+        switch(correctIndex) {
+            case 1:
+                return firstAnswer;
+            case 2:
+                return secondAnswer;
+            case 3:
+                return thirdAnswer;
+            case 4:
+                return fourthAnswer;
+            default:
+                throw new RuntimeException("Correct Answer Index must be 1-4");
+        }
     }
 
     /**
      * Getters and Setters
      */
+
     public String getQuestion() {
-        return this.question;
-    }
-
-    public String getExplanation() {
-        return this.explanation;
-    }
-
-    public Map<Integer, String> getPossibleAnswers() {
-        return this.possibleAnswers;
-    }
-
-    public int getCorrectIndex() {
-        return this.correctIndex;
-    }
-
-    public List<UserAnswer> getPreviousAnswers() {
-        return this.previousAnswers;
-    }
-
-    public Category getCategory() {
-        return this.category;
+        return question;
     }
 
     public void setQuestion(String question) {
         this.question = question;
     }
 
+    public String getExplanation() {
+        return explanation;
+    }
+
     public void setExplanation(String explanation) {
         this.explanation = explanation;
     }
 
-    public void setPossibleAnswers(Map<Integer, String> possibleAnswers) {
-        this.possibleAnswers = possibleAnswers;
+    public String getFirstAnswer() {
+        return firstAnswer;
+    }
+
+    public void setFirstAnswer(String firstAnswer) {
+        this.firstAnswer = firstAnswer;
+    }
+
+    public String getSecondAnswer() {
+        return secondAnswer;
+    }
+
+    public void setSecondAnswer(String secondAnswer) {
+        this.secondAnswer = secondAnswer;
+    }
+
+    public String getThirdAnswer() {
+        return thirdAnswer;
+    }
+
+    public void setThirdAnswer(String thirdAnswer) {
+        this.thirdAnswer = thirdAnswer;
+    }
+
+    public String getFourthAnswer() {
+        return fourthAnswer;
+    }
+
+    public void setFourthAnswer(String fourthAnswer) {
+        this.fourthAnswer = fourthAnswer;
+    }
+
+    public int getCorrectIndex() {
+        return correctIndex;
     }
 
     public void setCorrectIndex(int correctIndex) {
         this.correctIndex = correctIndex;
     }
 
+    public List<UserAnswer> getPreviousAnswers() {
+        return previousAnswers;
+    }
+
     public void setPreviousAnswers(List<UserAnswer> previousAnswers) {
         this.previousAnswers = previousAnswers;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     public void setCategory(Category category) {
@@ -101,14 +138,16 @@ public class Question {
 
     @Override
     public String toString() {
-        return "{" +
-                " question='" + getQuestion() + "'" +
-                ", explanation='" + getExplanation() + "'" +
-                ", possibleAnswers='" + getPossibleAnswers() + "'" +
-                ", correctIndex='" + getCorrectIndex() + "'" +
-                ", previousAnswers='" + getPreviousAnswers() + "'" +
-                ", category='" + getCategory() + "'" +
-                "}";
+        return "Question{" +
+                "question='" + question + '\'' +
+                ", explanation='" + explanation + '\'' +
+                ", firstAnswer='" + firstAnswer + '\'' +
+                ", secondAnswer='" + secondAnswer + '\'' +
+                ", thirdAnswer='" + thirdAnswer + '\'' +
+                ", fourthAnswer='" + fourthAnswer + '\'' +
+                ", correctIndex=" + correctIndex +
+                ", previousAnswers=" + previousAnswers +
+                ", category=" + category +
+                '}';
     }
-
 }
