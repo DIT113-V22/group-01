@@ -22,12 +22,10 @@ import java.util.List;
 
 public class QuizQuestionActivity extends AppCompatActivity {
 
-    private TextView questionCount;
-    private TextView questionsLeft;
+    private TextView questionCountText;
     private TextView scoreText;
     private TextView timer;
     private ImageView questionImage;
-    private TextView explanationText;
     private static int scoreNumber = 0;
 
     //Radio buttons
@@ -40,6 +38,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
     //correct answer choice from radio group (1,2,3, or 4)
     private String correctAns;
     private int correctAnswer;
+
+    //TODO: get total questions from QuizState.instance.getQuestionCount
+    private int totalQuestions = 0;
+    private int currentQuestionNum = 1;
     private int clicks = 0;
 
     private Drawable right;
@@ -59,8 +61,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
         right = getDrawable(R.drawable.correct_border);
         wrong = getDrawable(R.drawable.wrong_border);
 
-        questionCount = findViewById(R.id.questionCount);
-        questionsLeft = findViewById(R.id.questionsLeft);
+        questionCountText = findViewById(R.id.questionCount);
+        //questionsLeftText.setText(totalQuestions);
+
         scoreText = findViewById(R.id.score);
         scoreText.setText(Integer.toString(scoreNumber));
         timer = findViewById(R.id.header);
@@ -79,6 +82,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //add questions to question list via helper method --> help us select question
 
         onNextQuestionButtonClicked();
+        //addQuestion();
         //TODO: add random question to each text field, on pressing next question it loads next question
 
 
@@ -129,7 +133,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
      * question is marked as incorrect and stored as an incorrect answer.
      */
     public void onNextQuestionButtonClicked() {
-        Button finishQuizButton = findViewById(R.id.nextQuestionBTN);
+        Button nextQuestionButton = findViewById(R.id.nextQuestionBTN);
         Button checkAnswerBtn = findViewById(R.id.checkAnswer);
         correctAnswer = option1.getId();
 
@@ -140,6 +144,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 option1.setTooltipText("Ipsum lorens, this should explain the nature of why the chosen option is correct");
             }
         });
+
+        if(currentQuestionNum == totalQuestions){
+            nextQuestionButton.setText("Finish Quiz");
+        }
 
         checkAnswerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,17 +187,18 @@ public class QuizQuestionActivity extends AppCompatActivity {
             }
         });
 
-        finishQuizButton.setOnClickListener(new View.OnClickListener() {
+        nextQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //if radio buttons are disabled or there were two clicks on next question button (skip)
+
                 if(!option1.isClickable() || clicks == 1){
                     clicks = 0;
                     startActivity(new Intent(QuizQuestionActivity.this, PracticeTheoryActivity.class));
 
                     //When the amount of questions finish
-                    if (questionCount.getText().equals(questionsLeft.getText())) {
+                    if (currentQuestionNum == totalQuestions) {
                         //when the question count finished, go to the results screen
                         startActivity(new Intent());
                         //TODO: reset the QuizState class as a quiz is Terminated
@@ -202,6 +211,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         //TODO for @Lancear: move this in a method where it loops, checking timer until it reaches zero (talk to ivan about it)
                     }
 
+                    resetRadioButtons();
                     //TODO: call method for getting new question, after passing previous checks for quiz completion
                 }
                 else{
@@ -227,6 +237,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
      */
     public void addQuestion(){
         //gets the current text fields and saves them to temp Strings
+        currentQuestionNum++;
+        questionCountText.setText(currentQuestionNum + " / " + totalQuestions);
 
         String currentQuestionNum;
         String totalQuestions;
@@ -263,6 +275,17 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4.setText("");
     }
 
+    public void resetRadioButtons(){
+        option1.setBackground(null);
+        option1.setTypeface(null, Typeface.NORMAL);
+        option2.setBackground(null);
+        option2.setTypeface(null, Typeface.NORMAL);
+        option3.setBackground(null);
+        option3.setTypeface(null, Typeface.NORMAL);
+        option4.setBackground(null);
+        option4.setTypeface(null, Typeface.NORMAL);
+
+    }
     public void withBorderOpt1(){
 
         option1.setBackground(right);
