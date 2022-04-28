@@ -12,7 +12,8 @@ public class Question {
      */
     private int correctIndex;
     private List<UserAnswer> previousAnswers;
-    private Category category; // not in Acceptance Criteria but required
+    private Category category; // not in Acceptance Criteria but required (good to have just 1 category)
+    // or perhaps have only Categories hold Questions.
 
     // Constructor with all fields
     public Question(
