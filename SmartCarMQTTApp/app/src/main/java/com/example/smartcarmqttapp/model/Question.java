@@ -4,6 +4,7 @@ import java.util.List;
 // Class for creating each possible question and the answers & explanations to them
 public class Question {
 
+    private int id;
     private String question;
     private String explanation;
     private String firstAnswer;
@@ -13,8 +14,35 @@ public class Question {
     private int correctIndex;
     private List<UserAnswer> previousAnswers;
     private Category category;
+    /* instead of using category array for holding review category, use a boolean property
+    private boolean needsReview;
+     */
 
     // Constructor with all fields
+    public Question(
+            int id,
+            String question,
+            String explanation,
+            String firstAnswer,
+            String secondAnswer,
+            String thirdAnswer,
+            String fourthAnswer,
+            int correctIndex,
+            List<UserAnswer> previousAnswers,
+            Category category) {
+        this.id = id;
+        this.question = question;
+        this.explanation = explanation;
+        this.firstAnswer = firstAnswer;
+        this.secondAnswer = secondAnswer;
+        this.thirdAnswer = thirdAnswer;
+        this.fourthAnswer = fourthAnswer;
+        this.correctIndex = correctIndex;
+        this.previousAnswers = previousAnswers;
+        this.category = category;
+    }
+
+    // Constructor without id
     public Question(
             String question,
             String explanation,
@@ -42,11 +70,16 @@ public class Question {
     }
 
     /**
-     * Getters and Setters
+     * Helper methods
      */
 
-    public String getCorrectAnswerFromIndex() throws RuntimeException {
-        switch(correctIndex) {
+    // Returns correct answer string for this question
+    public String getCorrectAnswer() throws RuntimeException {
+        return getAnswerFromIndex(correctIndex);
+    }
+
+    public String getAnswerFromIndex(int index) throws RuntimeException{
+        switch(index) {
             case 1:
                 return firstAnswer;
             case 2:
@@ -60,9 +93,23 @@ public class Question {
         }
     }
 
+
+    // Adds answer to previously banked answers for this question
+    public boolean addAnswer(UserAnswer answer) {
+        return this.previousAnswers.add(answer);
+    }
+
     /**
      * Getters and Setters
      */
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getQuestion() {
         return question;

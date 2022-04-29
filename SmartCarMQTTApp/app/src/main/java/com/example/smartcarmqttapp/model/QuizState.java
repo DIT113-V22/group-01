@@ -5,6 +5,7 @@ import java.util.List;
 // Class for defining the current state of the quiz: in particular what questions are part of the quiz and what answers have been accumulated, as well as the current score.
 public class QuizState {
 
+    private int id;
     private boolean isTakingQuiz;
     private List<Question> questions;
     private List<UserAnswer> currentAnswers;
@@ -12,6 +13,21 @@ public class QuizState {
     private int currentPointer;
 
     // Constructor with all fields
+    public QuizState(
+            int id,
+            boolean isTakingQuiz,
+            List<Question> questions,
+            List<UserAnswer> currentAnswers,
+            int score) {
+        this.id = id;
+        this.isTakingQuiz = isTakingQuiz;
+        this.questions = questions;
+        this.currentAnswers = currentAnswers;
+        this.score = score;
+        this.currentPointer = 0;
+    }
+
+    // Constructor without id
     public QuizState(
             boolean isTakingQuiz,
             List<Question> questions,
@@ -33,12 +49,21 @@ public class QuizState {
      * Helper methods
      */
 
+    // Submits an answer for the current question
     public void answerQuestion(UserAnswer answer) {
         if (questions.get(currentPointer).getCorrectIndex() == answer.getIndex()) {
+            // Answer is correct. Increase the score
             incrementScore();
+        } else {
+            // ToDo: Answer is incorrect. Add question to review
+            // questions.get(currentPointer).setNeedsReview(true);
         }
         currentAnswers.add(answer); // adds answer to list of current answers
         incrementCurrentPointer(); // increases question number
+    }
+
+    public Question getCurrentQuestion() {
+        return this.questions.get(currentPointer);
     }
 
     private void incrementScore() {
@@ -74,6 +99,14 @@ public class QuizState {
     /**
      * Getters and Setters
      */
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean getIsTakingQuiz() {
         return this.isTakingQuiz;
