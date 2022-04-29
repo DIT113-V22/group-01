@@ -38,4 +38,5 @@ To accomplish our goal, we will create a remotely accessible api for the car, pr
 | Car controller | Arduino, C++, smartcar shield |
 | Car - App communication | MQTT |
 | App | Android, Java |
+| Database | SQLite |
 | City environment | SMCE, Blender, etc. |
