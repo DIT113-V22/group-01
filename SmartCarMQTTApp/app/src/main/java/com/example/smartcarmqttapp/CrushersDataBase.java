@@ -2,51 +2,115 @@ package com.example.smartcarmqttapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.smartcarmqttapp.QuizContract.*;
 
 import androidx.annotation.Nullable;
 
-public class CrushersDataBase extends SQLiteOpenHelper {
-    private SQLiteDatabase db;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    private Context context;
+public class CrushersDataBase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "CrushersDataBase.db";
     private static final int DATABASE_VERSION = 1;
+
+    private SQLiteDatabase db;
 
 
     public CrushersDataBase(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         this.db = db;
-        final String createTableQuery = "CREATE TABLE " + QuestionsTable.TABLE_NAME+
-            " (" + QuestionsTable._ID + " INTEGER PRIMARY KEY, " +
+
+        final String CREATE_TABLE = "CREATE TABLE " + QuestionsTable.TABLE_NAME+
+            " (" + QuestionsTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             QuestionsTable.COLUMN_QUESTION + " TEXT," +
             QuestionsTable.COLUMN_ANSWER1 + " TEXT, " +
             QuestionsTable.COLUMN_ANSWER2 + " TEXT, " +
             QuestionsTable.COLUMN_ANSWER3 + " TEXT, " +
             QuestionsTable.COLUMN_ANSWER4 + " TEXT, " +
             QuestionsTable.COLUMN_CORRECT_ANSWER + " INTEGER," +
-            QuestionsTable.COLUMN_CATEGORY + " TEXT);";
-    db.execSQL(createTableQuery);
+            QuestionsTable.COLUMN_EXPLANATION + " TEXT, " +
+            QuestionsTable.COLUMN_NEEDS_REVIEW + " INTEGER, " +
+            QuestionsTable.COLUMN_CATEGORY + " TEXT" + ")";
+    db.execSQL(CREATE_TABLE);
+    populateQuestionsTable();
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int pastVersion, int newVersion) {
     db.execSQL("DROP TABLE IF EXISTS " + QuestionsTable.TABLE_NAME);
     onCreate(db);
     }
 
-    private void populateQuestionsTable(Question question){
-        //Place holder question values for now
-        Question q1 = new Question("Question","ans1","ans2","ans3","ans4",3,"Safety");
-        populateQuestionsTable(q1);
+    private List<Question> createQuestionsAddToList(){
+        //Place holder question values (3 topics(categories), 15 questions each)
+        return Arrays.asList(
+                //CATEGORY 1
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+
+                //CATEGORY 2
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+
+                //CATEGORY 3
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1"),
+                new Question("placeholder question","answer1","answer2","answer3","answer4", 1, "explanation", 0, "cat1")
+                );
+    }
+
+    private void populateQuestionsTable(){
+        List<Question> questions = createQuestionsAddToList();
+        for (Question question : questions) {
+            createQuestion(question);
+        }
     }
 
     private void createQuestion(Question question){
@@ -57,11 +121,36 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         cv.put(QuestionsTable.COLUMN_ANSWER3, question.getAnswer_3());
         cv.put(QuestionsTable.COLUMN_ANSWER4, question.getAnswer_4());
         cv.put(QuestionsTable.COLUMN_CORRECT_ANSWER, question.getCorrect_Answer());
+        cv.put(QuestionsTable.COLUMN_EXPLANATION, question.getExplanation());
+        cv.put(QuestionsTable.COLUMN_NEEDS_REVIEW, question.isNeedsReview());
         cv.put(QuestionsTable.COLUMN_CATEGORY, question.getCategory());
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
-
-
     }
 
+    public List<Question> getAllQuestions(){
+    List<Question> questionList = new ArrayList<>();
+    db = getReadableDatabase();
+    Cursor cursor = db.rawQuery("SELECT * FROM " + QuestionsTable.TABLE_NAME, null);
+
+    if(cursor.moveToFirst()){
+        do {
+        Question question = new Question();
+        question.setQuestion(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_QUESTION)));
+        question.setAnswer_1(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER1)));
+        question.setAnswer_2(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER2)));
+        question.setAnswer_3(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER3)));
+        question.setAnswer_4(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER4)));
+        question.setCorrect_Answer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
+        question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
+        question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
+        question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
+
+        questionList.add(question);
+
+        } while (cursor.moveToNext());
+    }
+        cursor.close();
+        return questionList;
+    }
 
 }

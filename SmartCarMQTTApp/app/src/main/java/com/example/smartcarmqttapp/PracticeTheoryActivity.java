@@ -6,17 +6,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.w3c.dom.Text;
+
+import java.util.List;
 
 public class PracticeTheoryActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_theory);
+        CrushersDataBase db = new CrushersDataBase(this);
+        List<Question> questions = db.getAllQuestions();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
