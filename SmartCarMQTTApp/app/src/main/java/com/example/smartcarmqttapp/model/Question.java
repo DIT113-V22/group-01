@@ -4,7 +4,6 @@ import java.util.List;
 // Class for creating each possible question and the answers & explanations to them
 public class Question {
 
-    private int id;
     private String question;
     private String explanation;
     private String firstAnswer;
@@ -16,31 +15,6 @@ public class Question {
     private boolean needsReview;
 
     // Constructor with all fields
-    public Question(
-            int id,
-            String question,
-            String explanation,
-            String firstAnswer,
-            String secondAnswer,
-            String thirdAnswer,
-            String fourthAnswer,
-            int correctIndex,
-            Category category,
-            boolean needsReview
-    ) {
-        this.id = id;
-        this.question = question;
-        this.explanation = explanation;
-        this.firstAnswer = firstAnswer;
-        this.secondAnswer = secondAnswer;
-        this.thirdAnswer = thirdAnswer;
-        this.fourthAnswer = fourthAnswer;
-        this.correctIndex = correctIndex;
-        this.category = category;
-        this.needsReview = needsReview;
-    }
-
-    // Constructor without id
     public Question(
             String question,
             String explanation,
@@ -95,14 +69,6 @@ public class Question {
     /**
      * Getters and Setters
      */
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getQuestion() {
         return question;
