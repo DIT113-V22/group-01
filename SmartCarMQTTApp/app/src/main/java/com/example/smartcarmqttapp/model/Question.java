@@ -12,7 +12,7 @@ public class Question {
     private String fourthAnswer;
     private int correctIndex;
     private Category category;
-    private boolean needsReview;
+    private int needsReview;
 
     // Constructor with all fields
     public Question(
@@ -24,7 +24,7 @@ public class Question {
             String fourthAnswer,
             int correctIndex,
             Category category,
-            boolean needsReview
+            int needsReview
     ) {
         this.question = question;
         this.explanation = explanation;
@@ -134,11 +134,11 @@ public class Question {
         this.category = category;
     }
 
-    public boolean getNeedsReview() {
+    public int getNeedsReview() {
         return this.needsReview;
     }
 
-    public void setNeedsReview(boolean needsReview) {
+    public int setNeedsReview(boolean needsReview) {
         this.needsReview = needsReview;
     }
 
