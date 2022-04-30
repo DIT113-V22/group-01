@@ -116,13 +116,13 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     private void createQuestion(Question question){
         ContentValues cv = new ContentValues();
         cv.put(QuestionsTable.COLUMN_QUESTION, question.getQuestion());
-        cv.put(QuestionsTable.COLUMN_ANSWER1, question.getAnswer_1());
-        cv.put(QuestionsTable.COLUMN_ANSWER2, question.getAnswer_2());
-        cv.put(QuestionsTable.COLUMN_ANSWER3, question.getAnswer_3());
-        cv.put(QuestionsTable.COLUMN_ANSWER4, question.getAnswer_4());
-        cv.put(QuestionsTable.COLUMN_CORRECT_ANSWER, question.getCorrect_Answer());
+        cv.put(QuestionsTable.COLUMN_ANSWER1, question.getFirstAnswer());
+        cv.put(QuestionsTable.COLUMN_ANSWER2, question.getSecondAnswer());
+        cv.put(QuestionsTable.COLUMN_ANSWER3, question.getThirdAnswer());
+        cv.put(QuestionsTable.COLUMN_ANSWER4, question.getFourthAnswer());
+        cv.put(QuestionsTable.COLUMN_CORRECT_ANSWER, question.getCorrectAnswer());
         cv.put(QuestionsTable.COLUMN_EXPLANATION, question.getExplanation());
-        cv.put(QuestionsTable.COLUMN_NEEDS_REVIEW, question.isNeedsReview());
+        cv.put(QuestionsTable.COLUMN_NEEDS_REVIEW, question.getNeedsReview());
         cv.put(QuestionsTable.COLUMN_CATEGORY, question.getCategory());
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
     }
@@ -136,11 +136,11 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         do {
         Question question = new Question();
         question.setQuestion(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_QUESTION)));
-        question.setAnswer_1(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER1)));
-        question.setAnswer_2(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER2)));
-        question.setAnswer_3(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER3)));
-        question.setAnswer_4(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER4)));
-        question.setCorrect_Answer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
+        question.setFirstAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER1)));
+        question.setSecondAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER2)));
+        question.setThirdAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER3)));
+        question.setFourthAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER4)));
+        question.setCorrectAnswer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
         question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
         question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
         question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));

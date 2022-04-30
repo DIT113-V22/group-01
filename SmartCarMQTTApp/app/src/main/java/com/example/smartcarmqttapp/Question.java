@@ -8,11 +8,11 @@ import androidx.room.PrimaryKey;
 public class Question {
 
     private String question;
-    private String answer_1;
-    private String answer_2;
-    private String answer_3;
-    private String answer_4;
-    private int correct_Answer;
+    private String firstAnswer;
+    private String secondAnswer;
+    private String thirdAnswer;
+    private String fourthAnswer;
+    private int correctAnswer;
     private String explanation;
     //needsReview is stored as int as SQLite does not have BIT or BOOLEAN data types. Will store true as 1 and false as 0.
     private int needsReview;
@@ -20,13 +20,13 @@ public class Question {
 
     public Question(){}
 
-    public Question(String question, String answer1, String answer2, String answer3, String answer4, int correct_Answer, String explanation, int needsReview, String category) {
+    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category) {
         this.question = question;
-        this.answer_1 = answer1;
-        this.answer_2 = answer2;
-        this.answer_3 = answer3;
-        this.answer_4 = answer4;
-        this.correct_Answer = correct_Answer;
+        this.firstAnswer = firstAnswer;
+        this.secondAnswer = secondAnswer;
+        this.thirdAnswer = thirdAnswer;
+        this.fourthAnswer = fourthAnswer;
+        this.correctAnswer = correctAnswer;
         this.explanation = explanation;
         this.needsReview = needsReview;
         this.category = category;
@@ -40,44 +40,60 @@ public class Question {
         this.question = question;
     }
 
-    public String getAnswer_1() {
-        return answer_1;
+    public String getFirstAnswer() {
+        return firstAnswer;
     }
 
-    public void setAnswer_1(String answer_1) {
-        this.answer_1 = answer_1;
+    public void setFirstAnswer(String firstAnswer) {
+        this.firstAnswer = firstAnswer;
     }
 
-    public String getAnswer_2() {
-        return answer_2;
+    public String getSecondAnswer() {
+        return secondAnswer;
     }
 
-    public void setAnswer_2(String answer_2) {
-        this.answer_2 = answer_2;
+    public void setSecondAnswer(String secondAnswer) {
+        this.secondAnswer = secondAnswer;
     }
 
-    public String getAnswer_3() {
-        return answer_3;
+    public String getThirdAnswer() {
+        return thirdAnswer;
     }
 
-    public void setAnswer_3(String answer_3) {
-        this.answer_3 = answer_3;
+    public void setThirdAnswer(String thirdAnswer) {
+        this.thirdAnswer = thirdAnswer;
     }
 
-    public String getAnswer_4() {
-        return answer_4;
+    public String getFourthAnswer() {
+        return fourthAnswer;
     }
 
-    public void setAnswer_4(String answer_4) {
-        this.answer_4 = answer_4;
+    public void setFourthAnswer(String fourthAnswer) {
+        this.fourthAnswer = fourthAnswer;
     }
 
-    public int getCorrect_Answer() {
-        return correct_Answer;
+    public int getCorrectAnswer() {
+        return correctAnswer;
     }
 
-    public void setCorrect_Answer(int correct_Answer) {
-        this.correct_Answer = correct_Answer;
+    public void setCorrectAnswer(int correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
+    public int getNeedsReview() {
+        return needsReview;
+    }
+
+    public void setNeedsReview(int needsReview) {
+        this.needsReview = needsReview;
     }
 
     public String getCategory() {
@@ -87,45 +103,4 @@ public class Question {
     public void setCategory(String category) {
         this.category = category;
     }
-
-    public String getExplanation() {
-        return explanation; }
-
-    public void setExplanation(String explanation) {
-        this.explanation = explanation; }
-
-    public int isNeedsReview() {
-        return needsReview;
-    }
-
-    public void setNeedsReview(int needsReview) {
-        this.needsReview = needsReview;
-    }
-
-    /*
-    @PrimaryKey(autoGenerate = true)
-    public int qid;
-
-    @ColumnInfo
-    public String question;
-
-    @ColumnInfo(defaultValue = "First Answer")
-    public String ans_1;
-
-    @ColumnInfo(defaultValue = "Second Answer")
-    public String ans_2;
-
-    @ColumnInfo(defaultValue = "Third Answer")
-    public String ans_3;
-
-    @ColumnInfo(defaultValue = "Fourth Answer")
-    public String ans_4;
-
-    @ColumnInfo(defaultValue = "Correct Answer")
-    public String correct_answer;
-
-    @ColumnInfo
-    public String category;
-
-     */
 }
