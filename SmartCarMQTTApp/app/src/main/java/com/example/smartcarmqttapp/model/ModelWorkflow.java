@@ -29,7 +29,7 @@ public class ModelWorkflow {
                 "to be the very best",
                 2,
                 signsCategory,
-                false
+                0
                 );
 
         Question q2 = new Question(
@@ -41,7 +41,7 @@ public class ModelWorkflow {
                 "idk but i like this button better",
                 3,
                 signsCategory,
-                false
+                0
         );
 
         // Create a quiz with two questions

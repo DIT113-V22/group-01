@@ -138,7 +138,7 @@ public class Question {
         return this.needsReview;
     }
 
-    public int setNeedsReview(boolean needsReview) {
+    public void setNeedsReview(int needsReview) {
         this.needsReview = needsReview;
     }
 
