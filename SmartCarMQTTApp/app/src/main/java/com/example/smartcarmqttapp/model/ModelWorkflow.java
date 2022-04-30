@@ -28,8 +28,8 @@ public class ModelWorkflow {
                 "to go to the dentist",
                 "to be the very best",
                 2,
-                new ArrayList<>(),
-                signsCategory
+                signsCategory,
+                false
                 );
 
         Question q2 = new Question(
@@ -40,8 +40,8 @@ public class ModelWorkflow {
                 "Vehicle must be stopped",
                 "idk but i like this button better",
                 3,
-                new ArrayList<>(),
-                signsCategory
+                signsCategory,
+                false
         );
 
         // Create a quiz with two questions
@@ -60,9 +60,9 @@ public class ModelWorkflow {
 
         firstQuiz.getCurrentQuestion(); // display the current question
         firstQuiz.answerQuestion(answer1); // answer the current question
-        // if correct, increment score. adds answer to question and increments pointer
+        // if correct, increment score. increments pointer
+        // else make question reviewable. increments pointer
         // ... repeat until all questions are finished then display firstQuiz.getScore();
-        // incorrectly answered questions
 
 
 

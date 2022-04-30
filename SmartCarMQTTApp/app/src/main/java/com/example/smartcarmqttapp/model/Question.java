@@ -12,11 +12,8 @@ public class Question {
     private String thirdAnswer;
     private String fourthAnswer;
     private int correctIndex;
-    private List<UserAnswer> previousAnswers;
     private Category category;
-    /* instead of using category array for holding review category, use a boolean property
     private boolean needsReview;
-     */
 
     // Constructor with all fields
     public Question(
@@ -28,8 +25,9 @@ public class Question {
             String thirdAnswer,
             String fourthAnswer,
             int correctIndex,
-            List<UserAnswer> previousAnswers,
-            Category category) {
+            Category category,
+            boolean needsReview
+    ) {
         this.id = id;
         this.question = question;
         this.explanation = explanation;
@@ -38,8 +36,8 @@ public class Question {
         this.thirdAnswer = thirdAnswer;
         this.fourthAnswer = fourthAnswer;
         this.correctIndex = correctIndex;
-        this.previousAnswers = previousAnswers;
         this.category = category;
+        this.needsReview = needsReview;
     }
 
     // Constructor without id
@@ -51,8 +49,9 @@ public class Question {
             String thirdAnswer,
             String fourthAnswer,
             int correctIndex,
-            List<UserAnswer> previousAnswers,
-            Category category) {
+            Category category,
+            boolean needsReview
+    ) {
         this.question = question;
         this.explanation = explanation;
         this.firstAnswer = firstAnswer;
@@ -60,8 +59,8 @@ public class Question {
         this.thirdAnswer = thirdAnswer;
         this.fourthAnswer = fourthAnswer;
         this.correctIndex = correctIndex;
-        this.previousAnswers = previousAnswers;
         this.category = category;
+        this.needsReview = needsReview;
     }
 
     // Empty constructor
@@ -91,12 +90,6 @@ public class Question {
             default:
                 throw new RuntimeException("Correct Answer Index must be 1-4");
         }
-    }
-
-
-    // Adds answer to previously banked answers for this question
-    public boolean addAnswer(UserAnswer answer) {
-        return this.previousAnswers.add(answer);
     }
 
     /**
@@ -167,20 +160,20 @@ public class Question {
         this.correctIndex = correctIndex;
     }
 
-    public List<UserAnswer> getPreviousAnswers() {
-        return previousAnswers;
-    }
-
-    public void setPreviousAnswers(List<UserAnswer> previousAnswers) {
-        this.previousAnswers = previousAnswers;
-    }
-
     public Category getCategory() {
         return category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public boolean getNeedsReview() {
+        return this.needsReview;
+    }
+
+    public void setNeedsReview(boolean needsReview) {
+        this.needsReview = needsReview;
     }
 
     @Override
@@ -193,8 +186,8 @@ public class Question {
                 ", thirdAnswer='" + thirdAnswer + '\'' +
                 ", fourthAnswer='" + fourthAnswer + '\'' +
                 ", correctIndex=" + correctIndex +
-                ", previousAnswers=" + previousAnswers +
                 ", category=" + category +
+                ", needsReview=" + needsReview +
                 '}';
     }
 }

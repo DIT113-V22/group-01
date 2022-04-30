@@ -55,8 +55,8 @@ public class QuizState {
             // Answer is correct. Increase the score
             incrementScore();
         } else {
-            // ToDo: Answer is incorrect. Add question to review
-            // questions.get(currentPointer).setNeedsReview(true);
+            // Answer is incorrect. Add question to review
+             questions.get(currentPointer).setNeedsReview(true);
         }
         currentAnswers.add(answer); // adds answer to list of current answers
         incrementCurrentPointer(); // increases question number
