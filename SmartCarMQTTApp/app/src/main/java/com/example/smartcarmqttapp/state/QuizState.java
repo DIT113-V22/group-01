@@ -58,10 +58,12 @@ public class QuizState {
         if (questions.get(currentPointer).getCorrectAnswer() == answer.getIndex()) {
             // Answer is correct. Increase the score and remove from review
             incrementScore();
-            questions.get(currentPointer).setNeedsReview(0);
+            questions.get(currentPointer).setNeedsReview(
+                questions.get(currentPointer).getNeedsReview() - 1
+            );
         } else {
             // Answer is incorrect. Add question to review
-             questions.get(currentPointer).setNeedsReview(1);
+             questions.get(currentPointer).setNeedsReview(2);
         }
         currentAnswers.add(answer); // adds answer to list of current answers
         incrementCurrentPointer(); // increases question number
