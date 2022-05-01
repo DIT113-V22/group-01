@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     Intent i;
 
 
+
     switch (view.getId()){
         // TODO: Add activity class to intent. e.g  case R.id.theoryCard:i = new Intent(this,Driving.class);startActivity(i);
         case R.id.theoryCard:i = new Intent(this,PracticeTheoryActivity.class);startActivity(i);
