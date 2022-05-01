@@ -1,4 +1,7 @@
-package com.example.smartcarmqttapp.model;
+package com.example.smartcarmqttapp.state;
+
+import com.example.smartcarmqttapp.Question;
+import com.example.smartcarmqttapp.model.UserAnswer;
 
 import java.util.List;
 
@@ -51,12 +54,12 @@ public class QuizState {
 
     // Submits an answer for the current question
     public void answerQuestion(UserAnswer answer) {
-        if (questions.get(currentPointer).getCorrectIndex() == answer.getIndex()) {
+        if (questions.get(currentPointer).getCorrectAnswer() == answer.getIndex()) {
             // Answer is correct. Increase the score
             incrementScore();
         } else {
             // Answer is incorrect. Add question to review
-             questions.get(currentPointer).setNeedsReview(true);
+             questions.get(currentPointer).setNeedsReview(1);
         }
         currentAnswers.add(answer); // adds answer to list of current answers
         incrementCurrentPointer(); // increases question number
@@ -89,7 +92,7 @@ public class QuizState {
         // Score is already updated, but method added just in case
         int calcScore = 0;
         for (int i = 0; i < currentAnswers.size(); i++) {
-            if (questions.get(i).getCorrectIndex() == currentAnswers.get(i).getIndex()) {
+            if (questions.get(i).getCorrectAnswer() == currentAnswers.get(i).getIndex()) {
                 calcScore++;
             }
         }
