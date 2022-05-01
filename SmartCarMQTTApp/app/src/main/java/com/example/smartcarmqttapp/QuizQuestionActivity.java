@@ -16,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.smartcarmqttapp.model.UserAnswer;
+import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
@@ -52,6 +54,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private TooltipCompat tooltipCompat;
 
     private BottomNavigationView bottomNavigationView;
+    private QuizState quizState;
 
 
     @Override
@@ -83,6 +86,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //add questions to question list via helper method --> help us select question
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
+        quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
 
         addQuestion();
@@ -155,37 +159,46 @@ public class QuizQuestionActivity extends AppCompatActivity {
         checkAnswerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TextView selectQ = findViewById(R.id.selectQuestion);
+                if (radioGroup.getCheckedRadioButtonId() == -1) {
+                    selectQ.setText("Select a question or skip by pressing 'Next Question' twice");
+                } else {
+                    selectQ.setText("");
+                    //Set skip warning to transparent
+                    TextView textView = findViewById(R.id.areYouSure);
+                    textView.setText("");
 
-                //After confirmation of answer, cant select any other question
-                option1.setClickable(false);
-                option2.setClickable(false);
-                option3.setClickable(false);
-                option4.setClickable(false);
+                    //After confirmation of answer, cant select any other question
+                    option1.setClickable(false);
+                    option2.setClickable(false);
+                    option3.setClickable(false);
+                    option4.setClickable(false);
 
-                //show the user that they also cant re-press the button
-                Drawable drawable = getDrawable(R.drawable.button_border);
-                checkAnswerBtn.setBackground(drawable);
+                    //show the user that they also cant re-press the button
+                    Drawable drawable = getDrawable(R.drawable.button_border);
+                    checkAnswerBtn.setBackground(drawable);
 
-                //for testing option 1 is correct
+                    //switch case for setting style of correct answer
+                    if (radioGroup.getCheckedRadioButtonId() == correctAnswer) {
+                        scoreNumber++;
+                    } else {
+                        quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                    }
 
-                //switch case for setting style of correct answer
-                if(radioGroup.getCheckedRadioButtonId() == correctAnswer){
-                    scoreNumber++;
-                }
-
-                switch(correctAnswer) {
-                    case R.id.option1:
-                        withBorderOpt1();
-                        break;
-                    case R.id.option2:
-                        withBorderOpt2();
-                        break;
-                    case R.id.option3:
-                        withBorderOpt3();
-                        break;
-                    case R.id.option4:
-                        withBorderOpt4();
-                        break;
+                    switch (correctAnswer) {
+                        case R.id.option1:
+                            withBorderOpt1();
+                            break;
+                        case R.id.option2:
+                            withBorderOpt2();
+                            break;
+                        case R.id.option3:
+                            withBorderOpt3();
+                            break;
+                        case R.id.option4:
+                            withBorderOpt4();
+                            break;
+                    }
                 }
             }
         });
@@ -197,8 +210,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 //if radio buttons are disabled or there were two clicks on next question button (skip)
 
                 if(!option1.isClickable() || clicks == 1){
+                    if(clicks == 1){
+                        //if question was skipped the current question is flagged as 'incorrect'
+                        quizState.answerQuestion(new UserAnswer(quizState.getCurrentPointer(), false));
+                    }
+                    //reset the skip feature
                     clicks = 0;
-                    //startActivity(new Intent(QuizQuestionActivity.this, PracticeTheoryActivity.class));
 
                     //When the amount of questions finish
                     if (currentQuestionNum == totalQuestions) {
@@ -241,10 +258,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
      */
     public void addQuestion(){
         radioGroup.clearCheck();
-        //gets the current text fields and saves them to temp Strings
-        Question currentQuestion = questionList.get(currentQuestionNum);
-        currentQuestionNum++;
-        questionCountText.setText(currentQuestionNum + " / " + totalQuestions);
+
+        Question currentQuestion = quizState.getCurrentQuestion();
+        questionCountText.setText((quizState.getCurrentPointer() + 1) + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
 
         //this makes sure that when the answer is checked

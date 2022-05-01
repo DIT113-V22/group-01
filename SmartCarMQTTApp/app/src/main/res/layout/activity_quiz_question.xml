@@ -54,12 +54,12 @@
                 android:id="@+id/questionImage"
                 android:layout_width="404dp"
                 android:layout_height="263dp"
+                android:layout_marginBottom="472dp"
                 android:translationY="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/custombanner" />
 
             <TextView
@@ -69,12 +69,23 @@
                 android:text="Insert Image here"
                 android:textSize="20dp"
                 android:translationX="130dp"
-                app:layout_constraintBottom_toBottomOf="@+id/questionImage"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/questionImage"
-                app:layout_constraintTop_toTopOf="@+id/questionImage"
-                app:layout_constraintVertical_bias="0.809" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.313" />
+
+            <TextView
+                android:id="@+id/selectQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.452" />
 
             <RadioGroup
                 android:id="@+id/radioGroup"
@@ -170,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:text="Questions Left:"
+                        android:text="Progress: "
                         android:textSize="14dp"
                         android:translationX="5dp" />
 
