@@ -1,6 +1,7 @@
 package com.example.smartcarmqttapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 
@@ -93,39 +94,65 @@ public class QuizQuestionActivity extends AppCompatActivity {
         onNextQuestionButtonClicked();
 
 
-        //TODO for @Lancear: Add a listener/if statement that essentially asks the user whether they are sure
-        //TODO for @Lancear: Add dialog box with 2 buttons: yes -> driving theory screen, no -> back to current question
-        //TODO for @Lancear: Decide where exactly dialog comes up: clicking bottom navigation bar, ... or another quit button at each question?
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.connectedCar:
-                        startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceDriving:
-                        startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceTheory:
-                        return true;
-
-                    case R.id.aboutUs:
-                        startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                }
+                alertQuitQuiz(() -> navigate(item));
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        alertQuitQuiz(() -> {
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            overridePendingTransition(0, 0);
+        });
+    }
+
+    protected void alertQuitQuiz(Runnable onQuit) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+            .setMessage("Are you sure, you are almost at the finish line! Let's finish this together! You can do it!")
+            .setNegativeButton("🙌 Let's do this!", (theDialog, id) -> {})
+            .setPositiveButton("😔 Maybe next time", (theDialog, id) -> {
+                onQuit.run();
+            })
+        .create();
+
+        dialog.setTitle("Leaving Quiz");
+        dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
+        dialog.show();
+    }
+
+    protected boolean navigate(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.connectedCar:
+                startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+
+            case R.id.practiceDriving:
+                startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+
+            case R.id.home:
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+
+            case R.id.practiceTheory:
+                return true;
+
+            case R.id.aboutUs:
+                startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+
+            default:
+                return false;
+        }
     }
 
     /**
