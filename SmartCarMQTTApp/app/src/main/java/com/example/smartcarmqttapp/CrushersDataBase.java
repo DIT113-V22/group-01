@@ -15,16 +15,16 @@ import java.util.Map;
 
 public class CrushersDataBase extends SQLiteOpenHelper {
 
-    private Context context;
-    private static final String DATABASE_NAME = "crushersDataBase.db";
-    private static final int DATABASE_VERSION = 1;
+    public Context context;
+    public static final String DATABASE_NAME = "crushersDataBase.db";
+    public static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NAME = "crushersDataBase";
+    public static final String TABLE_NAME = "crushersDataBase";
 
-    private static final String COLUMN_ID = "_ID";
-    private static final String COLUMN_SCORE = "SCORE";
-    private static final String COLUMN_CORRECT_ANSWERS = "CORRECT_ANSWERS";
-    private static final String COLUMN_WRONG_ANSWERS = "WRONG_ANSWERS";
+    public static final String COLUMN_ID = "_ID";
+    public static final String COLUMN_SCORE = "SCORE";
+    public static final String COLUMN_CORRECT_ANSWERS = "CORRECT_ANSWERS";
+    public static final String COLUMN_WRONG_ANSWERS = "WRONG_ANSWERS";
 
 
     public CrushersDataBase(@Nullable Context context) {
@@ -36,20 +36,20 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     /*
     SQL Table for Results of a current Quiz
 
-    ------------------------------------------------------
-    | ID  |  SCORE  |  CorrectAns  |  WrongAns  |  COUNT  |
-    -------------------------------------------------------
-    |     |         |              |            |         |
-    -------------------------------------------------------
+    ---------------------------------------------
+    | ID  |  SCORE  |  CorrectAns  |  WrongAns  |
+    ---------------------------------------------
+    |     |         |              |            |
+    ---------------------------------------------
 
     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String table = "CREATE TABLE " + TABLE_NAME +
                        " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                       COLUMN_SCORE + "INT, " +
-                       COLUMN_CORRECT_ANSWERS + "INT, " +
-                       COLUMN_WRONG_ANSWERS + "INT " + ") ";
+                       COLUMN_SCORE + " TEXT, " +
+                       COLUMN_CORRECT_ANSWERS + " TEXT, " +
+                       COLUMN_WRONG_ANSWERS + " TEXT " + ") ";
         db.execSQL(table);
     }
 
@@ -57,28 +57,5 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
-    }
-
-    public Cursor getFinalResult() {
-        String query = "SELECT * FROM " + TABLE_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = null;
-
-        if (!(db == null))
-            cursor = db.rawQuery(query, null);
-
-        return cursor;
-    }
-
-    public void finishQuiz(int score, int numOfCorrectAnswers, int NumOfWrongAnswers) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(COLUMN_SCORE, score);
-        cv.put(COLUMN_CORRECT_ANSWERS, numOfCorrectAnswers);
-        cv.put(COLUMN_WRONG_ANSWERS, NumOfWrongAnswers);
-
-        db.insert(TABLE_NAME, null, cv);
     }
 }
