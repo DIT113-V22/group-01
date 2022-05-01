@@ -26,7 +26,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private TextView scoreText;
     private TextView timer;
     private ImageView questionImage;
-    private static int scoreNumber = 0;
+    private int scoreNumber = 0;
 
     //Radio buttons
     private RadioGroup radioGroup;
@@ -34,20 +34,21 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private RadioButton option2;
     private RadioButton option3;
     private RadioButton option4;
+    private RadioButton explanationButton;
 
     //correct answer choice from radio group (1,2,3, or 4)
     private String correctAns;
     private int correctAnswer;
 
     //TODO: get total questions from QuizState.instance.getQuestionCount
-    private int totalQuestions = 0;
-    private int currentQuestionNum = 1;
+    private int currentQuestionNum = 0;
     private int clicks = 0;
+    private int totalQuestions;
 
     private Drawable right;
     private Drawable wrong;
 
-    private List<String> questionList;
+    private List<Question> questionList;
     private TooltipCompat tooltipCompat;
 
     private BottomNavigationView bottomNavigationView;
@@ -80,10 +81,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
+        CrushersDataBase db = new CrushersDataBase(this);
+        questionList = db.getAllQuestions();
+        totalQuestions = questionList.size();
 
+        addQuestion();
         onNextQuestionButtonClicked();
-        //addQuestion();
-        //TODO: add random question to each text field, on pressing next question it loads next question
 
 
         //TODO for @Lancear: Add a listener/if statement that essentially asks the user whether they are sure
@@ -135,10 +138,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
     public void onNextQuestionButtonClicked() {
         Button nextQuestionButton = findViewById(R.id.nextQuestionBTN);
         Button checkAnswerBtn = findViewById(R.id.checkAnswer);
-        correctAnswer = option1.getId();
 
+        explanationButton = findViewById(correctAnswer);
         //TODO: set the correct answer, based on query, to have onclick listener with explanation
-        option1.setOnClickListener(new View.OnClickListener() {
+        explanationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 option1.setTooltipText("Ipsum lorens, this should explain the nature of why the chosen option is correct");
@@ -190,12 +193,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
         nextQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                checkAnswerBtn.setBackgroundResource(android.R.drawable.btn_default);
                 //if radio buttons are disabled or there were two clicks on next question button (skip)
 
                 if(!option1.isClickable() || clicks == 1){
                     clicks = 0;
-                    startActivity(new Intent(QuizQuestionActivity.this, PracticeTheoryActivity.class));
+                    //startActivity(new Intent(QuizQuestionActivity.this, PracticeTheoryActivity.class));
 
                     //When the amount of questions finish
                     if (currentQuestionNum == totalQuestions) {
@@ -212,6 +215,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     }
 
                     resetRadioButtons();
+                    addQuestion();
                     //TODO: call method for getting new question, after passing previous checks for quiz completion
                 }
                 else{
@@ -236,23 +240,16 @@ public class QuizQuestionActivity extends AppCompatActivity {
      *  - current answer (assigns correct answer to check which radio button is correct
      */
     public void addQuestion(){
+        radioGroup.clearCheck();
         //gets the current text fields and saves them to temp Strings
+        Question currentQuestion = questionList.get(currentQuestionNum);
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + totalQuestions);
-
-        String currentQuestionNum;
-        String totalQuestions;
-        String score;
-
-        String question;
-        final String answer1 = "s";
-        final String answer2 = "d";
-        final String answer3 = "f";
-        final String answer4 = "a";
+        scoreText.setText(Integer.toString(scoreNumber));
 
         //this makes sure that when the answer is checked
         //it can correctly color the correct answer and wrong answers
-        correctAnswer = 1;
+        correctAnswer = currentQuestion.getCorrectAnswer();
         switch(correctAnswer){
             case 1:
                 correctAnswer = option1.getId();
@@ -269,10 +266,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
         }
         //sets all the textFields to the current question
         questionImage.setImageBitmap(null);
-        option1.setText("");
-        option2.setText("");
-        option3.setText("");
-        option4.setText("");
+        TextView textView = findViewById(R.id.textReplacingImage);
+        textView.setText(currentQuestion.getQuestion());
+        option1.setText(currentQuestion.getFirstAnswer());
+        option2.setText(currentQuestion.getSecondAnswer());
+        option3.setText(currentQuestion.getThirdAnswer());
+        option4.setText(currentQuestion.getFourthAnswer());
     }
 
     public void resetRadioButtons(){
