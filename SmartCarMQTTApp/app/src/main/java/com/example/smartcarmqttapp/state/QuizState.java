@@ -53,10 +53,12 @@ public class QuizState {
      */
 
     // Submits an answer for the current question
+    // DO NOT call for questions when the user runs out of time
     public void answerQuestion(UserAnswer answer) {
         if (questions.get(currentPointer).getCorrectAnswer() == answer.getIndex()) {
-            // Answer is correct. Increase the score
+            // Answer is correct. Increase the score and remove from review
             incrementScore();
+            questions.get(currentPointer).setNeedsReview(0);
         } else {
             // Answer is incorrect. Add question to review
              questions.get(currentPointer).setNeedsReview(1);
