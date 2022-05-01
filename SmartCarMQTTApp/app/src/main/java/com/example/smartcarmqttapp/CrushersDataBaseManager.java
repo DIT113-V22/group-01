@@ -2,6 +2,7 @@ package com.example.smartcarmqttapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class CrushersDataBaseManager {
@@ -32,5 +33,15 @@ public class CrushersDataBaseManager {
         cv.put(CrushersDataBase.COLUMN_WRONG_ANSWERS, numOfWrongAnswers);
 
         database.insert(CrushersDataBase.TABLE_NAME, null, cv);
+    }
+
+    public Cursor fetch() {
+        String[] columns = new String[] {CrushersDataBase.COLUMN_ID, CrushersDataBase.COLUMN_SCORE, CrushersDataBase.COLUMN_CORRECT_ANSWERS, CrushersDataBase.COLUMN_WRONG_ANSWERS};
+        Cursor cursor = database.query(CrushersDataBase.TABLE_NAME, columns, null, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        return cursor;
     }
 }
