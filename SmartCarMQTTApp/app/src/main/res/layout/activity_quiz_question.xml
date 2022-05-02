@@ -164,7 +164,7 @@
                 android:background="@drawable/button_border"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/nextQuestionBTN"
-                app:layout_constraintEnd_toStartOf="@+id/header"
+                app:layout_constraintEnd_toStartOf="@+id/timer"
                 app:layout_constraintHorizontal_bias="0.227"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

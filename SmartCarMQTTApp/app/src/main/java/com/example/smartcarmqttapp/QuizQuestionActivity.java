@@ -347,13 +347,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                timer.setText("done");
+
             }
         }.start();
     }
 
     private void formatTimeView() {
         TextView timerView = findViewById(R.id.timer);
+        timerView.setTextSize(30);
         int minutes = (int) (MILLIS / 1000) / 60;
         int seconds = (int) (MILLIS / 1000) % 60;
 
@@ -377,6 +378,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4.setTypeface(null, Typeface.NORMAL);
 
     }
+
     public void withBorderOpt1(){
 
         option1.setBackground(right);
