@@ -144,7 +144,7 @@
             </RadioGroup>
 
             <TextView
-                android:id="@+id/header"
+                android:id="@+id/timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

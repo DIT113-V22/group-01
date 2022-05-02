@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class QuizQuestionActivity extends AppCompatActivity {
 
@@ -29,7 +31,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private TextView scoreText;
     private TextView timer;
     private ImageView questionImage;
-    private int scoreNumber = 0;
 
     //Radio buttons
     private RadioGroup radioGroup;
@@ -47,6 +48,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private int currentQuestionNum = 0;
     private int clicks = 0;
     private int totalQuestions;
+    private int scoreNumber = 0;
 
     private Drawable right;
     private Drawable wrong;
@@ -57,11 +59,20 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private QuizState quizState;
 
+    private static int MILLIS;
+    private int TOTAL_TIME;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_question);
+
+        //staret timer with value from practice theory
+        Intent intent = getIntent();
+        MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
+        TOTAL_TIME = MILLIS;
+        startCountDown();
 
         right = getDrawable(R.drawable.correct_border);
         wrong = getDrawable(R.drawable.wrong_border);
@@ -71,7 +82,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         scoreText = findViewById(R.id.score);
         scoreText.setText(Integer.toString(scoreNumber));
-        timer = findViewById(R.id.header);
+        timer = findViewById(R.id.timer);
         questionImage = findViewById(R.id.questionImage);
 
         //Radio buttons
@@ -248,6 +259,15 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     if (currentQuestionNum == totalQuestions) {
                         //when the question count finished, go to the results screen
                         startActivity(new Intent());
+                        //TODO: add result values to intent to display
+
+                        //TODO: alternative big popup to save time
+                        //stop timer, saving current value to a variable for substraction
+
+                        //Time take = total time - time left
+                        //format into minutes
+
+                        int timeTaken = TOTAL_TIME - MILLIS;
                         //TODO: reset the QuizState class as a quiz is Terminated
                         //TODO: call results screen and set the back or exit button to go back to home screen
                     }
@@ -315,6 +335,30 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option2.setText(currentQuestion.getSecondAnswer());
         option3.setText(currentQuestion.getThirdAnswer());
         option4.setText(currentQuestion.getFourthAnswer());
+    }
+
+    private void startCountDown() {
+        new CountDownTimer(MILLIS, 1000) {
+            @Override
+            public void onTick(long l) {
+                MILLIS = (int) l;
+                formatTimeView();
+            }
+
+            @Override
+            public void onFinish() {
+                timer.setText("done");
+            }
+        }.start();
+    }
+
+    private void formatTimeView() {
+        TextView timerView = findViewById(R.id.timer);
+        int minutes = (int) (MILLIS / 1000) / 60;
+        int seconds = (int) (MILLIS / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        timer.setText(timeLeftFormatted);
     }
 
     public void resetRadioButtons(){
