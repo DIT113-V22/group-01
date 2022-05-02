@@ -258,7 +258,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     //When the amount of questions finish
                     if (currentQuestionNum == totalQuestions) {
                         //when the question count finished, go to the results screen
-                        startActivity(new Intent());
+                        //startActivity(new Intent(getApplicationContext(), QuizResultActivity.class));
+                        int timeTaken = TOTAL_TIME - MILLIS;
+
+                        Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);
+                        intent.putExtra("Score", scoreNumber);
+                        intent.putExtra("Total_questions", totalQuestions);
+                        intent.putExtra("Time_taken", timeTaken);
+                        startActivity(intent);
                         //TODO: add result values to intent to display
 
                         //TODO: alternative big popup to save time
@@ -267,7 +274,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         //Time take = total time - time left
                         //format into minutes
 
-                        int timeTaken = TOTAL_TIME - MILLIS;
+
                         //TODO: reset the QuizState class as a quiz is Terminated
                         //TODO: call results screen and set the back or exit button to go back to home screen
                     }

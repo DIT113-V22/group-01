@@ -10,6 +10,7 @@ import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -93,7 +94,22 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
         timer = findViewById(R.id.timer);
 
-        enableTimer.setOnClickListener(new View.OnClickListener() {
+        enableTimer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(enableTimer.isChecked()) {
+                    timerDialog.setContentView(R.layout.timer_dialog);
+                    timerDialog.show();
+                }
+                else {
+                    timerDialog.cancel();
+                    MILLIS = 0;
+                }
+
+            }
+        });
+
+        /*
             @Override
             public void onClick(View view) {
                 if(enableTimer.isChecked()) {
@@ -107,7 +123,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             }
         });
 
-
+         */
     }
 
     public void goToQuiz(){
