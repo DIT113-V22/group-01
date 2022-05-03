@@ -61,21 +61,21 @@ public class QuizState {
             // Answer is incorrect. Add question to review
              questions.get(currentPointer).setNeedsReview(1);
         }
-        currentAnswers.add(answer); // adds answer to list of current answers
+        //currentAnswers.add(answer); // adds answer to list of current answers
         incrementCurrentPointer(); // increases question number
     }
 
-    public Question getCurrentQuestion() {
+    public Question getCurrentQuestion(int currentPointer) {
         return this.questions.get(currentPointer);
     }
 
-    private void incrementScore() {
+    public void incrementScore() {
         this.score++;
         // Made method separate in case UI actions needed
     }
 
     // Moves one question up (we don't need moving down)
-    private void incrementCurrentPointer() {
+    public void incrementCurrentPointer() {
         this.currentPointer++;
         if (this.currentPointer + 1 == this.questions.size())
             finishQuiz();
