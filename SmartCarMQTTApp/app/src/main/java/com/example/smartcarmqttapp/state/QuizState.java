@@ -3,7 +3,9 @@ package com.example.smartcarmqttapp.state;
 import com.example.smartcarmqttapp.Question;
 import com.example.smartcarmqttapp.model.UserAnswer;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // Class for defining the current state of the quiz: in particular what questions are part of the quiz and what answers have been accumulated, as well as the current score.
 public class QuizState {
@@ -14,6 +16,7 @@ public class QuizState {
     private List<UserAnswer> currentAnswers;
     private int score;
     private int currentPointer;
+    private Map<String, Integer> options;
 
     // Constructor with all fields
     public QuizState(
@@ -21,13 +24,15 @@ public class QuizState {
             boolean isTakingQuiz,
             List<Question> questions,
             List<UserAnswer> currentAnswers,
-            int score) {
+            int score,
+            HashMap<String, Integer> options) {
         this.id = id;
         this.isTakingQuiz = isTakingQuiz;
         this.questions = questions;
         this.currentAnswers = currentAnswers;
         this.score = score;
         this.currentPointer = 0;
+        this.options = options;
     }
 
     // Constructor without id
@@ -35,12 +40,14 @@ public class QuizState {
             boolean isTakingQuiz,
             List<Question> questions,
             List<UserAnswer> currentAnswers,
-            int score) {
+            int score,
+            HashMap<String, Integer> options) {
         this.isTakingQuiz = isTakingQuiz;
         this.questions = questions;
         this.currentAnswers = currentAnswers;
         this.score = score;
         this.currentPointer = 0;
+        this.options = options;
     }
 
     // Empty constructor
@@ -149,6 +156,10 @@ public class QuizState {
 
     public void setCurrentPointer(int currentPointer) {
         this.currentPointer = currentPointer;
+    }
+
+    public Map<String, Integer> getOptions(){
+        return this.options;
     }
 
     @Override

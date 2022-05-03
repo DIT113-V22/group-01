@@ -26,6 +26,14 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         CrushersDataBase db = new CrushersDataBase(this);
         List<Question> questions = db.getAllQuestions();
 
+        //Pass values to next screen for display, db query, and textview display
+        //TODO: UI for selecting category, option screen setting questions
+        //TODO: add textView to show each questions' category
+        Intent intent = new Intent();
+        intent.putExtra("option_timer", 0);
+        intent.putExtra("option_numOfQuestions", 0);
+        intent.putExtra("option_category", "categoryName");
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
