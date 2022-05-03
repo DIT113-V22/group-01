@@ -206,12 +206,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select a question or skip by pressing 'Next Question' twice");
                 } else {
-
-                    //TODO: this isnt really working pls IVAN
-                    if (quizState.getCurrentPointer() == totalQuestions) {
-                        nextButton.setText("Finish Quiz");
-                    }
-
                     selectQ.setText("");
                     //Set skip warning to transparent
                     TextView textView = findViewById(R.id.areYouSure);
@@ -259,8 +253,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 checkAnswerBtn.setBackgroundResource(android.R.drawable.btn_default);
                 //if radio buttons are disabled or there were two clicks on next question button (skip)
 
-                if((radioGroup.getCheckedRadioButtonId() != -1) || clicks == 1){
-                    if (quizState.getCurrentPointer() == totalQuestions) {
+                if(!option1.isClickable() || clicks == 1){
+                    if (currentQuestionNum == totalQuestions) {
                         //when the question count finished, go to the results screen
                         int timeTaken = TOTAL_TIME - MILLIS;
 
@@ -281,9 +275,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         //TODO: call results screen and set the back or exit button to go back to home screen
                     }
 
+                    else{
+                        resetRadioButtons();
+                        addQuestion();
+                    }
+
                     if(clicks == 1){
                         //if question was skipped the current question is flagged as 'incorrect'
-                        quizState.answerQuestion(new UserAnswer(quizState.getCurrentPointer(), false));
+                        quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
                     }
                     //reset the skip feature
                     clicks = 0;
@@ -297,10 +296,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         //TODO for @Lancear: move this in a method where it loops, checking timer until it reaches zero (talk to ivan about it)
                     }
 
-                    else if (quizState.getCurrentPointer() < totalQuestions){
-                        resetRadioButtons();
-                        addQuestion();
-                    }
                     //TODO: call method for getting new question, after passing previous checks for quiz completion
                 }
                 else{
@@ -325,10 +320,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
      *  - current answer (assigns correct answer to check which radio button is correct
      */
     public void addQuestion(){
-        radioGroup.clearCheck();
+        if(currentQuestionNum == totalQuestions){
+            nextButton.setText("Finish Quiz");
+        }
 
-        Question currentQuestion = quizState.getCurrentQuestion();
-        questionCountText.setText((quizState.getCurrentPointer() + 1) + " / " + quizState.getQuestions().size());
+        radioGroup.clearCheck();
+        Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
+        currentQuestionNum++;
+        questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
 
         //this makes sure that when the answer is checked
