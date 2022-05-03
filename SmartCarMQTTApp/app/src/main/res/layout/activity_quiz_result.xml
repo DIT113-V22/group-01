@@ -106,7 +106,7 @@
         app:layout_constraintEnd_toEndOf="@+id/progressbar"
         app:layout_constraintStart_toStartOf="@+id/progressbar"
         app:layout_constraintTop_toTopOf="@+id/progressbar"
-        tools:text="00.00%" />
+        tools:text="00%" />
 
     <Button
         android:id="@+id/home_btn"
