@@ -34,7 +34,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private int questionCount = 0;
 
     //Countdown timer
-    public static final int TEN_MIN_IN_MILLIS = 600000;
+    public static final int TEN_MIN_IN_MILLIS = 10000;
     public static final int FIFTEEN_MIN_IN_MILLIS = 900000;
     public static final int TWENTY_MIN_IN_MILLIS = 1200000;
     private TextView timer;

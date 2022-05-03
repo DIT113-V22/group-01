@@ -63,6 +63,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     private static int MILLIS;
     private int TOTAL_TIME;
+    private QuizQuestionActivity zis;
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
 
@@ -71,12 +72,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_question);
+        zis = this;
 
         //staret timer with value from practice theory
         Intent intent = getIntent();
         MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
         TOTAL_TIME = MILLIS;
-        startCountDown();
+        if (TOTAL_TIME > 0) startCountDown();
 
         right = getDrawable(R.drawable.correct_border);
         wrong = getDrawable(R.drawable.wrong_border);
@@ -259,23 +261,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 if(!option1.isClickable() || clicks == 1){
                     if (currentQuestionNum == totalQuestions) {
                         //when the question count finished, go to the results screen
-                        int timeTaken = TOTAL_TIME - MILLIS;
-
-                        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber));
-                        results_db.close();
-
-                        Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);
-                        intent.putExtra("Score", scoreNumber);
-                        intent.putExtra("Total_questions", totalQuestions);
-                        intent.putExtra("Time_taken", timeTaken);
-                        startActivity(intent);
-                        //TODO: add result values to intent to display
-
-                        //TODO: alternative big popup to save time
-                        //stop timer, saving current value to a variable for substraction
-                        
-                        //TODO: reset the QuizState class as a quiz is Terminated
-                        //TODO: call results screen and set the back or exit button to go back to home screen
+                        finishQuiz(TOTAL_TIME - MILLIS);
                     }
 
                     else{
@@ -291,15 +277,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     clicks = 0;
 
                     //When the amount of questions finish
-
-
-                    if (timer.getText().equals("0:00")){
-                        //TODO: reset the QuizState class as a quiz is Terminated
-                        //TODO for @Lancear: add logic for when the timer reaches zero -> goes to result screen
-                        //TODO for @Lancear: move this in a method where it loops, checking timer until it reaches zero (talk to ivan about it)
-                    }
-
-                    //TODO: call method for getting new question, after passing previous checks for quiz completion
                 }
                 else{
                     //Set text to say: please confirm an answer or click again to skip
@@ -372,9 +349,33 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                for (; currentQuestionNum < totalQuestions; currentQuestionNum++) {
+                    quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                }
 
+                AlertDialog dialog = new AlertDialog.Builder(zis)
+                        .setMessage("Time is up! Put down your no. 2 pencils!")
+                        .setPositiveButton("Show the results", (theDialog, id) -> {
+                            finishQuiz(TOTAL_TIME);
+                        })
+                        .create();
+
+                dialog.setTitle("Bed time! Sleepy time!");
+                dialog.setIcon(R.drawable.ic_baseline_timer_off_24);
+                dialog.show();
             }
         }.start();
+    }
+
+    private void finishQuiz(int timeTaken) {
+        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber));
+        results_db.close();
+
+        Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);
+        intent.putExtra("Score", scoreNumber);
+        intent.putExtra("Total_questions", totalQuestions);
+        intent.putExtra("Time_taken", timeTaken);
+        startActivity(intent);
     }
 
     private void formatTimeView() {
