@@ -28,9 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-//For error screen when the car is not connected
-//import pl.droidsonroids.gif.GifImageView;
-
+import pl.droidsonroids.gif.GifImageView;
 import java.time.Duration;
 import java.time.LocalTime;
 
@@ -42,14 +40,14 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     private final int IMAGE_WIDTH = 320;
     public ImageView imageView;
 
-    //For error screen when the car is not connected
-    //public GifImageView screenError;
+    public GifImageView screenError;
 
 
 
     private Button sensorDisplayButton;
     private BottomNavigationView bottomNavigationView;
     private Dialog sensorDialog;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
