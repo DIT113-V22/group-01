@@ -4,13 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Locale;
 
 public class QuizResultActivity extends AppCompatActivity {
 
@@ -20,6 +25,7 @@ public class QuizResultActivity extends AppCompatActivity {
     private TextView score;
     private TextView total_question;
     private TextView quiz_time;
+    private ProgressBar progressBar;
 
     //Data from quiz
     private int scoreNumber;
@@ -31,6 +37,10 @@ public class QuizResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_result);
 
+        if(getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
+
         result = findViewById(R.id.result);
 
         score = findViewById(R.id.score);
@@ -41,6 +51,8 @@ public class QuizResultActivity extends AppCompatActivity {
 
         home = findViewById(R.id.home_btn);
         again = findViewById(R.id.again_btn);
+
+        progressBar = findViewById(R.id.progressbar);
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +68,7 @@ public class QuizResultActivity extends AppCompatActivity {
             }
         });
 
+
         //Result values from quiz activity
         Intent intent = getIntent();
         scoreNumber = intent.getIntExtra("Score", 0);
@@ -64,9 +77,12 @@ public class QuizResultActivity extends AppCompatActivity {
 
         score.setText(Integer.toString(scoreNumber));
         total_question.setText(Integer.toString(totalQuestions));
-        quiz_time.setText(Integer.toString(total_time));
+        quiz_time.setText(Integer.toString(total_time/1000));
+        formatTimeView();
 
-
+        result.setText(Integer.toString(scorePercentage()) + "%");
+        progressBar.setProgress(scorePercentage());
+        //setProgressBarColour();
 
         /*
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -104,6 +120,28 @@ public class QuizResultActivity extends AppCompatActivity {
         });
 
          */
+    }
+    private int scorePercentage() {
+        float frac = (float) scoreNumber / (float) totalQuestions;
+        return (int)(frac * 100);
+    }
+
+    /*
+    private void setProgressBarColour() {
+        int percentage = scorePercentage();
+        if(percentage < 50) {
+            progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+     */
+
+    private void formatTimeView() {
+        int minutes = (int) (total_time / 1000) / 60;
+        int seconds = (int) (total_time / 1000) % 60;
+
+        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        quiz_time.setText(timeLeftFormatted);
     }
 
     //

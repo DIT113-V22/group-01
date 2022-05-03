@@ -64,6 +64,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private static int MILLIS;
     private int TOTAL_TIME;
 
+    private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,24 +257,21 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 if(!option1.isClickable() || clicks == 1){
                     if (currentQuestionNum == totalQuestions) {
                         //when the question count finished, go to the results screen
-                        //startActivity(new Intent(getApplicationContext(), QuizResultActivity.class));
                         int timeTaken = TOTAL_TIME - MILLIS;
+
+                        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber));
+                        results_db.close();
 
                         Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);
                         intent.putExtra("Score", scoreNumber);
                         intent.putExtra("Total_questions", totalQuestions);
                         intent.putExtra("Time_taken", timeTaken);
                         startActivity(intent);
-                        startActivity(new Intent(QuizQuestionActivity.this, PracticeDrivingActivity.class));
                         //TODO: add result values to intent to display
 
                         //TODO: alternative big popup to save time
                         //stop timer, saving current value to a variable for substraction
-
-                        //Time take = total time - time left
-                        //format into minutes
-
-
+                        
                         //TODO: reset the QuizState class as a quiz is Terminated
                         //TODO: call results screen and set the back or exit button to go back to home screen
                     }
@@ -297,7 +296,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         //TODO for @Lancear: add logic for when the timer reaches zero -> goes to result screen
                         //TODO for @Lancear: move this in a method where it loops, checking timer until it reaches zero (talk to ivan about it)
                     }
-
 
                     //TODO: call method for getting new question, after passing previous checks for quiz completion
                 }
