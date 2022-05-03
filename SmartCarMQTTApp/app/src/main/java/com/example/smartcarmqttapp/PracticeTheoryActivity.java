@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -17,6 +21,19 @@ import java.util.List;
 public class PracticeTheoryActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
+
+    //Countdown timer
+    public static final int TEN_MIN_IN_MILLIS = 600000;
+    public static final int FIFTEEN_MIN_IN_MILLIS = 900000;
+    public static final int TWENTY_MIN_IN_MILLIS = 1200000;
+    private TextView timer;
+    private Switch enableTimer;
+    private Dialog timerDialog;
+    private Button tenMin, fifteenMin, twentyMin;
+
+    private static int MILLIS;
+
+
 
 
     @Override
@@ -59,5 +76,49 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        //Countdown timer
+        enableTimer = findViewById(R.id.enableTimer);
+
+        tenMin = findViewById(R.id.tenMin);
+
+        fifteenMin = findViewById(R.id.fifteenMin);
+
+        twentyMin = findViewById(R.id.twentyMin);
+
+        timerDialog = new Dialog(this);
+
+        timer = findViewById(R.id.timer);
+
+        enableTimer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(enableTimer.isChecked()) {
+                    timerDialog.setContentView(R.layout.timer_dialog);
+                    timerDialog.show();
+                }
+                else {
+                    timerDialog.cancel();
+                    MILLIS = 0;
+                }
+
+            }
+        });
+
+        /*
+            @Override
+            public void onClick(View view) {
+                if(enableTimer.isChecked()) {
+                    timerDialog.setContentView(R.layout.timer_dialog);
+                    timerDialog.show();
+                }
+                else {
+                    timerDialog.cancel();
+                    timer.setText("00:00");
+                }
+            }
+        });
+
+         */
     }
 }
