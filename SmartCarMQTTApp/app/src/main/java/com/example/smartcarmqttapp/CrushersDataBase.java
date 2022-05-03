@@ -28,6 +28,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     public static final String COLUMN_SCORE = "SCORE";
     public static final String COLUMN_CORRECT_ANSWERS = "CORRECT_ANSWERS";
     public static final String COLUMN_WRONG_ANSWERS = "WRONG_ANSWERS";
+    public static final String COLUMN_CATEGORY = "CATEGORY";
 
     private SQLiteDatabase db;
 
@@ -41,12 +42,11 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     /*
     SQL Table for Results of a current Quiz
 
-    ---------------------------------------------
-    | ID  |  SCORE  |  CorrectAns  |  WrongAns  |
-    ---------------------------------------------
-    |     |         |              |            |
-    ---------------------------------------------
-
+    --------------------------------------------------------------------
+    | _ID  |  SCORE  |  CORRECT_ANSWERS  |  WRONG_ANSWERS  | CATEGORY  |
+    --------------------------------------------------------------------
+    |      |         |                   |                 |           |
+    --------------------------------------------------------------------
     */
 
     @Override
@@ -57,7 +57,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                     " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                    COLUMN_SCORE + " TEXT, " +
                    COLUMN_CORRECT_ANSWERS + " TEXT, " +
-                   COLUMN_WRONG_ANSWERS + " TEXT " + ") ";
+                   COLUMN_WRONG_ANSWERS + " TEXT, " +
+                   COLUMN_CATEGORY + " TEXT " +") ";
         db.execSQL(table);
 
         final String CREATE_TABLE = "CREATE TABLE " + QuestionsTable.TABLE_NAME+

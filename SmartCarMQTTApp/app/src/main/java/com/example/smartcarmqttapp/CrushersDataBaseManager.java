@@ -25,12 +25,13 @@ public class CrushersDataBaseManager {
         crushersDataBase.close();
     }
 
-    public void finishQuiz(int score, int numOfCorrectAnswers, int numOfWrongAnswers) {
+    public void finishQuiz(int score, int numOfCorrectAnswers, int numOfWrongAnswers, String category) {
         ContentValues cv = new ContentValues();
 
         cv.put(CrushersDataBase.COLUMN_SCORE, score);
         cv.put(CrushersDataBase.COLUMN_CORRECT_ANSWERS, numOfCorrectAnswers);
         cv.put(CrushersDataBase.COLUMN_WRONG_ANSWERS, numOfWrongAnswers);
+        cv.put(CrushersDataBase.COLUMN_CATEGORY, category);
 
         database.insert(CrushersDataBase.TABLE_NAME, null, cv);
     }
