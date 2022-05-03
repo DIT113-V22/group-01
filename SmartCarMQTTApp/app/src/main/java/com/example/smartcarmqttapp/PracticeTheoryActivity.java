@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -24,6 +28,10 @@ import java.util.Locale;
 public class PracticeTheoryActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
+    private Dialog settingsDialog;
+    private ImageView settingsButton;
+
+    private int questionCount = 0;
 
     //Countdown timer
     public static final int TEN_MIN_IN_MILLIS = 600000;
@@ -124,6 +132,38 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         });
 
          */
+
+        settingsDialog = new Dialog(this);
+        settingsButton = findViewById(R.id.settingsImage);
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingsDialog.setContentView(R.layout.settings_dialog);
+                settingsDialog.show();
+
+                Button button = settingsDialog.findViewById(R.id.confirmBtn);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditText enterQnumber = settingsDialog.findViewById(R.id.editTextNumber);
+
+                        questionCount = Integer.parseInt(enterQnumber.getText().toString());
+                        if(questionCount > 10 || questionCount < 1){
+                            TextView t = settingsDialog.findViewById(R.id.warningForNums);
+                            t.setText("Enter a number ranging between 1 - 10");
+                            t.setTextColor(Color.RED);
+                        }
+                        else{
+                            settingsDialog.cancel();
+                            Toast.makeText(getBaseContext(),
+                                    "Setting successfully updated!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void goToQuiz(){

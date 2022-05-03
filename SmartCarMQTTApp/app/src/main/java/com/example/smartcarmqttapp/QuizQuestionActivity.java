@@ -160,6 +160,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 return true;
 
             case R.id.practiceTheory:
+                startActivity(new Intent(getApplicationContext(), PracticeTheoryActivity.class));
+                overridePendingTransition(0, 0);
                 return true;
 
             case R.id.aboutUs:
