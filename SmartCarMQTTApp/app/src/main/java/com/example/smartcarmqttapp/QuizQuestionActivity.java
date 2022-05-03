@@ -32,7 +32,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private TextView timer;
     private ImageView questionImage;
     private Button nextButton;
-
+    private TextView categoryText;
 
     //Radio buttons
     private RadioGroup radioGroup;
@@ -87,6 +87,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         timer = findViewById(R.id.timer);
         questionImage = findViewById(R.id.questionImage);
         nextButton = findViewById(R.id.nextQuestionBTN);
+        categoryText = findViewById(R.id.categoryText);
 
         //Radio buttons
         option1 = findViewById(R.id.option1);
@@ -331,6 +332,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
+        categoryText.setText(currentQuestion.getCategory());
 
         //this makes sure that when the answer is checked
         //it can correctly color the correct answer and wrong answers
