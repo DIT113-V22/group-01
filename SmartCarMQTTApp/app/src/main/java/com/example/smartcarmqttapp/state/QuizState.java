@@ -40,14 +40,13 @@ public class QuizState {
             boolean isTakingQuiz,
             List<Question> questions,
             List<UserAnswer> currentAnswers,
-            int score,
-            HashMap<String, Integer> options) {
+            int score) {
         this.isTakingQuiz = isTakingQuiz;
         this.questions = questions;
         this.currentAnswers = currentAnswers;
         this.score = score;
         this.currentPointer = 0;
-        this.options = options;
+        this.options = new HashMap<>();
     }
 
     // Empty constructor

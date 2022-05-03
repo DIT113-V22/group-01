@@ -366,7 +366,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     private void finishQuiz(int timeTaken) {
-        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber));
+        //TODO: add the category handling here since we finish quiz by stating categories covered.
+        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber), "");
         results_db.close();
 
         Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);
