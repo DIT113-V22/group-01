@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCarMQTTApp">
         <activity
-            android:name=".QuizQuestionActivity"
+            android:name=".TimerActivity"
             android:exported="false" />
         <activity
             android:name=".QuizResultActivity"
