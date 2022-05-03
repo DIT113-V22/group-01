@@ -65,7 +65,7 @@ public class QuizState {
         incrementCurrentPointer(); // increases question number
     }
 
-    public Question getCurrentQuestion() {
+    public Question getCurrentQuestion(int currentPointer) {
         return this.questions.get(currentPointer);
     }
 
