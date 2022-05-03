@@ -171,9 +171,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go to quiz screen
-                //TODO: start the Quiz State
-                //QuizState.instance.startQuiz();
                 Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
                 intent.putExtra("TIMER_VALUE", MILLIS);
                 startActivity(intent);

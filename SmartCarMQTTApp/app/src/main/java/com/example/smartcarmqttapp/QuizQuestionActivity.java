@@ -46,7 +46,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private String correctAns;
     private int correctAnswer;
 
-    //TODO: get total questions from QuizState.instance.getQuestionCount
     private int currentQuestionNum = 0;
     private int clicks = 0;
     private int totalQuestions;
@@ -192,7 +191,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         Button checkAnswerBtn = findViewById(R.id.checkAnswer);
 
         explanationButton = findViewById(correctAnswer);
-        //TODO: set the correct answer, based on query, to have onclick listener with explanation
         explanationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
