@@ -161,6 +161,35 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
     }
 
+    public List<Question> getCategoryQuestions(String category){
+        List<Question> questionList = new ArrayList<>();
+        db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * " +
+                                        "FROM " + QuestionsTable.TABLE_NAME +
+                                        " WHERE " + QuestionsTable.COLUMN_CATEGORY + " = '" + category + "' ", null);
+
+        if(cursor.moveToFirst()){
+            do {
+                Question question = new Question();
+                question.setQuestion(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_QUESTION)));
+                question.setFirstAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER1)));
+                question.setSecondAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER2)));
+                question.setThirdAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER3)));
+                question.setFourthAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER4)));
+                question.setCorrectAnswer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
+                question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
+                question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
+                question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
+
+                questionList.add(question);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return questionList;
+    }
+
+
     public List<Question> getAllQuestions(){
     List<Question> questionList = new ArrayList<>();
     db = getReadableDatabase();
