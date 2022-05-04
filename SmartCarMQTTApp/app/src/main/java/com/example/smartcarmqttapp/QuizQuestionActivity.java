@@ -22,8 +22,10 @@ import com.example.smartcarmqttapp.model.UserAnswer;
 import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class QuizQuestionActivity extends AppCompatActivity {
 
@@ -33,6 +35,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private ImageView questionImage;
     private Button nextButton;
     private TextView categoryText;
+    private TextView areYouSure;
 
     //Radio buttons
     private RadioGroup radioGroup;
@@ -55,12 +58,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private Drawable wrong;
 
     private List<Question> questionList;
+    private List<Question> specifcQuestionList;
     private TooltipCompat tooltipCompat;
 
     private BottomNavigationView bottomNavigationView;
     private QuizState quizState;
 
     private static int MILLIS;
+    private int questionCountSelected;
     private int TOTAL_TIME;
     private QuizQuestionActivity zis;
 
@@ -75,6 +80,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         //staret timer with value from practice theory
         Intent intent = getIntent();
+        Bundle e = getIntent().getExtras();
+
         MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
@@ -91,6 +98,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         questionImage = findViewById(R.id.questionImage);
         nextButton = findViewById(R.id.nextQuestionBTN);
         categoryText = findViewById(R.id.categoryText);
+        areYouSure = findViewById(R.id.areYouSure);
 
         //Radio buttons
         option1 = findViewById(R.id.option1);
@@ -105,10 +113,32 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //add questions to question list via helper method --> help us select question
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
-        quizState = new QuizState(true, questionList, null, scoreNumber);
-        totalQuestions = questionList.size();
 
-        addQuestion();
+
+        specifcQuestionList = new ArrayList<>();
+        if(currentQuestionNum == totalQuestions){
+            nextButton.setText("Finish Quiz");
+        }
+
+
+        questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
+        System.out.println(questionCountSelected);
+        if(questionCountSelected != 0) {
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+
+            Random rand = new Random();
+            for (int i = 0; i < questionCountSelected; i++) {
+                int randomIndex = rand.nextInt(questionList.size());
+                specifcQuestionList.add(questionList.get(randomIndex));
+            }
+            totalQuestions = questionCountSelected;
+            addQuestion(specifcQuestionList);
+        } else {
+            quizState = new QuizState(true, questionList, null, scoreNumber);
+            totalQuestions = questionList.size();
+            addQuestion(questionList);
+        }
+
         onNextQuestionButtonClicked();
 
 
@@ -206,6 +236,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView selectQ = findViewById(R.id.selectQuestion);
+                areYouSure.setText("");
+
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select a question or skip by pressing 'Next Question' twice");
                 } else {
@@ -255,6 +287,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 checkAnswerBtn.setBackgroundResource(android.R.drawable.btn_default);
                 //if radio buttons are disabled or there were two clicks on next question button (skip)
+                areYouSure.setText("");
 
                 if(!option1.isClickable() || clicks == 1){
                     if (currentQuestionNum == totalQuestions) {
@@ -264,7 +297,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                     else{
                         resetRadioButtons();
-                        addQuestion();
+                        if (new Intent().getIntExtra("", 0) != 0)
+                            addQuestion(specifcQuestionList);
+                        else
+                            addQuestion(questionList);
                     }
 
                     if(clicks == 1){
@@ -278,7 +314,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 }
                 else{
                     //Set text to say: please confirm an answer or click again to skip
-                    TextView areYouSure = findViewById(R.id.areYouSure);
+
                     areYouSure.setText("Are you sure you want to skip?");
                     clicks++;
                 }
@@ -297,11 +333,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
      *  - all answer choices
      *  - current answer (assigns correct answer to check which radio button is correct
      */
-    public void addQuestion(){
-        if(currentQuestionNum == totalQuestions){
-            nextButton.setText("Finish Quiz");
-        }
-
+    public void addQuestion(List<Question> questionList){
         radioGroup.clearCheck();
         Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
         currentQuestionNum++;

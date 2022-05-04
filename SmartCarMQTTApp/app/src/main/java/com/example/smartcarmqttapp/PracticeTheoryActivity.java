@@ -31,7 +31,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private Dialog settingsDialog;
     private ImageView settingsButton;
 
-    private int questionCount = 0;
+    private int questionCount;
 
     //Countdown timer
     public static final int TEN_MIN_IN_MILLIS = 600000;
@@ -58,7 +58,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         //Pass values to next screen for display, db query, and textview display
         //TODO: UI for selecting category, option screen setting questions
         //TODO: add textView to show each questions' category
-        Intent intent = new Intent();
+        Intent intent = this.getIntent();
         intent.putExtra("option_timer", 0);
         intent.putExtra("option_numOfQuestions", 0);
         intent.putExtra("option_category", "categoryName");
@@ -141,6 +141,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                         EditText enterQnumber = settingsDialog.findViewById(R.id.editTextNumber);
 
                         questionCount = Integer.parseInt(enterQnumber.getText().toString());
+                        System.out.println(questionCount);
                         if(questionCount > 10 || questionCount < 1){
                             TextView t = settingsDialog.findViewById(R.id.warningForNums);
                             t.setText("Enter a number ranging between 1 - 10");
@@ -165,6 +166,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
                 intent.putExtra("TIMER_VALUE", MILLIS);
+                intent.putExtra("OPTION_QUESTIONS", questionCount);
                 startActivity(intent);
 
             }
