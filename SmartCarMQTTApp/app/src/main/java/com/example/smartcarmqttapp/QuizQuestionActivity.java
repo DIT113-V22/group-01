@@ -23,6 +23,7 @@ import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -59,6 +60,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     private List<Question> questionList;
     private List<Question> specifcQuestionList;
+
+    //To keep track of categories covered
+    private HashSet<String> categories;
     private TooltipCompat tooltipCompat;
 
     private BottomNavigationView bottomNavigationView;
@@ -77,10 +81,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_question);
         zis = this;
-
-        //staret timer with value from practice theory
         Intent intent = getIntent();
-        Bundle e = getIntent().getExtras();
 
         MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
         TOTAL_TIME = MILLIS;
@@ -92,6 +93,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         questionCountText = findViewById(R.id.questionCount);
         //questionsLeftText.setText(totalQuestions);
 
+        //View fields
         scoreText = findViewById(R.id.score);
         scoreText.setText(Integer.toString(scoreNumber));
         timer = findViewById(R.id.timer);
@@ -107,6 +109,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4 = findViewById(R.id.option4);
         radioGroup = findViewById(R.id.radioGroup);
 
+        //bottomNavigation bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
@@ -114,30 +117,18 @@ public class QuizQuestionActivity extends AppCompatActivity {
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
 
-
+        //Collections for categories and custom question amount quizes
+        categories = new HashSet<>();
         specifcQuestionList = new ArrayList<>();
+
         if(currentQuestionNum == totalQuestions){
             nextButton.setText("Finish Quiz");
         }
 
-
         questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
-        System.out.println(questionCountSelected);
-        if(questionCountSelected != 0) {
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
 
-            Random rand = new Random();
-            for (int i = 0; i < questionCountSelected; i++) {
-                int randomIndex = rand.nextInt(questionList.size());
-                specifcQuestionList.add(questionList.get(randomIndex));
-            }
-            totalQuestions = questionCountSelected;
-            addQuestion(specifcQuestionList);
-        } else {
-            quizState = new QuizState(true, questionList, null, scoreNumber);
-            totalQuestions = questionList.size();
-            addQuestion(questionList);
-        }
+        //Forms custom quiz with question count from previous screen
+        customQuiz(questionCountSelected);
 
         onNextQuestionButtonClicked();
 
@@ -157,6 +148,24 @@ public class QuizQuestionActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });
+    }
+
+    protected void customQuiz(int questionCountSelected){
+        if(questionCountSelected != 0) {
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+
+            Random rand = new Random();
+            for (int i = 0; i < questionCountSelected; i++) {
+                int randomIndex = rand.nextInt(questionList.size());
+                specifcQuestionList.add(questionList.get(randomIndex));
+            }
+            totalQuestions = questionCountSelected;
+            addQuestion(specifcQuestionList);
+        } else {
+            quizState = new QuizState(true, questionList, null, scoreNumber);
+            totalQuestions = questionList.size();
+            addQuestion(questionList);
+        }
     }
 
     protected void alertQuitQuiz(Runnable onQuit) {
@@ -224,6 +233,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         explanationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: add explanations to each of the questions
                 option1.setTooltipText("Ipsum lorens, this should explain the nature of why the chosen option is correct");
             }
         });
@@ -309,12 +319,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     }
                     //reset the skip feature
                     clicks = 0;
-
-                    //When the amount of questions finish
                 }
                 else{
-                    //Set text to say: please confirm an answer or click again to skip
-
                     areYouSure.setText("Are you sure you want to skip?");
                     clicks++;
                 }
@@ -336,6 +342,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     public void addQuestion(List<Question> questionList){
         radioGroup.clearCheck();
         Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
+        categories.add(currentQuestion.getCategory());
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
@@ -398,8 +405,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     private void finishQuiz(int timeTaken) {
-        //TODO: add the category handling here since we finish quiz by stating categories covered.
-        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber), "");
+        //Saves categories in a string list, since database doesnt support list feature
+        String categoryList = "";
+        for(String categories : categories){
+            categoryList = categoryList + " " + categories;
+        }
+        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber), categoryList);
         results_db.close();
 
         Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);

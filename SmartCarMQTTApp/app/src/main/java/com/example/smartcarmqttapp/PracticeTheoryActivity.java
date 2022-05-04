@@ -141,7 +141,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                         EditText enterQnumber = settingsDialog.findViewById(R.id.editTextNumber);
 
                         questionCount = Integer.parseInt(enterQnumber.getText().toString());
-                        System.out.println(questionCount);
                         if(questionCount > 10 || questionCount < 1){
                             TextView t = settingsDialog.findViewById(R.id.warningForNums);
                             t.setText("Enter a number ranging between 1 - 10");
