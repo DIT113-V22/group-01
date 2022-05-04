@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.smartcarmqttapp.model.UserAnswer;
 import com.example.smartcarmqttapp.state.QuizState;
@@ -29,6 +30,8 @@ import java.util.Locale;
 import java.util.Random;
 
 public class QuizQuestionActivity extends AppCompatActivity {
+
+    private CrushersDataBase db;
 
     private TextView questionCountText;
     private TextView scoreText;
@@ -64,6 +67,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
     //To keep track of categories covered
     private HashSet<String> categories;
     private TooltipCompat tooltipCompat;
+
+    private String categorySelected = "No Category";
 
     private BottomNavigationView bottomNavigationView;
     private QuizState quizState;
@@ -114,7 +119,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
-        CrushersDataBase db = new CrushersDataBase(this);
+        db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
 
         //Collections for categories and custom question amount quizes
@@ -126,9 +131,15 @@ public class QuizQuestionActivity extends AppCompatActivity {
         }
 
         questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
+        categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
 
         //Forms custom quiz with question count from previous screen
-        customQuiz(questionCountSelected);
+        if(questionCountSelected != 0 && !(categorySelected.equals("No Category")))
+            customQuiz(questionCountSelected, categorySelected);
+        else {
+            quizState = new QuizState(true, questionList, null, scoreNumber);
+            addQuestion(questionList);
+        }
 
         onNextQuestionButtonClicked();
 
@@ -150,18 +161,35 @@ public class QuizQuestionActivity extends AppCompatActivity {
         });
     }
 
-    protected void customQuiz(int questionCountSelected){
-        if(questionCountSelected != 0) {
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-
-            Random rand = new Random();
+    //TODO: clean this spaghetti code up fam
+    protected void customQuiz(int questionCountSelected, String categorySelected) {
+        Random rand = new Random();
+        if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
+            //TODO: make sure you get only the questions amount for category selected
+            questionList = db.getCategoryQuestions(categorySelected);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
                 specifcQuestionList.add(questionList.get(randomIndex));
             }
             totalQuestions = questionCountSelected;
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
-        } else {
+        } if (questionCountSelected != 0) {
+            for (int i = 0; i < questionCountSelected; i++) {
+                int randomIndex = rand.nextInt(questionList.size());
+                specifcQuestionList.add(questionList.get(randomIndex));
+            }
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            totalQuestions = questionCountSelected;
+            addQuestion(specifcQuestionList);
+            //if they selected the question count and a category then this happens
+        } else if (!categorySelected.equals("No Category")) {
+            specifcQuestionList = db.getCategoryQuestions(categorySelected);
+            totalQuestions = specifcQuestionList.size();
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            addQuestion(specifcQuestionList);
+        }
+        else {
             quizState = new QuizState(true, questionList, null, scoreNumber);
             totalQuestions = questionList.size();
             addQuestion(questionList);

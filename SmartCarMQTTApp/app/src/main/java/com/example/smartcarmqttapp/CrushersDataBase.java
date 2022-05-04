@@ -164,8 +164,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     public List<Question> getCategoryQuestions(String category){
         List<Question> questionList = new ArrayList<>();
         db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * " +
-                                        "FROM " + QuestionsTable.TABLE_NAME +
+        Cursor cursor = db.rawQuery("SELECT *" +
+                                        " FROM " + QuestionsTable.TABLE_NAME +
                                         " WHERE " + QuestionsTable.COLUMN_CATEGORY + " = '" + category + "' ", null);
 
         if(cursor.moveToFirst()){

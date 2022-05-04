@@ -34,7 +34,8 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private Dialog settingsDialog;
     private ImageView settingsButton;
 
-    private int questionCount;
+    private int questionCount = 0;
+    private String categoryValue = "";
 
     //Countdown timer
     public static final int TEN_MIN_IN_MILLIS = 600000;
@@ -44,6 +45,9 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private Switch enableTimer;
     private Dialog timerDialog;
     private Button tenMin, fifteenMin, twentyMin;
+    private Spinner spin;
+
+
 
     private static int MILLIS;
 
@@ -55,8 +59,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_theory);
         goToQuiz();
-        CrushersDataBase db = new CrushersDataBase(this);
-        List<Question> questions = db.getAllQuestions();
 
         //Pass values to next screen for display, db query, and textview display
         //TODO: UI for selecting category, option screen setting questions
@@ -139,9 +141,9 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
                 Button button = settingsDialog.findViewById(R.id.confirmBtn);
 
-                String[] category = {"Driving Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
+                String[] category = {"No Category", "Driving Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
 
-                Spinner spin = settingsDialog.findViewById(R.id.dropDown);
+                spin = settingsDialog.findViewById(R.id.dropDown);
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -173,6 +175,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                                 t.setTextColor(Color.RED);
                             }
                         }
+                        categoryValue = spin.getSelectedItem().toString();
                         settingsDialog.cancel();
                         Toast.makeText(getBaseContext(),
                                 "Setting successfully updated!",
@@ -188,11 +191,22 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if the user hasnt entered the settings
+                if(questionCount == 0 || categoryValue.equals("")){
+                    Toast.makeText(getBaseContext(),
+                            "No settings chosen -- Loading Random Quiz",
+                            Toast.LENGTH_SHORT).show();
+                }
+                try {
+                    Thread.sleep(1200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
                 intent.putExtra("TIMER_VALUE", MILLIS);
                 intent.putExtra("OPTION_QUESTIONS", questionCount);
+                intent.putExtra("CATEGORY_SELECTED", categoryValue);
                 startActivity(intent);
-
             }
         });
     }
