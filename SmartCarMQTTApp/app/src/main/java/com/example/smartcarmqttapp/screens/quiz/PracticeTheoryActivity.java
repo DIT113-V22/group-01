@@ -1,14 +1,11 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.screens.quiz;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,16 +18,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.w3c.dom.Text;
+import com.example.smartcarmqttapp.Navigation;
+import com.example.smartcarmqttapp.R;
+import com.example.smartcarmqttapp.database.CrushersDataBase;
+import com.example.smartcarmqttapp.model.Question;
 
 import java.util.List;
-import java.util.Locale;
 
 public class PracticeTheoryActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
     private Dialog settingsDialog;
     private ImageView settingsButton;
 
@@ -57,6 +53,8 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         MILLIS = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_theory);
+        Navigation.initializeNavigation(this, R.id.practiceTheory);
+
         goToQuiz();
 
         //Pass values to next screen for display, db query, and textview display
@@ -66,52 +64,13 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         intent.putExtra("option_numOfQuestions", 0);
         intent.putExtra("option_category", "categoryName");
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.connectedCar:
-                        startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceDriving:
-                        startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceTheory:
-                        return true;
-
-                    case R.id.aboutUs:
-                        startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                }
-                return false;
-            }
-        });
-
         //Countdown timer
         enableTimer = findViewById(R.id.enableTimer);
-
         tenMin = findViewById(R.id.tenMin);
-
         fifteenMin = findViewById(R.id.fifteenMin);
-
         twentyMin = findViewById(R.id.twentyMin);
-
-        timerDialog = new Dialog(this);
-
         timer = findViewById(R.id.timer);
+        timerDialog = new Dialog(this);
 
         enableTimer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -130,7 +89,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
         settingsDialog = new Dialog(this);
         settingsButton = findViewById(R.id.settingsImage);
-
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,7 +97,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
                 Button button = settingsDialog.findViewById(R.id.confirmBtn);
 
-                String[] category = {"No Category", "Driving Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
+                String[] category = {"No Category", "Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
 
                 spin = settingsDialog.findViewById(R.id.dropDown);
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
