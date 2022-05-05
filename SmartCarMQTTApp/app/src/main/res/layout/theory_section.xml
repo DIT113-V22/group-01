@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPopup"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="412dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible">
+
+
+        <SeekBar
+            android:id="@+id/seekBar3"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:max="3"
+            android:progress="3"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="160dp"/>
+
+        <SeekBar
+            android:id="@+id/seekBar2"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:max="2"
+            android:progress="3"
+            android:layout_marginLeft="160dp"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/startBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start quiz"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="130dp"
+            />
+
+        <TextView
+            android:id="@+id/setTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose time: "
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/numOfQuestions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of questions: "
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"/>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu" />
+
+    <TextView
+        android:id="@+id/textCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Choose one or multiple category's"
+        app:layout_constraintBottom_toTopOf="@+id/cardCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardMode"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ListView
+            android:id="@+id/listMode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardCategory"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginBottom="308dp"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ListView
+            android:id="@+id/listCategory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/textMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Choose a mode"
+        app:layout_constraintBottom_toTopOf="@+id/cardMode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
