@@ -255,27 +255,24 @@
                     android:id="@+id/estop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="120dp"
                     android:backgroundTint="@color/teamBlue"
                     android:onClick="onClickEmergencyStop"
                     android:text="STOP"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.642" />
+                    app:layout_constraintTop_toBottomOf="@+id/divider13" />
 
                 <ImageButton
                     android:id="@+id/imageButton"
                     android:layout_width="95dp"
                     android:layout_height="50dp"
-                    android:layout_marginStart="158dp"
-                    android:layout_marginEnd="158dp"
                     android:layout_marginBottom="12dp"
                     android:backgroundTint="#9C27B0"
                     android:onClick="onClickAccelerate"
                     app:layout_constraintBottom_toTopOf="@+id/estop"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.4"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/ic_arrow" />
 
@@ -283,13 +280,10 @@
                     android:id="@+id/imageButton5"
                     android:layout_width="95dp"
                     android:layout_height="50dp"
-                    android:layout_marginStart="158dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginEnd="158dp"
                     android:backgroundTint="#9C27B0"
                     android:onClick="onClickDecelerate"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/estop"
                     app:srcCompat="@drawable/ic_arrow_down" />
@@ -298,13 +292,13 @@
                     android:id="@+id/imageButton2"
                     android:layout_width="95dp"
                     android:layout_height="50dp"
-                    android:layout_marginStart="52dp"
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="68dp"
                     android:backgroundTint="#9C27B0"
                     android:onClick="onClickRotateLeft"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/estop"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/ic_arrow_left" />
 
