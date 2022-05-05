@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
@@ -76,6 +77,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     private String categorySelected = "No Category";
 
+    private BottomNavigationView bottomNavigationView;
     private QuizState quizState;
 
     private static int MILLIS;
@@ -117,6 +119,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
         radioGroup = findViewById(R.id.radioGroup);
+
+        //bottomNavigation bar
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
         db = new CrushersDataBase(this);
@@ -168,7 +174,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: clean this spaghetti code up fam
     protected void customQuiz(int questionCountSelected, String categorySelected) {
         Random rand = new Random();
         //quiz with a specific category and question count
