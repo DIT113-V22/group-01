@@ -78,10 +78,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         leftBlinkerButton = findViewById(R.id.leftBlinker);
         rightBlinkerButton= findViewById(R.id.rightBlinker);
 
-
-
-
-        sensorDisplayButton = findViewById(R.id.sensorDisplayButton);
         ultraSoundText = findViewById(R.id.udText);
         gyroText = findViewById(R.id.gyroText);
         infraredText = findViewById(R.id.infraText);
@@ -197,7 +193,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                 return false;
             }
         });
-
 
         controller = new MqttCar(getApplicationContext(), () -> {
             try {
