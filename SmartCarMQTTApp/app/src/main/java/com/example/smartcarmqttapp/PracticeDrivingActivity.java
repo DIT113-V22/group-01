@@ -74,7 +74,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_practice_driving);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage("\n Use the arrow keys to maneuver the car \n \n" +
+                .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
                             "Red button is an emergency stop \n \n" +
                             "Pressing the toggle data gives some extra car data ;)")
                 .setPositiveButton("Time to drive!", (theDialog, id) -> {})
@@ -429,6 +429,10 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         };
         thread.start();
 
+        if(leftBlinkerArrow.getAnimation().hasEnded()){
+            thread.interrupt();
+        }
+
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Left);
     }
 
@@ -460,6 +464,10 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             }
         };
         thread.start();
+
+        if(rightBlinkerArrow.getAnimation().hasEnded()){
+            thread.interrupt();
+        }
 
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
