@@ -97,7 +97,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
                 Button button = settingsDialog.findViewById(R.id.confirmBtn);
 
-                String[] category = {"No Category", "Driving Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
+                String[] category = {"No Category", "Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
 
                 spin = settingsDialog.findViewById(R.id.dropDown);
                 spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

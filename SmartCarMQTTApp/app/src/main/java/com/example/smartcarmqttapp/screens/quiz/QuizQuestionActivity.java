@@ -179,6 +179,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
             questionList = db.getCategoryQuestions(categorySelected);
+            System.out.println(questionList);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
                 specifcQuestionList.add(questionList.get(randomIndex));
