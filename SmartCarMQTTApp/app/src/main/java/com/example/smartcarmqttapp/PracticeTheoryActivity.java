@@ -1,15 +1,20 @@
 package com.example.smartcarmqttapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -50,10 +55,24 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     private static int MILLIS;
 
+
+
     private final ArrayList<String> quizModes = new ArrayList<>(Arrays.asList(
             "Practice Quiz",
             "Theory Exam",
             "Review"
+    ));
+
+    private final ArrayList<String> quizModesDescription = new ArrayList<>(Arrays.asList(
+            "Take a Quiz on a specific category",
+            "Take an Exam with all categories",
+            "Practice reivew questions"
+    ));
+
+    private final ArrayList<Integer> quizModeImages = new ArrayList<>(Arrays.asList(
+       R.drawable.quiz_logo,
+       R.drawable.exam_logo,
+       R.drawable.review_logo
     ));
 
     private Map<String, List<Question>> categoryQuestions;
@@ -220,9 +239,21 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     }
 
     private void addModesToModeListView() {
+
+        ModeAdapter modeAdapter = new ModeAdapter(this, quizModes, quizModesDescription, quizModeImages);
         ListView modeListView = findViewById(R.id.listMode);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, this.quizModes);
-        modeListView.setAdapter(adapter);
+
+        modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if(position == 0) {
+                    System.out.println("test");
+                }
+            }
+        });
+
+        modeListView.setAdapter(modeAdapter);
     }
 
     private void addCategoriesToCategoryListView() {
@@ -231,5 +262,40 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         categoryListView.setAdapter(adapter);
     }
 
+    class ModeAdapter extends ArrayAdapter<String> {
+        Context ctx;
+        ArrayList<String> titles;
+        ArrayList<String> subtitles;
+        ArrayList<Integer> logos;
+
+        ModeAdapter(
+                Context ctx,
+                ArrayList<String> titles,
+                ArrayList<String> subtitles,
+                ArrayList<Integer> logos
+        ) {
+            super(ctx, R.layout.row, R.id.textViewTitle, titles);
+            this.ctx = ctx;
+            this.titles = titles;
+            this.subtitles = subtitles;
+            this.logos = logos;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater li = (LayoutInflater)getApplication().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = li.inflate(R.layout.row, parent, false);
+            ImageView images = row.findViewById(R.id.quizLogo);
+            TextView title = row.findViewById(R.id.textViewTitle);
+            TextView subtitle = row.findViewById(R.id.textViewSubtitle);
+
+            images.setImageResource(quizModeImages.get(position));
+            title.setText(quizModes.get(position));
+            subtitle.setText(quizModesDescription.get(position));
+
+            return row;
+        }
+    }
 
 }

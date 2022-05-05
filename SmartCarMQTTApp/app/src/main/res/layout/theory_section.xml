@@ -8,14 +8,14 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPopup"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="412dp"
+        android:layout_width="384dp"
+        android:layout_height="167dp"
+        android:layout_marginTop="456dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <SeekBar
@@ -23,45 +23,44 @@
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:max="3"
-            android:progress="3"
+            android:layout_marginLeft="160dp"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="160dp"/>
+            android:max="3"
+            android:progress="3" />
 
         <SeekBar
             android:id="@+id/seekBar2"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:max="2"
-            android:progress="3"
             android:layout_marginLeft="160dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:max="2"
+            android:progress="3" />
 
         <Button
             android:id="@+id/startBTN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start quiz"
             android:layout_marginLeft="120dp"
             android:layout_marginTop="130dp"
-            />
+            android:text="Start quiz" />
 
         <TextView
             android:id="@+id/setTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose time: "
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="70dp"
-            android:layout_marginLeft="10dp"/>
+            android:text="Choose time: " />
 
         <TextView
             android:id="@+id/numOfQuestions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Number of questions: "
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:text="Number of questions: " />
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -90,8 +89,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMode"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_width="379dp"
+        android:layout_height="204dp"
         android:layout_marginTop="40dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +101,7 @@
         <ListView
             android:id="@+id/listMode"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         </ListView>
 
@@ -112,7 +111,7 @@
         android:id="@+id/cardCategory"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginBottom="308dp"
+        android:layout_marginBottom="256dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +121,7 @@
         <ListView
             android:id="@+id/listCategory"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         </ListView>
 
