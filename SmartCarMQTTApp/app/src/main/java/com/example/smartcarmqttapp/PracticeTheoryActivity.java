@@ -1,39 +1,32 @@
 package com.example.smartcarmqttapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.w3c.dom.Text;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class PracticeTheoryActivity extends AppCompatActivity {
@@ -55,7 +48,12 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     private static int MILLIS;
 
+    TextView numOfQuestionsTextView;
+    TextView timerTextView;
+    SeekBar numOfQuestionsSeekBar;
+    SeekBar timerSeekBar;
 
+    private List<Question> allQuestions;
 
     private final ArrayList<String> quizModes = new ArrayList<>(Arrays.asList(
             "Practice Quiz",
@@ -77,48 +75,20 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     private Map<String, List<Question>> categoryQuestions;
 
+    private String selectedCategory;
+    private String selectedMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theory_section);
 //        goToQuiz();
         CrushersDataBase db = new CrushersDataBase(this);
-        List<Question> questions = db.getAllQuestions();
-        this.categoryQuestions = groupQuestionsByCategory(questions);
+        allQuestions = db.getAllQuestions();
+        this.categoryQuestions = groupQuestionsByCategory(allQuestions);
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.connectedCar:
-                        startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceDriving:
-                        startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceTheory:
-                        return true;
-
-                    case R.id.aboutUs:
-                        startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                }
-                return false;
-            }
-        });
+        initializeElements();
+        initializeNavBar();
 
         addModesToModeListView();
         addCategoriesToCategoryListView();
@@ -219,6 +189,13 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 //
 //    }
 
+    private void initializeElements() {
+        numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
+        numOfQuestionsSeekBar = findViewById(R.id.numOfQuestionsSeekBar);
+        timerTextView = findViewById(R.id.timerTextView);
+        timerSeekBar = findViewById(R.id.timerSeekBar);
+    }
+
     /**
      * Groups Questions according to their categories
      * @param questions - List of questions to group
@@ -238,24 +215,30 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         return categories;
     }
 
+    // Populates Mode ListView with pre-defined rows
     private void addModesToModeListView() {
 
         ModeAdapter modeAdapter = new ModeAdapter(this, quizModes, quizModesDescription, quizModeImages);
         ListView modeListView = findViewById(R.id.listMode);
-
-        modeListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if(position == 0) {
-                    System.out.println("test");
-                }
+        modeListView.setOnItemClickListener((adapterView, view, position, id) -> {
+            selectedMode = quizModes.get(position);
+            if(position == 1) {
+                numOfQuestionsTextView.setVisibility(View.INVISIBLE);
+                numOfQuestionsSeekBar.setVisibility(View.INVISIBLE);
+                timerTextView.setVisibility(View.INVISIBLE);
+                timerSeekBar.setVisibility(View.INVISIBLE);
+            } else {
+                numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                numOfQuestionsSeekBar.setVisibility(View.VISIBLE);
+                timerTextView.setVisibility(View.VISIBLE);
+                timerSeekBar.setVisibility(View.VISIBLE);
             }
         });
 
         modeListView.setAdapter(modeAdapter);
     }
 
+    // Populates Category ListView with pre-defined strings
     private void addCategoriesToCategoryListView() {
         ListView categoryListView = findViewById(R.id.listCategory);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, this.categoryQuestions.keySet().toArray());
@@ -296,6 +279,74 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
             return row;
         }
+    }
+
+    public void startQuiz(View view) {
+        if(selectedMode == null) {
+            System.out.println("Mode not selected");
+            return;
+        }
+        if(selectedMode.equals(quizModes.get(0)) && selectedCategory == null) {
+            System.out.println("Category not selected");
+            return;
+        }
+
+        List<Question> selectedQuestions = new ArrayList<Question>();
+        if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
+            selectedQuestions = categoryQuestions.get(selectedCategory);
+            // get only N questions
+        } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
+            selectedQuestions = allQuestions;
+        } else {
+            for(Question question: allQuestions) { // Get Questions that need to be reviewed
+                if(question.getNeedsReview() == 1) {
+                    selectedQuestions.add(question);
+                }
+            }
+        }
+
+        Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
+        intent.putExtra("TIMER_VALUE", MILLIS);
+        intent.putExtra("questionList", (Serializable) selectedQuestions);
+        startActivity(intent);
+
+    }
+
+    private void initializeNavBar() {
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.connectedCar:
+                        startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+
+                    case R.id.practiceDriving:
+                        startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+
+                    case R.id.practiceTheory:
+                        return true;
+
+                    case R.id.aboutUs:
+                        startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                }
+                return false;
+            }
+        });
+
     }
 
 }

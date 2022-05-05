@@ -22,6 +22,8 @@ import com.example.smartcarmqttapp.model.UserAnswer;
 import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -75,7 +77,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         //staret timer with value from practice theory
         Intent intent = getIntent();
-        MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
+
+        Bundle extras = intent.getExtras();
+        MILLIS = extras.getInt("TIMER_VALUE", 0);
+        questionList = (List<Question>)extras.getSerializable("questionList");
+        System.out.println("Starting quiz with Timer " + MILLIS);
+        System.out.println("And Questions: " + questionList);
+
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
 
