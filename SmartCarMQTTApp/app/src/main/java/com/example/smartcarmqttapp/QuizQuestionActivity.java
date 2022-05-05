@@ -24,6 +24,7 @@ import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -121,6 +122,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //add questions to question list via helper method --> help us select question
         db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
+        Collections.shuffle(questionList);
 
         //Collections for categories and custom question amount quizes
         categories = new HashSet<>();
@@ -130,11 +132,15 @@ public class QuizQuestionActivity extends AppCompatActivity {
         questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
         categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
 
+        System.out.println(questionCountSelected);
+        System.out.println(categorySelected);
         //Forms custom quiz with question count from previous screen
-        if(questionCountSelected != 0 && !(categorySelected.equals("No Category")))
+        if(questionCountSelected != 0 || !(categorySelected.equals("No Category")))
             customQuiz(questionCountSelected, categorySelected);
         else {
+            //else start a random quiz -- No settings selected
             quizState = new QuizState(true, questionList, null, scoreNumber);
+            totalQuestions = questionList.size();
             addQuestion(questionList);
         }
 
@@ -163,9 +169,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         Random rand = new Random();
         //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
-            //TODO: make sure you get only the questions amount for category selected
-            List<Question> q = new ArrayList<>();
-            q = db.getCategoryQuestions(categorySelected);
             questionList = db.getCategoryQuestions(categorySelected);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
@@ -190,12 +193,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
             totalQuestions = specifcQuestionList.size();
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
-        }
-        else {
-            //random quiz with 45 questions
-            quizState = new QuizState(true, questionList, null, scoreNumber);
-            totalQuestions = questionList.size();
-            addQuestion(questionList);
         }
     }
 

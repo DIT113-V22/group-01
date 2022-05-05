@@ -192,7 +192,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //if the user hasnt entered the settings
-                if(questionCount == 0 || categoryValue.equals("")){
+                if(questionCount == 0 && categoryValue.equals("")){
                     Toast.makeText(getBaseContext(),
                             "No settings chosen -- Loading Random Quiz",
                             Toast.LENGTH_SHORT).show();
