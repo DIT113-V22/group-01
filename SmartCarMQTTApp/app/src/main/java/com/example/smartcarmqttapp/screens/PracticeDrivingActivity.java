@@ -120,7 +120,11 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                 else {
                     exit = true;
                     clicks = 0;
-                    CarState.instance.getConnectedCar().listeners.remove("data");
+
+                    if (CarState.instance.isConnected()) {
+                        CarState.instance.getConnectedCar().listeners.remove("data");
+                    }
+
                     ultraSoundText.setText("");
                     gyroText.setText("");
                     infraredText.setText("");
