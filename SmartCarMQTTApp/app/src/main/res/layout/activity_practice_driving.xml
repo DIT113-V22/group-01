@@ -170,7 +170,7 @@
                             app:layout_constraintVertical_bias="0.231" />
 
                         <Button
-                            android:id="@+id/button5"
+                            android:id="@+id/sensorDisplayButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Toggle Data"
@@ -258,16 +258,18 @@
                     app:srcCompat="@drawable/ic_arrow_right" />
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/leftBlinker"
                     android:layout_width="80dp"
                     android:layout_height="35dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginBottom="70dp"
+                    android:onClick="onClickBlinkLeft"
                     app:cardBackgroundColor="@color/teamBlue"
                     app:layout_constraintBottom_toTopOf="@+id/imageButton2"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <ImageView
-                        android:id="@+id/imageView"
+                        android:id="@+id/leftBlinkerArrow"
                         android:layout_width="50dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center_horizontal|center_vertical"
@@ -276,16 +278,18 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/rightBlinker"
                     android:layout_width="80dp"
                     android:layout_height="35dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="70dp"
+                    android:onClick="onClickBlinkRight"
                     app:cardBackgroundColor="@color/teamBlue"
                     app:layout_constraintBottom_toTopOf="@+id/imageButton3"
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/rightBlinkerArrow"
                         android:layout_width="50dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center_horizontal|center_vertical"
