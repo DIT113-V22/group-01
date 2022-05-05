@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.databinding.Observable;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -71,6 +72,16 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage("\n Use the arrow keys to maneuver the car \n \n" +
+                            "Red button is an emergency stop \n \n" +
+                            "Pressing the toggle data gives some extra car data ;)")
+                .setPositiveButton("Time to drive!", (theDialog, id) -> {})
+                .create();
+
+        dialog.setTitle("Quick Hints on how to drive the car");
+        dialog.show();
 
         leftBlinkerArrow = findViewById(R.id.leftBlinkerArrow);
         rightBlinkerArrow = findViewById(R.id.rightBlinkerArrow);
