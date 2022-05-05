@@ -166,7 +166,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: clean this spaghetti code up fam
     protected void customQuiz(int questionCountSelected, String categorySelected) {
         Random rand = new Random();
         //quiz with a specific category and question count

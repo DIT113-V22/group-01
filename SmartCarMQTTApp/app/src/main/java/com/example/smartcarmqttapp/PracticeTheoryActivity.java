@@ -52,8 +52,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private static int MILLIS = 0;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         MILLIS = 0;
@@ -62,8 +60,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         goToQuiz();
 
         //Pass values to next screen for display, db query, and textview display
-        //TODO: UI for selecting category, option screen setting questions
-        //TODO: add textView to show each questions' category
+
         Intent intent = this.getIntent();
         intent.putExtra("option_timer", 0);
         intent.putExtra("option_numOfQuestions", 0);
