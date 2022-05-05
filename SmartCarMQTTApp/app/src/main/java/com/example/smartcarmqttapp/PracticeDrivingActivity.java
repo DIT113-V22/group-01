@@ -39,6 +39,7 @@ import java.time.LocalTime;
 
 public class PracticeDrivingActivity extends AppCompatActivity {
     public MqttCar controller;
+    private int clicks = 0;
 
     public ImageView leftBlinkerArrow, rightBlinkerArrow;
     public CardView leftBlinkerButton, rightBlinkerButton;
@@ -48,10 +49,19 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     private final int IMAGE_WIDTH = 320;
     public ImageView imageView;
 
+    private TextView ultraSoundText;
+    private TextView gyroText;
+    private TextView infraredText;
+
+    private TextView ultraVal;
+    private TextView gyroVal;
+    private TextView infraredVal;
+
+    private boolean exit = false;
     //For error screen when the car is not connected
     //public GifImageView screenError;
 
-
+    private Button toggleDataButton;
 
     private Button sensorDisplayButton;
     private BottomNavigationView bottomNavigationView;
@@ -72,11 +82,77 @@ public class PracticeDrivingActivity extends AppCompatActivity {
 
 
         sensorDisplayButton = findViewById(R.id.sensorDisplayButton);
+        ultraSoundText = findViewById(R.id.udText);
+        gyroText = findViewById(R.id.gyroText);
+        infraredText = findViewById(R.id.infraText);
+
+        ultraVal = findViewById(R.id.ultrasoundValue);
+        gyroVal = findViewById(R.id.gyroValue);
+        infraredVal = findViewById(R.id.infraValue);
+
+        //sensorDisplayButton = findViewById(R.id.sensorDataButton);
         sensorDialog = new Dialog(this);
 
+        dashboard();
+
+        toggleDataButton = findViewById(R.id.toggleDataBtn);
+
+        toggleDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Thread newThread = new Thread() {
+                    @Override
+                    public void run(){
+                        while (!isInterrupted()) {
+                            try {
+                                Thread.sleep(1000);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(!exit){
+                                            ultraSoundText.setText("Ultrasound Distance (cm):");
+                                            gyroText.setText("Gyroscope Heading (deg):");
+                                            infraredText.setText("Infrared Distance (cm):");
+                                            // Set Ultrasound reading
+                                            ultraVal.setText(CarState.instance.getUltraSoundDistance());
+
+                                            // Set Gyroscope heading
+                                            gyroVal.setText(CarState.instance.getGyroHeading());
+
+                                            // Set Infrared reading
+                                            infraredVal.setText(CarState.instance.getIRDistance());
+                                        }
+                                        else{
+                                            ultraSoundText.setText("");
+                                            gyroText.setText("");
+                                            infraredText.setText("");
+                                            ultraVal.setText("");
+                                            gyroVal.setText("");
+                                            infraredVal.setText("");
+                                        }
+                                    }
+                                });
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                };
+
+                if(clicks == 0){
+                    exit = false;
+                    clicks++;
+                    newThread.start();
+                }
+                else{
+                    exit = true;
+                    clicks = 0;
+                }
+            }
+        });
 
 
-
+        /*
         sensorDisplayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -84,6 +160,8 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             }
 
         });
+
+         */
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -146,7 +224,31 @@ public class PracticeDrivingActivity extends AppCompatActivity {
          */
 
     }
+    private void dashboard(){
+        TextView speedVal = findViewById(R.id.speedValue);
+        TextView distanceVal = findViewById(R.id.distanceValue);
 
+        Thread newThread = new Thread() {
+            @Override
+            public void run(){
+                while (!isInterrupted()) {
+                    try {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                speedVal.setText(CarState.instance.getSpeed() + " m/s");
+                                distanceVal.setText(CarState.instance.getDistance() + " cm");
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        newThread.start();
+    }
 
     /**
      *
@@ -168,7 +270,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
 
         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         imageView.setImageBitmap(bm);
-
     }
 
     /**
