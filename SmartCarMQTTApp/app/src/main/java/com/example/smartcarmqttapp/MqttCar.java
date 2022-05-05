@@ -78,7 +78,7 @@ public class MqttCar extends BaseObservable implements IMqttActionListener, Mqtt
     public final static double CONNECTION_TIMEOUT = 10;
 
     // Mqtt broker, default: emulator host on default port
-    public final static String MQTT_HOSTNAME = "tcp://192.168.0.136:1883";
+    public final static String MQTT_HOSTNAME = "tcp://10.0.2.2:1883";
 
     // Camera config
     private final static int IMAGE_HEIGHT = 240;

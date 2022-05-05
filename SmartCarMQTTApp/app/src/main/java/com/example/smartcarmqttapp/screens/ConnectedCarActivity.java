@@ -121,7 +121,8 @@ public class ConnectedCarActivity extends AppCompatActivity {
                 TextView timeRunningValue = findViewById(R.id.timeRunningValue);
                 TextView lastUpdate = findViewById(R.id.lastUpdateValue);
                 MqttCar car = CarState.instance.getConnectedCar();
-                timeRunningValue.setText(car.timeRunning.get().toString());
+                long milis = car.timeRunning.get() / 1000;
+                timeRunningValue.setText(String.valueOf(milis));
                 lastUpdate.setText(car.lastHeartbeat.get().toString().split("T")[1].split("\\.")[0]);
             });
         });
