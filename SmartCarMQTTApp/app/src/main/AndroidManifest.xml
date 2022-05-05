@@ -15,25 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCarMQTTApp">
         <activity
-            android:name=".QuizQuestionActivity"
+            android:name=".screens.quiz.QuizQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".QuizResultActivity"
+            android:name=".screens.quiz.QuizResultActivity"
             android:exported="false" />
         <activity
-            android:name=".PracticeTheoryActivity"
+            android:name=".screens.quiz.PracticeTheoryActivity"
             android:exported="false" />
         <activity
-            android:name=".PracticeDrivingActivity"
+            android:name=".screens.PracticeDrivingActivity"
             android:exported="false" />
         <activity
-            android:name=".ConnectedCarActivity"
+            android:name=".screens.ConnectedCarActivity"
             android:exported="false" />
         <activity
-            android:name=".AboutUsActivity"
+            android:name=".screens.AboutUsActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".screens.HomeActivity"
             android:exported="false" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />

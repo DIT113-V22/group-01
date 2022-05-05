@@ -1,4 +1,4 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

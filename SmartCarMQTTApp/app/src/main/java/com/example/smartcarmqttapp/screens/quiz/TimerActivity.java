@@ -1,4 +1,4 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.screens.quiz;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,19 +10,20 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.smartcarmqttapp.R;
+
 import java.util.Locale;
 
 public class TimerActivity extends AppCompatActivity {
     public static final int TEN_MIN_IN_MILLIS = 600000;
     public static final int FIFTEEN_MIN_IN_MILLIS = 900000;
     public static final int TWENTY_MIN_IN_MILLIS = 1200000;
+    private static int MILLIS;
+
     private TextView timerView;
     private Switch enableTimer;
     private Button startBtn;
     private Dialog timerDialog;
-    private Button tenMin, fifteenMin, twentyMin;
-
-    private static int MILLIS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +32,8 @@ public class TimerActivity extends AppCompatActivity {
 
         timerView = findViewById(R.id.timerView);
         enableTimer = findViewById(R.id.enableTimer);
-
         startBtn = findViewById(R.id.start);
-
-        tenMin = findViewById(R.id.tenMin);
-
-
-        fifteenMin = findViewById(R.id.fifteenMin);
-
-        twentyMin = findViewById(R.id.twentyMin);
-
         timerDialog = new Dialog(this);
-
 
         enableTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,16 +49,12 @@ public class TimerActivity extends AppCompatActivity {
             }
         });
 
-
-
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startCountDown();
             }
         });
-
-
     }
 
     private void startCountDown() {
@@ -108,9 +95,8 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void formatTimeView() {
-        int minutes = (int) (MILLIS / 1000) / 60;
-        int seconds = (int) (MILLIS / 1000) % 60;
-
+        int minutes = (MILLIS / 1000) / 60;
+        int seconds = (MILLIS / 1000) % 60;
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
         timerView.setText(timeLeftFormatted);
     }

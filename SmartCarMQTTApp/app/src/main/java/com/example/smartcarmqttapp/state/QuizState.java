@@ -1,6 +1,6 @@
 package com.example.smartcarmqttapp.state;
 
-import com.example.smartcarmqttapp.Question;
+import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.model.UserAnswer;
 
 import java.util.List;

@@ -1,8 +1,10 @@
 package com.example.smartcarmqttapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 
-import androidx.databinding.Observable;
+import androidx.databinding.BaseObservable;
 import androidx.databinding.ObservableField;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -16,12 +18,14 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
  * A facade for interacting with a car over mqtt.
  */
-public class MqttCar implements IMqttActionListener, MqttCallback{
+public class MqttCar extends BaseObservable implements IMqttActionListener, MqttCallback {
 
     /**
      * Constants for all mqtt car topics.
@@ -73,6 +77,12 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      */
     public final static double CONNECTION_TIMEOUT = 10;
 
+    // Mqtt broker, default: emulator host on default port
+    public final static String MQTT_HOSTNAME = "tcp://192.168.0.136:1883";
+
+    // Camera config
+    private final static int IMAGE_HEIGHT = 240;
+    private final static int IMAGE_WIDTH = 320;
 
     private final MqttAndroidClient mqtt;
     private final Logger logger;
@@ -116,11 +126,21 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
     public final ObservableField<Double> gyroscopeHeading = new ObservableField<>(DEFAULT_HEADING);
 
     /**
+     * The current angle of the wheels
+     */
+    public final ObservableField<Double> wheelAngle = new ObservableField<>(0.0);
+
+    /**
      * Which blinkers are activated.
      */
     public final ObservableField<BlinkerDirection> blinkerStatus = new ObservableField<>(BlinkerDirection.Off);
-    public MqttMessage cameraPayload = new MqttMessage();
-    public final ObservableField<Double> wheelAngle = new ObservableField<>(0.0);
+
+    /**
+     * The current camera frame.
+     */
+    public final ObservableField<Bitmap> camera = new ObservableField<>(null);
+
+    public final Map<String, Runnable> listeners = new HashMap<>();
 
     /**
      * Connects to a car over mqtt.
@@ -128,12 +148,8 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      * @param context unfortunately required for the MqttAndroidClient to work
      * @param onConnected since the connection is async, this callback is
      *                    fired when the connection successfully completed
+     * @param onConnectionLost this callback is fired when the connection is lost
      */
-
-    PracticeDrivingActivity driving;
-
-    
-    
     public MqttCar(Context context, Runnable onConnected, Runnable onConnectionLost) {
         this.logger = Logger.getLogger("mqtt");
         this.onConnected = onConnected;
@@ -142,7 +158,7 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
 
         // Mqtt Config
         String clientId = "AndroidApp";
-        String url = "tcp://10.0.2.2:1883"; // localhost on default port
+        String url = MQTT_HOSTNAME;
 
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(clientId);
@@ -160,35 +176,6 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
             ex.printStackTrace();
         }
 
-    }
-
-    public MqttCar(Context context, Runnable onConnected, PracticeDrivingActivity driving) {
-        this.driving = driving;
-        this.logger = Logger.getLogger("mqtt");
-        this.onConnected = onConnected;
-
-        // Mqtt Config
-        String clientId = "AndroidApp";
-        String url = "tcp://10.0.2.2:1883"; // localhost on default port
-
-        MqttConnectOptions options = new MqttConnectOptions();
-        options.setUserName(clientId);
-        options.setPassword("".toCharArray());
-        options.setAutomaticReconnect(true);
-        options.setCleanSession(true);
-
-        this.mqtt = new MqttAndroidClient(context, url, clientId);
-
-        try {
-            mqtt.setCallback(this);
-            mqtt.connect(options, null, this);
-        }
-        catch (MqttException ex) {
-            ex.printStackTrace();
-        }
-
-
-        onConnectionLost = null;
     }
 
     /**
@@ -254,7 +241,6 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
      */
     @Override
     public void messageArrived(String topic, MqttMessage message) {
-        System.out.println(topic);
         final String data = new String(message.getPayload());
 
         try {
@@ -263,7 +249,6 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
                     this.timeRunning.set(Long.parseLong(data));
                     this.lastHeartbeat.set(LocalDateTime.now());
                     break;
-
                 case Topics.Status.Odometer.Speed:
                     this.speed.set(Double.parseDouble(data));
                     break;
@@ -274,9 +259,19 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
                     this.ir_distance.set(Double.parseDouble(data));
                     break;
                 case Topics.Sensors.Camera:
-                    driving.cameraRendering(message);
-                    //Camera topic
-                    //Display camera view on home screen
+                    final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
+                    final byte[] payload = message.getPayload();
+                    final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
+
+                    for (int ci = 0; ci < colors.length; ++ci) {
+                        final byte r = payload[3 * ci ];
+                        final byte g = payload[3 * ci + 1];
+                        final byte b = payload[3 * ci + 2];
+                        colors[ci] = Color.rgb(r, g, b);
+                    }
+
+                    bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+                    this.camera.set(bm);
                     break;
                 case Topics.Sensors.Gyroscope:
                     this.gyroscopeHeading.set(Double.parseDouble(data));
@@ -299,6 +294,12 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
                 case Topics.Sensors.Ultrasonic:
                     this.ultrasoundDistance.set(Double.parseDouble(data));
                     break;
+            }
+
+            // For ui updates
+            for (Runnable listener : listeners.values()) {
+                listener.run();
+                System.out.println(listener);
             }
         }
         catch (NumberFormatException ex) {
@@ -324,14 +325,13 @@ public class MqttCar implements IMqttActionListener, MqttCallback{
     public boolean isConnected() {
         final long secondsSinceLastHeartbeat = Duration.between(lastHeartbeat.get(), LocalDateTime.now()).getSeconds();
 
-        System.out.println(secondsSinceLastHeartbeat);
-
         if (secondsSinceLastHeartbeat > CONNECTION_TIMEOUT && !heartbeatLost) {
+            System.out.println("Connection lost");
             heartbeatLost = true;
             onConnectionLost.run();
         }
 
-        return this.mqtt.isConnected() && heartbeatLost;
+        return this.mqtt.isConnected() && !heartbeatLost;
     }
 
     /**

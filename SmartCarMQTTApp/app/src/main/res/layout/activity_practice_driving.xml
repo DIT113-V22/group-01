@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PracticeDrivingActivity">
+    tools:context=".screens.PracticeDrivingActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,6 +16,13 @@
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/screenError"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:src="@drawable/screenerror"
+            android:visibility="gone" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="205dp"
@@ -117,19 +124,6 @@
         </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
-
-    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"--><![CDATA[
-    app:layout_csontraintTop_toBottomOf="@+id/mainLayout"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:translationY="580dp"
-    tools:layout_editor_absoluteY="1091dp" />
-
-
-
-
-
-    ]]>
 
     <LinearLayout
         android:id="@+id/mainLayout"
