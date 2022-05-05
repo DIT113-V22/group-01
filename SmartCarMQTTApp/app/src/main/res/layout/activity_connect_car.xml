@@ -5,136 +5,143 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".ConnectedCarActivity">
+    tools:context=".screens.ConnectedCarActivity">
 
-    <TextView
-        android:id="@+id/pageHeader"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Connected Car"
-        android:textColor="@color/teamBlueBlack"
-        android:textSize="24sp" />
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:orientation="vertical"
+        >
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/disconnectedCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible">
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/pageHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Connected Car"
+            android:textColor="@color/teamBlueBlack"
+            android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/disconnectedHeading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="How to connect a car?"
-                android:textColor="@color/teamBlueBlack"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/connectionInstructions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1. Start your MQTT Broker.\n2. Open the SMCE emulator.\n3. Clicking the '+', find the sketch titled 'smartcar.ino'\n4. Once found, compile your sketch.\n5. Press 'Start' in the emulator to load in the car\n6. Press the button below!" />
-
-            <Button
-                android:id="@+id/connectionButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:onClick="connectCar"
-                android:text="🚗 Connect Car 🚗" />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/connectedCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:onClick="goToDriving">
-
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/disconnectedCard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/connectedHeading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="CONNECTED 🎉"
-                android:gravity="center"
-                android:textColor="@color/cadmiumGreen"
-                android:textSize="16sp" />
-
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/lastUpdate"
+                    android:id="@+id/disconnectedHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Last Update: "
-                    android:layout_margin="1sp" />
+                    android:layout_marginBottom="4dp"
+                    android:text="How to connect a car?"
+                    android:textColor="@color/teamBlueBlack"
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/lastUpdateValue"
+                    android:id="@+id/connectionInstructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="1sp"
-                    android:layout_weight="1" />
+                    android:text="1. Start your MQTT Broker.\n2. Open the SMCE emulator.\n3. Clicking the '+', find the sketch titled 'smartcar.ino'\n4. Once found, compile your sketch.\n5. Press 'Start' in the emulator to load in the car\n6. Press the button below!" />
 
-                <TextView
-                    android:id="@+id/timeRunning"
+                <Button
+                    android:id="@+id/connectionButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="1sp"
-                    android:layout_weight="1"
-                    android:text="Elapsed(s): " />
-
-                <TextView
-                    android:id="@+id/timeRunningValue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="1sp"/>
+                    android:layout_marginTop="16dp"
+                    android:onClick="connectCar"
+                    android:text="🚗 Connect Car 🚗" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/disconnectButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:onClick="disconnectCar"
-                android:text="💥🚗 Disconnect Car 🚗💥" />
-            <TextView
-                android:id="@+id/hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="8dp"
-                android:paddingLeft="95dp"
-                android:paddingRight="70dp"
-                android:textStyle="italic"
-                android:text="* Clicking the card bring you to manual driving *" />
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-    </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/connectedCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:onClick="goToDriving">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/connectedHeading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="CONNECTED 🎉"
+                    android:gravity="center"
+                    android:textColor="@color/cadmiumGreen"
+                    android:textSize="16sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lastUpdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Last Update: "
+                        android:layout_margin="1sp" />
+
+                    <TextView
+                        android:id="@+id/lastUpdateValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1sp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/timeRunning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1sp"
+                        android:layout_weight="1"
+                        android:text="Elapsed(s): " />
+
+                    <TextView
+                        android:id="@+id/timeRunningValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="1sp"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/disconnectButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:onClick="disconnectCar"
+                    android:text="💥🚗 Disconnect Car 🚗💥" />
+                <TextView
+                    android:id="@+id/hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="8dp"
+                    android:paddingLeft="95dp"
+                    android:paddingRight="70dp"
+                    android:textStyle="italic"
+                    android:text="* Clicking the card bring you to manual driving *" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -145,5 +152,4 @@
         app:itemTextColor="@drawable/selector"
         app:menu="@menu/menu"
         android:layout_alignParentBottom="true" />
-
 </RelativeLayout>

@@ -1,159 +1,181 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.screens;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.Observable;
+import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.smartcarmqttapp.MqttCar;
+import com.example.smartcarmqttapp.Navigation;
+import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.state.CarState;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 import pl.droidsonroids.gif.GifImageView;
-import java.time.Duration;
-import java.time.LocalTime;
+
 
 public class PracticeDrivingActivity extends AppCompatActivity {
     public MqttCar controller;
+    private int clicks = 0;
+    private boolean exit = false;
 
-    //Camera Config
-    private final int IMAGE_HEIGHT = 240;
-    private final int IMAGE_WIDTH = 320;
+    public ImageView leftBlinkerArrow, rightBlinkerArrow;
+    public CardView leftBlinkerButton, rightBlinkerButton;
     public ImageView imageView;
 
+    private TextView ultraSoundText;
+    private TextView gyroText;
+    private TextView infraredText;
+
+    private TextView ultraVal;
+    private TextView gyroVal;
+    private TextView infraredVal;
+
+    //For error screen when the car is not connected
     public GifImageView screenError;
 
-
-
-    private Button sensorDisplayButton;
-    private BottomNavigationView bottomNavigationView;
+    private Button toggleDataButton;
     private Dialog sensorDialog;
-    private TextView textView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
+        Navigation.initializeNavigation(this, R.id.practiceDriving);
 
-        sensorDisplayButton = findViewById(R.id.sensorDataButton);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
+                        "Red button is an emergency stop \n \n" +
+                        "Pressing the toggle data gives some extra car data ;)")
+                .setPositiveButton("Time to drive!", (theDialog, id) -> {})
+                .create();
+
+        dialog.setTitle("Quick Hints on how to drive the car");
+        dialog.show();
+
+        leftBlinkerArrow = findViewById(R.id.leftBlinkerArrow);
+        rightBlinkerArrow = findViewById(R.id.rightBlinkerArrow);
+
+        leftBlinkerButton = findViewById(R.id.leftBlinker);
+        rightBlinkerButton= findViewById(R.id.rightBlinker);
+
+        ultraSoundText = findViewById(R.id.udText);
+        gyroText = findViewById(R.id.gyroText);
+        infraredText = findViewById(R.id.infraText);
+
+        ultraVal = findViewById(R.id.ultrasoundValue);
+        gyroVal = findViewById(R.id.gyroValue);
+        infraredVal = findViewById(R.id.infraValue);
+
+        //sensorDisplayButton = findViewById(R.id.sensorDataButton);
         sensorDialog = new Dialog(this);
 
+        toggleDataButton = findViewById(R.id.toggleDataBtn);
 
+        dashboard();
 
-
-        sensorDisplayButton.setOnClickListener(new View.OnClickListener() {
+        toggleDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                openSensorDialog();
-            }
+            public void onClick(View view) {
+                if(clicks == 0){
+                    exit = false;
+                    clicks++;
 
-        });
+                    if (CarState.instance.isConnected()) {
+                        CarState.instance.getConnectedCar().listeners.put("data", () -> {
+                            if(!exit){
+                                ultraSoundText.setText("Ultrasound Distance (cm):");
+                                gyroText.setText("Gyroscope Heading (deg):");
+                                infraredText.setText("Infrared Distance (cm):");
+                                // Set Ultrasound reading
+                                ultraVal.setText(CarState.instance.getUltraSoundDistance());
 
+                                // Set Gyroscope heading
+                                gyroVal.setText(CarState.instance.getGyroHeading());
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceDriving);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.connectedCar:
-                        startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceDriving:
-                        return true;
-
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.practiceTheory:
-                        startActivity(new Intent(getApplicationContext(), PracticeTheoryActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-
-                    case R.id.aboutUs:
-                        startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
+                                // Set Infrared reading
+                                infraredVal.setText(CarState.instance.getIRDistance());
+                            }
+                            else{
+                                ultraSoundText.setText("");
+                                gyroText.setText("");
+                                infraredText.setText("");
+                                ultraVal.setText("");
+                                gyroVal.setText("");
+                                infraredVal.setText("");
+                            }
+                        });
+                    }
                 }
-                return false;
+                else {
+                    exit = true;
+                    clicks = 0;
+
+                    if (CarState.instance.isConnected()) {
+                        CarState.instance.getConnectedCar().listeners.remove("data");
+                    }
+
+                    ultraSoundText.setText("");
+                    gyroText.setText("");
+                    infraredText.setText("");
+                    ultraVal.setText("");
+                    gyroVal.setText("");
+                    infraredVal.setText("");
+                }
             }
         });
-
-
-        controller = new MqttCar(getApplicationContext(), () -> {
-            try {
-                controller.changeSpeed(0.5);
-            } catch (MqttException ex) {
-                ex.printStackTrace();
-            }
-        }, this);
-
 
         imageView = findViewById(R.id.cameraView);
+        screenError = findViewById(R.id.screenError);
 
-        //screenError = findViewById(R.id.screenError);
-
-        /*
-        if(CarState.instance.isConnected()) {
+        if (CarState.instance.isConnected()) {
             imageView.setVisibility(View.VISIBLE);
-            //screenError.setVisibility(View.GONE);
+            screenError.setVisibility(View.GONE);
+
+            controller = CarState.instance.getConnectedCar();
+            controller.listeners.put("camera", () -> {
+                    Log.d("ui update", "ui update");
+                runOnUiThread(() -> {
+                    imageView.setImageBitmap(controller.camera.get());
+                });
+            });
         }
         else {
             imageView.setVisibility(View.INVISIBLE);
-            //screenError.setVisibility(View.VISIBLE);
+            screenError.setVisibility(View.VISIBLE);
         }
-         */
-
     }
 
-
-    /**
-     *
-     * @param message of frames to be rendered
-     * This should be called upon received a message on the Camera Topic
-     * and should then update the ImageView displayed on the current screen
-     */
-    public void cameraRendering(MqttMessage message){
-        final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
-
-        final byte[] payload = message.getPayload();
-        final int[] colors = new int[IMAGE_WIDTH * IMAGE_HEIGHT];
-        for (int ci = 0; ci < colors.length; ++ci) {
-            final byte r = payload[3 * ci ];
-            final byte g = payload[3 * ci + 1];
-            final byte b = payload[3 * ci + 2];
-            colors[ci] = Color.rgb(r, g, b);
+    @Override
+    protected void onStop() {
+        if (CarState.instance.isConnected()) {
+            CarState.instance.getConnectedCar().listeners.remove("dashboard");
+            CarState.instance.getConnectedCar().listeners.remove("camera");
         }
-
-        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-        imageView.setImageBitmap(bm);
-
+        super.onStop();
     }
 
+    private void dashboard(){
+        TextView speedVal = findViewById(R.id.speedValue);
+        TextView distanceVal = findViewById(R.id.distanceValue);
+
+        if (CarState.instance.isConnected()) {
+            CarState.instance.getConnectedCar().listeners.put("dashboard", () -> {
+                speedVal.setText(CarState.instance.getSpeed() + " m/s");
+                distanceVal.setText(CarState.instance.getDistance() + " cm");
+            });
+        }
+    }
     /**
      * Constants for determining Car behavior
      */
@@ -282,7 +304,20 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     public void onClickBlinkLeft(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Left);
 
-        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Left);
+        Animation animation = AnimationUtils.loadAnimation(
+                getApplicationContext(),
+                R.anim.blinker
+        );
+
+        if (clicks == 1) {
+            clicks--;
+            leftBlinkerArrow.clearAnimation();
+        }else{
+            leftBlinkerArrow.startAnimation(animation);
+            rightBlinkerArrow.clearAnimation();
+            clicks++;
+        }
+        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
 
     /**
@@ -292,6 +327,19 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     public void onClickBlinkRight(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Right);
 
+        Animation animation = AnimationUtils.loadAnimation(
+                getApplicationContext(),
+                R.anim.blinker
+        );
+
+        if (clicks == 1) {
+            clicks--;
+            rightBlinkerArrow.clearAnimation();
+        }else{
+            rightBlinkerArrow.startAnimation(animation);
+            leftBlinkerArrow.clearAnimation();
+            clicks++;
+        }
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
 
@@ -320,61 +368,4 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         // To obtain percentage integer from ratio, multiply by 100
         return absoluteSpeed / 1.8 * 100;
     }
-
-    private void openSensorDialog() {
-        sensorDialog.setContentView(R.layout.sensor_dialog);
-        sensorDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        sensorDialog.show();
-        ImageView closeDialog = sensorDialog.findViewById(R.id.closeDialog);
-
-        TextView speedValue = sensorDialog.findViewById(R.id.speedField);
-        TextView distanceValue = sensorDialog.findViewById(R.id.distanceField);
-        TextView USValue = sensorDialog.findViewById(R.id.ultrasoundField);
-        TextView gyroHeading = sensorDialog.findViewById(R.id.gyroHeadingField);
-        TextView infraredValue = sensorDialog.findViewById(R.id.infraredDistance);
-
-
-        Thread newThread = new Thread() {
-            @Override
-            public void run(){
-                while (!isInterrupted()) {
-                    try {
-                        Thread.sleep(1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Set speed value
-                                speedValue.setText(CarState.instance.getSpeed());
-
-                                // Set distance
-                                distanceValue.setText(CarState.instance.getDistance());
-
-                                // Set Ultrasound reading
-                                USValue.setText(CarState.instance.getUltraSoundDistance());
-
-                                // Set Gyroscope heading
-                                gyroHeading.setText(CarState.instance.getGyroHeading());
-
-                                // Set Infrared reading
-                                infraredValue.setText(CarState.instance.getIRDistance());
-                            }
-                        });
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        newThread.start();
-
-        closeDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sensorDialog.dismiss();
-            }
-        });
-
-    }
-
 }

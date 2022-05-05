@@ -133,8 +133,6 @@ void loop() {
   if (mqtt.connected()) {
     mqtt.loop();
     // delay to not overload the CPU
-    delay(1);
-
     const auto currentTime = millis();
 
     /**
@@ -184,7 +182,7 @@ void loop() {
  */
 #ifdef __SMCE__
     static auto previousFrame = 0UL;
-    if (currentTime - previousFrame >= 65) {
+    if (currentTime - previousFrame >= 250) {
       previousFrame = currentTime;
       Camera.readFrame(frameBuffer.data());
       mqtt.publish(CAMERA_TOPIC, frameBuffer.data(), frameBuffer.size(), false,
