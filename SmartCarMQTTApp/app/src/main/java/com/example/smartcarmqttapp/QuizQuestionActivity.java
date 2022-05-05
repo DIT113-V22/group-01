@@ -126,9 +126,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         categories = new HashSet<>();
         specifcQuestionList = new ArrayList<>();
 
-        if(currentQuestionNum == totalQuestions){
-            nextButton.setText("Finish Quiz");
-        }
 
         questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
         categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
@@ -164,8 +161,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
     //TODO: clean this spaghetti code up fam
     protected void customQuiz(int questionCountSelected, String categorySelected) {
         Random rand = new Random();
+        //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
             //TODO: make sure you get only the questions amount for category selected
+            List<Question> q = new ArrayList<>();
+            q = db.getCategoryQuestions(categorySelected);
             questionList = db.getCategoryQuestions(categorySelected);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
@@ -174,7 +174,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
             totalQuestions = questionCountSelected;
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
-        } if (questionCountSelected != 0) {
+        //random quiz with only the amount of selected questions
+        } else if (questionCountSelected != 0) {
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
                 specifcQuestionList.add(questionList.get(randomIndex));
@@ -182,14 +183,16 @@ public class QuizQuestionActivity extends AppCompatActivity {
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             totalQuestions = questionCountSelected;
             addQuestion(specifcQuestionList);
-            //if they selected the question count and a category then this happens
+        //if they selected the question count and a category then this happens
         } else if (!categorySelected.equals("No Category")) {
+            //quiz with only selected category question
             specifcQuestionList = db.getCategoryQuestions(categorySelected);
             totalQuestions = specifcQuestionList.size();
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
         }
         else {
+            //random quiz with 45 questions
             quizState = new QuizState(true, questionList, null, scoreNumber);
             totalQuestions = questionList.size();
             addQuestion(questionList);
