@@ -8,82 +8,139 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toTopOf="@+id/mainLayout"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
 
-        <TextView
-            android:id="@+id/udText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:layout_width="205dp"
+            android:layout_height="111dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="256dp"
-            android:text="Ultrasound Distance (cm):" />
+            android:layout_marginStart="164dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginBottom="179dp"
+            android:background="@android:color/transparent"
+            android:translationX="20dp"
+            android:translationY="-20dp"
+            android:visibility="visible"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardElevation="0dp">
 
-        <TextView
-            android:id="@+id/gyroText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="221dp"
-            android:text="Gyroscope Heading (degrees):" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/infraText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="185dp"
-            android:text="Infrared Distance (cm):" />
+                <TextView
+                    android:id="@+id/udText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.025"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.064" />
 
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="185dp"
-            android:text="0" />
+                <TextView
+                    android:id="@+id/ultrasoundValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.84"
+                    app:layout_constraintStart_toEndOf="@+id/udText"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.054" />
 
-        <TextView
-            android:id="@+id/gyroValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="222dp"
-            android:text="0" />
+                <TextView
+                    android:id="@+id/infraText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toTopOf="@+id/gyroText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.024"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/udText"
+                    app:layout_constraintVertical_bias="0.458" />
 
-        <TextView
-            android:id="@+id/ultrasoundValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="257dp"
-            android:text="0" />
+                <TextView
+                    android:id="@+id/infraValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.841"
+                    app:layout_constraintStart_toEndOf="@+id/infraText"
+                    app:layout_constraintTop_toBottomOf="@+id/ultrasoundValue"
+                    app:layout_constraintVertical_bias="0.274" />
+
+                <TextView
+                    android:id="@+id/gyroText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.027"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/udText"
+                    app:layout_constraintVertical_bias="0.886" />
+
+                <TextView
+                    android:id="@+id/gyroValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.845"
+                    app:layout_constraintStart_toEndOf="@+id/gyroText"
+                    app:layout_constraintTop_toBottomOf="@+id/infraValue"
+                    app:layout_constraintVertical_bias="0.666" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
     </RelativeLayout>
+
+    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"--><![CDATA[
+    app:layout_csontraintTop_toBottomOf="@+id/mainLayout"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:translationY="580dp"
+    tools:layout_editor_absoluteY="1091dp" />
+
+
+
+
+
+    ]]>
 
     <LinearLayout
         android:id="@+id/mainLayout"
         android:layout_width="406dp"
         android:layout_height="345dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.821"
         app:srcCompat="@drawable/ic_aboutus_24"
-        tools:layout_editor_absoluteX="2dp"
-        tools:layout_editor_absoluteY="316dp">
+        tools:layout_editor_absoluteX="2dp">
 
         <View
             android:id="@+id/divider4"
@@ -170,12 +227,15 @@
                             app:layout_constraintVertical_bias="0.231" />
 
                         <Button
-                            android:id="@+id/button5"
+                            android:id="@+id/toggleDataBtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Toggle Data"
-                            tools:layout_editor_absoluteX="252dp"
-                            tools:layout_editor_absoluteY="20dp" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.94"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -285,17 +345,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <!--        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"--><![CDATA[
-    app:layout_csontraintTop_toBottomOf="@+id/mainLayout"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:translationY="580dp"
-    tools:layout_editor_absoluteY="1091dp" />
-
-
-
-    ]]>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
