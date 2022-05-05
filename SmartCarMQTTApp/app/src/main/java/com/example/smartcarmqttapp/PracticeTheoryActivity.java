@@ -49,13 +49,14 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
 
 
-    private static int MILLIS;
+    private static int MILLIS = 0;
 
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MILLIS = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_theory);
         goToQuiz();
@@ -205,7 +206,9 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
                 intent.putExtra("TIMER_VALUE", MILLIS);
                 intent.putExtra("OPTION_QUESTIONS", questionCount);
-                intent.putExtra("CATEGORY_SELECTED", categoryValue);
+                if(categoryValue.equals("")) intent.putExtra("CATEGORY_SELECTED", "");
+                else intent.putExtra("CATEGORY_SELECTED", categoryValue);
+
                 startActivity(intent);
             }
         });

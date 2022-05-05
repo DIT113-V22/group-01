@@ -128,15 +128,17 @@ public class QuizQuestionActivity extends AppCompatActivity {
         categories = new HashSet<>();
         specifcQuestionList = new ArrayList<>();
 
-
+        //default values are 0, ""
         questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
         categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
 
         System.out.println(questionCountSelected);
         System.out.println(categorySelected);
         //Forms custom quiz with question count from previous screen
-        if(questionCountSelected != 0 || !(categorySelected.equals("No Category")))
-            customQuiz(questionCountSelected, categorySelected);
+        if(questionCountSelected != 0 || !(categorySelected.equals("")))
+            if(!(categorySelected.equals("No Category")))
+                customQuiz(questionCountSelected, categorySelected);
+            else customQuiz(questionCountSelected, "No Category");
         else {
             //else start a random quiz -- No settings selected
             quizState = new QuizState(true, questionList, null, scoreNumber);
@@ -193,6 +195,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
             totalQuestions = specifcQuestionList.size();
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
+        }
+        else{
+            quizState = new QuizState(true, questionList, null, scoreNumber);
+            totalQuestions = questionList.size();
+            addQuestion(questionList);
         }
     }
 
