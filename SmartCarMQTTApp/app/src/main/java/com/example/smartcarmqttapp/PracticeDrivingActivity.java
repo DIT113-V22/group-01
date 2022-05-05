@@ -100,9 +100,11 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         //sensorDisplayButton = findViewById(R.id.sensorDataButton);
         sensorDialog = new Dialog(this);
 
+        toggleDataButton = findViewById(R.id.toggleDataBtn);
+
         dashboard();
 
-        toggleDataButton = findViewById(R.id.toggleDataBtn);
+
 
         toggleDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -410,8 +412,22 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                 R.anim.blinker
         );
         leftBlinkerArrow.startAnimation(animation);
-        leftBlinkerButton.setBackgroundColor(Color.YELLOW);
+        Thread thread = new Thread() {
 
+            @Override
+            public void run(){
+                try {
+                    double initialHeading = Double.parseDouble(CarState.instance.getGyroHeading());
+                    Thread.sleep(1000);
+                    if (initialHeading - Double.parseDouble(CarState.instance.getGyroHeading()) > 0) { // right turn
+                        leftBlinkerArrow.clearAnimation();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
 
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Left);
     }
@@ -427,6 +443,23 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                 R.anim.blinker
         );
         rightBlinkerArrow.startAnimation(animation);
+
+        Thread thread = new Thread() {
+
+            @Override
+            public void run(){
+                try {
+                    double initialHeading = Double.parseDouble(CarState.instance.getGyroHeading());
+                    Thread.sleep(1000);
+                    if (initialHeading - Double.parseDouble(CarState.instance.getGyroHeading()) < 0) { // left turn
+                        rightBlinkerArrow.clearAnimation();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
 
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
