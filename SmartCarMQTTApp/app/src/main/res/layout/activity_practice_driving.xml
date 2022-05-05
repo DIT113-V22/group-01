@@ -133,7 +133,7 @@
 
     <LinearLayout
         android:id="@+id/mainLayout"
-        android:layout_width="406dp"
+        android:layout_width="0dp"
         android:layout_height="345dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -252,33 +252,10 @@
                     android:background="?android:attr/listDivider" />
 
                 <Button
-                    android:id="@+id/button3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/button4"
-                    app:layout_constraintHorizontal_bias="0.079"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.084" />
-
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.948"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.084" />
-
-                <Button
                     android:id="@+id/estop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/teamBlue"
                     android:text="STOP"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -286,59 +263,95 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.642" />
 
-                <Button
-                    android:id="@+id/upButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="95dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="158dp"
+                    android:layout_marginEnd="158dp"
+                    android:layout_marginBottom="12dp"
                     android:backgroundTint="#9C27B0"
-                    android:onClick="onClickAccelerate"
-                    android:text="UP"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/estop"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.336" />
+                    app:srcCompat="@drawable/ic_arrow" />
 
-                <Button
-                    android:id="@+id/downButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="95dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="158dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="158dp"
                     android:backgroundTint="#9C27B0"
-                    android:onClick="onClickDecelerate"
-                    android:text="DOWN"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.973" />
+                    app:layout_constraintTop_toBottomOf="@+id/estop"
+                    app:srcCompat="@drawable/ic_arrow_down" />
 
-                <Button
-                    android:id="@+id/rightButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="95dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="52dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="68dp"
                     android:backgroundTint="#9C27B0"
-                    android:onClick="onClickRotateRight"
-                    android:text="RIGHT"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.886"
+                    app:layout_constraintEnd_toStartOf="@+id/estop"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.636" />
+                    app:srcCompat="@drawable/ic_arrow_left" />
 
-                <Button
-                    android:id="@+id/leftButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="95dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="68dp"
                     android:backgroundTint="#9C27B0"
-                    android:onClick="onClickRotateLeft"
-                    android:text="LEFT"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.119"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.636" />
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/estop"
+                    app:srcCompat="@drawable/ic_arrow_right" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginBottom="70dp"
+                    app:cardBackgroundColor="@color/teamBlue"
+                    app:layout_constraintBottom_toTopOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        app:srcCompat="@drawable/ic_blinker" />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="80dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="70dp"
+                    app:cardBackgroundColor="@color/teamBlue"
+                    app:layout_constraintBottom_toTopOf="@+id/imageButton3"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="50dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:rotationY="180"
+                        app:srcCompat="@drawable/ic_blinker" />
+                </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
