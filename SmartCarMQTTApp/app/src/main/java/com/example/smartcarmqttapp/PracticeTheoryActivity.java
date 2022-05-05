@@ -10,10 +10,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +35,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private ImageView settingsButton;
 
     private int questionCount = 0;
+    private String categoryValue = "";
 
     //Countdown timer
     public static final int TEN_MIN_IN_MILLIS = 600000;
@@ -41,19 +45,26 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private Switch enableTimer;
     private Dialog timerDialog;
     private Button tenMin, fifteenMin, twentyMin;
+    private Spinner spin;
 
-    private static int MILLIS;
 
 
+    private static int MILLIS = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MILLIS = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_theory);
         goToQuiz();
-        CrushersDataBase db = new CrushersDataBase(this);
-        List<Question> questions = db.getAllQuestions();
+
+        //Pass values to next screen for display, db query, and textview display
+
+        Intent intent = this.getIntent();
+        intent.putExtra("option_timer", 0);
+        intent.putExtra("option_numOfQuestions", 0);
+        intent.putExtra("option_category", "categoryName");
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
@@ -127,23 +138,46 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 settingsDialog.show();
 
                 Button button = settingsDialog.findViewById(R.id.confirmBtn);
+
+                String[] category = {"No Category", "Driving Safety and Best Practices", "Environment", "Basic Traffic Rules and Signs"};
+
+                spin = settingsDialog.findViewById(R.id.dropDown);
+                spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        //
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                        //
+                    }
+                });
+
+                //Creating the ArrayAdapter instance having the country list
+                ArrayAdapter aa = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, category);
+                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                //Setting the ArrayAdapter data on the Spinner
+                spin.setAdapter(aa);
+
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         EditText enterQnumber = settingsDialog.findViewById(R.id.editTextNumber);
 
-                        questionCount = Integer.parseInt(enterQnumber.getText().toString());
-                        if(questionCount > 10 || questionCount < 1){
-                            TextView t = settingsDialog.findViewById(R.id.warningForNums);
-                            t.setText("Enter a number ranging between 1 - 10");
-                            t.setTextColor(Color.RED);
+                        if(!enterQnumber.getText().toString().equals("")){
+                            questionCount = Integer.parseInt(enterQnumber.getText().toString());
+                            if(questionCount > 10 || questionCount < 1){
+                                TextView t = settingsDialog.findViewById(R.id.warningForNums);
+                                t.setText("Enter a number ranging between 1 - 10");
+                                t.setTextColor(Color.RED);
+                            }
                         }
-                        else{
-                            settingsDialog.cancel();
-                            Toast.makeText(getBaseContext(),
-                                    "Setting successfully updated!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        categoryValue = spin.getSelectedItem().toString();
+                        settingsDialog.cancel();
+                        Toast.makeText(getBaseContext(),
+                                "Setting successfully updated!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -155,10 +189,24 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if the user hasnt entered the settings
+                if(questionCount == 0 && categoryValue.equals("")){
+                    Toast.makeText(getBaseContext(),
+                            "No settings chosen -- Loading Random Quiz",
+                            Toast.LENGTH_SHORT).show();
+                }
+                try {
+                    Thread.sleep(1200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
                 intent.putExtra("TIMER_VALUE", MILLIS);
-                startActivity(intent);
+                intent.putExtra("OPTION_QUESTIONS", questionCount);
+                if(categoryValue.equals("")) intent.putExtra("CATEGORY_SELECTED", "");
+                else intent.putExtra("CATEGORY_SELECTED", categoryValue);
 
+                startActivity(intent);
             }
         });
     }
