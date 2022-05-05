@@ -1,25 +1,17 @@
 package com.example.smartcarmqttapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     public MqttCar controller;
     public CardView theoryCard, drivingCard, connectCard, supportCard;
-
 
     private BottomNavigationView bottomNavigationView;
 
@@ -28,6 +20,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         theoryCard = (CardView) findViewById(R.id.theoryCard);
         drivingCard = (CardView) findViewById(R.id.drivingCard);
         connectCard = (CardView) findViewById(R.id.connectCard);
@@ -56,13 +49,31 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     switch (view.getId()){
         // TODO: Add activity class to intent. e.g  case R.id.theoryCard:i = new Intent(this,Driving.class);startActivity(i);
-        case R.id.theoryCard:i = new Intent(this,PracticeTheoryActivity.class);startActivity(i);
+        case R.id.theoryCard:i = new Intent(this, PracticeTheoryActivity.class);startActivity(i);
         break;
-        case R.id.drivingCard:i = new Intent(this,PracticeDrivingActivity.class);startActivity(i);
+        case R.id.drivingCard: i = new Intent(this, PracticeDrivingActivity.class);startActivity(i);
+        /*
+        //If the carstate worked than this would be useful
+        if(CarState.instance.isConnected()) {
+                i = new Intent(this, PracticeDrivingActivity.class);
+                startActivity(i);
+            } else {
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setMessage("Would you like to connect to it?")
+                        .setPositiveButton("Connect my car!!!", (theDialog, id) -> {
+                            Intent intent = new Intent(this, ConnectedCarActivity.class);
+                            startActivity(intent);
+                        })
+                        .create();
+
+                dialog.setTitle("Car Not Connected 😔");
+                dialog.show();
+            }
+         */
+            break;
+        case R.id.connectCard:i = new Intent(this, ConnectedCarActivity.class);startActivity(i);
         break;
-        case R.id.connectCard:i = new Intent(this,ConnectedCarActivity.class);startActivity(i);
-        break;
-        case R.id.supportCard:i = new Intent(this,AboutUsActivity.class);startActivity(i);
+        case R.id.supportCard:i = new Intent(this, AboutUsActivity.class);startActivity(i);
         break;
         default:break;
     }

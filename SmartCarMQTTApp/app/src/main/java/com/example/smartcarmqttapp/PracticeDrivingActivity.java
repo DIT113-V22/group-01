@@ -196,7 +196,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             }
         });
 
-
         controller = new MqttCar(getApplicationContext(), () -> {
             try {
                 controller.changeSpeed(0.5);
