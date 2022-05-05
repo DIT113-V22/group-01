@@ -299,33 +299,21 @@ public class PracticeDrivingActivity extends AppCompatActivity {
      */
     public void onClickBlinkLeft(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Left);
+
         Animation animation = AnimationUtils.loadAnimation(
                 getApplicationContext(),
                 R.anim.blinker
         );
-        leftBlinkerArrow.startAnimation(animation);
-        Thread thread = new Thread() {
 
-            @Override
-            public void run(){
-                try {
-                    double initialHeading = Double.parseDouble(CarState.instance.getGyroHeading());
-                    Thread.sleep(1000);
-                    if (initialHeading - Double.parseDouble(CarState.instance.getGyroHeading()) > 0) { // right turn
-                        leftBlinkerArrow.clearAnimation();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
-
-        if(leftBlinkerArrow.getAnimation().hasEnded()){
-            thread.interrupt();
+        if (clicks == 1) {
+            clicks--;
+            leftBlinkerArrow.clearAnimation();
+        }else{
+            leftBlinkerArrow.startAnimation(animation);
+            rightBlinkerArrow.clearAnimation();
+            clicks++;
         }
-
-        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Left);
+        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
 
     /**
@@ -334,33 +322,20 @@ public class PracticeDrivingActivity extends AppCompatActivity {
      */
     public void onClickBlinkRight(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Right);
+
         Animation animation = AnimationUtils.loadAnimation(
                 getApplicationContext(),
                 R.anim.blinker
         );
-        rightBlinkerArrow.startAnimation(animation);
 
-        Thread thread = new Thread() {
-
-            @Override
-            public void run(){
-                try {
-                    double initialHeading = Double.parseDouble(CarState.instance.getGyroHeading());
-                    Thread.sleep(1000);
-                    if (initialHeading - Double.parseDouble(CarState.instance.getGyroHeading()) < 0) { // left turn
-                        rightBlinkerArrow.clearAnimation();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
-
-        if(rightBlinkerArrow.getAnimation().hasEnded()){
-            thread.interrupt();
+        if (clicks == 1) {
+            clicks--;
+            rightBlinkerArrow.clearAnimation();
+        }else{
+            rightBlinkerArrow.startAnimation(animation);
+            leftBlinkerArrow.clearAnimation();
+            clicks++;
         }
-
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
 
