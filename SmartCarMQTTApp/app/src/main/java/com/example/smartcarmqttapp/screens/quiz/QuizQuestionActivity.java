@@ -1,4 +1,4 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.screens.quiz;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -19,7 +19,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.smartcarmqttapp.Navigation;
+import com.example.smartcarmqttapp.R;
+import com.example.smartcarmqttapp.database.CrushersDataBase;
+import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
+import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.model.UserAnswer;
+import com.example.smartcarmqttapp.screens.HomeActivity;
 import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -81,7 +87,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +139,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         System.out.println(questionCountSelected);
         System.out.println(categorySelected);
+
         //Forms custom quiz with question count from previous screen
         if(questionCountSelected != 0 || !(categorySelected.equals("")))
             if(!(categorySelected.equals("No Category")))
@@ -148,11 +154,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         onNextQuestionButtonClicked();
 
-
+        // bottomNavigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                alertQuitQuiz(() -> navigate(item));
+                alertQuitQuiz(() -> Navigation.navigate(zis, item));
                 return false;
             }
         });
@@ -171,6 +179,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
             questionList = db.getCategoryQuestions(categorySelected);
+            System.out.println(questionList);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
                 specifcQuestionList.add(questionList.get(randomIndex));
@@ -214,38 +223,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         dialog.setTitle("Leaving Quiz");
         dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
         dialog.show();
-    }
-
-    protected boolean navigate(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.connectedCar:
-                startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.practiceDriving:
-                startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.home:
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.practiceTheory:
-                startActivity(new Intent(getApplicationContext(), PracticeTheoryActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.aboutUs:
-                startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            default:
-                return false;
-        }
     }
 
     /**
