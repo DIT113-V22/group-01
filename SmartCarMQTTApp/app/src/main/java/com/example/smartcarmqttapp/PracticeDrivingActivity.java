@@ -2,6 +2,7 @@ package com.example.smartcarmqttapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.databinding.Observable;
 
 import android.app.Dialog;
@@ -11,6 +12,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.Color;
@@ -37,6 +40,9 @@ import java.time.LocalTime;
 public class PracticeDrivingActivity extends AppCompatActivity {
     public MqttCar controller;
     private int clicks = 0;
+
+    public ImageView leftBlinkerArrow, rightBlinkerArrow;
+    public CardView leftBlinkerButton, rightBlinkerButton;
 
     //Camera Config
     private final int IMAGE_HEIGHT = 240;
@@ -66,6 +72,16 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
 
+        leftBlinkerArrow = findViewById(R.id.leftBlinkerArrow);
+        rightBlinkerArrow = findViewById(R.id.rightBlinkerArrow);
+
+        leftBlinkerButton = findViewById(R.id.leftBlinker);
+        rightBlinkerButton= findViewById(R.id.rightBlinker);
+
+
+
+
+        sensorDisplayButton = findViewById(R.id.sensorDisplayButton);
         ultraSoundText = findViewById(R.id.udText);
         gyroText = findViewById(R.id.gyroText);
         infraredText = findViewById(R.id.infraText);
@@ -383,6 +399,13 @@ public class PracticeDrivingActivity extends AppCompatActivity {
      */
     public void onClickBlinkLeft(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Left);
+        Animation animation = AnimationUtils.loadAnimation(
+         getApplicationContext(),
+                R.anim.blinker
+        );
+        leftBlinkerArrow.startAnimation(animation);
+        leftBlinkerButton.setBackgroundColor(Color.YELLOW);
+
 
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Left);
     }
@@ -393,6 +416,11 @@ public class PracticeDrivingActivity extends AppCompatActivity {
      */
     public void onClickBlinkRight(View view) throws MqttException {
         controller.blinkDirection(MqttCar.BlinkerDirection.Right);
+        Animation animation = AnimationUtils.loadAnimation(
+                getApplicationContext(),
+                R.anim.blinker
+        );
+        rightBlinkerArrow.startAnimation(animation);
 
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
