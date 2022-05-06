@@ -6,15 +6,12 @@ import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-<<<<<<< HEAD
 import android.content.Intent;
-=======
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
->>>>>>> master
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -62,10 +59,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     private Button toggleDataButton;
     private Dialog sensorDialog;
-<<<<<<< HEAD
     PracticeDrivingActivity pda;
     BottomNavigationView bottomNavigationView;
-=======
 
     private SensorManager sensorManager;
     private final float[] accelerometerReading = new float[3];
@@ -76,7 +71,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     private Switch tilting;
 
->>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +78,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         setContentView(R.layout.activity_practice_driving);
         pda = this;
         Navigation.initializeNavigation(this, R.id.practiceDriving);
-<<<<<<< HEAD
         initializeNavBar();
-=======
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
->>>>>>> master
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
                         "Red button is an emergency stop \n \n" +
