@@ -18,6 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartcarmqttapp.R;
+import com.example.smartcarmqttapp.database.CrushersDataBase;
+import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
+import com.example.smartcarmqttapp.model.Question;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -61,13 +65,12 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     private Map<String, List<Question>> categoryQuestions;
 
-    private String selectedCategory;
+    public static String selectedCategory;
     private String selectedMode;
-    public static List<Question> selectedQuestions;
 
     private int EXAM_TIME_MILLIS = 30*60*1000; // exam time in millis
     private int MILLIS = 0; // default time in millis
-    private int numOfQuestions = 10; // default num of questions
+    public static int numOfQuestions = 0; // default num of questions
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,16 +162,27 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         ListView modeListView = findViewById(R.id.listMode);
         modeListView.setOnItemClickListener((adapterView, view, position, id) -> {
             selectedMode = quizModes.get(position);
-            if(position == 1) {
+            if(position == 0) {
+                timerContainer.setVisibility(View.VISIBLE);
+                numOfQuestionsContainer.setVisibility(View.VISIBLE);
+                timerTextView.setVisibility(View.VISIBLE);
+                numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                MILLIS = 0;
+                numOfQuestions = 10;
+            }else if(position == 1) {
                 timerContainer.setVisibility(View.INVISIBLE);
                 numOfQuestionsContainer.setVisibility(View.INVISIBLE);
                 timerTextView.setVisibility(View.INVISIBLE);
                 numOfQuestionsTextView.setVisibility(View.INVISIBLE);
+                MILLIS = EXAM_TIME_MILLIS;
+                selectedCategory = "No Category";
+                numOfQuestions = 0;
             } else {
                 timerContainer.setVisibility(View.VISIBLE);
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
+//                selectedCategory = "Review";
             }
         });
 
@@ -229,29 +243,30 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             return;
         }
         if(selectedMode.equals(quizModes.get(0)) && selectedCategory == null) {
-            warningTextView.setText("Please select a category!");
-            return;
+            selectedCategory = "No Category";
         }
 
-        selectedQuestions = new ArrayList<>();
-        if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
-            selectedQuestions = categoryQuestions.get(selectedCategory);
-            Collections.shuffle(selectedQuestions);
-            selectedQuestions = selectedQuestions.subList(0, numOfQuestions);
-            // get only N questions
-        } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
-            selectedQuestions = allQuestions;
-            MILLIS = EXAM_TIME_MILLIS;
-        } else {
-            for(Question question: allQuestions) { // Get Questions that need to be reviewed
-                if(question.getNeedsReview() == 1) {
-                    selectedQuestions.add(question);
-                }
-            }
-        }
+//        selectedQuestions = new ArrayList<>();
+//        if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
+//            selectedQuestions = categoryQuestions.get(selectedCategory);
+//            Collections.shuffle(selectedQuestions);
+//            selectedQuestions = selectedQuestions.subList(0, numOfQuestions);
+//            // get only N questions
+//        } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
+//            selectedQuestions = allQuestions;
+//            MILLIS = EXAM_TIME_MILLIS;
+//        } else {
+//            for(Question question: allQuestions) { // Get Questions that need to be reviewed
+//                if(question.getNeedsReview() == 1) {
+//                    selectedQuestions.add(question);
+//                }
+//            }
+//        }
 
         Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
         intent.putExtra("TIMER_VALUE", MILLIS);
+        intent.putExtra("numOfQuestions", numOfQuestions);
+        intent.putExtra("category", selectedCategory);
         startActivity(intent);
         // I tried passing
     }

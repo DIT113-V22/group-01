@@ -31,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -93,13 +94,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
         zis = this;
         Intent intent = getIntent();
 
-        questionList = PracticeTheoryActivity.selectedQuestions;
-        System.out.println(questionList);
-
         Bundle extras = intent.getExtras();
         MILLIS = extras.getInt("TIMER_VALUE", 0);
+        String category = extras.getString("category");
+        int numberOfQuestions = extras.getInt("numOfQuestions");
+
         System.out.println("Starting quiz with Timer " + MILLIS);
-        System.out.println("And Questions: " + questionList);
 
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
@@ -131,10 +131,15 @@ public class QuizQuestionActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
-//        CrushersDataBase db = new CrushersDataBase(this);
-//        questionList = db.getAllQuestions();
-        quizState = new QuizState(true, questionList, null, scoreNumber);
+        CrushersDataBase db = new CrushersDataBase(this);
+        questionList = db.getAllQuestions();
+//        quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
+        specifcQuestionList = new ArrayList<>();
+        categories = new HashSet<>();
+        this.db = new CrushersDataBase(this);
+
+        customQuiz(numberOfQuestions, category);
 
         onNextQuestionButtonClicked();
 
@@ -159,6 +164,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     protected void customQuiz(int questionCountSelected, String categorySelected) {
+
         Random rand = new Random();
         //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
