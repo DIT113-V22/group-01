@@ -252,7 +252,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 areYouSure.setText("");
 
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
-                    selectQ.setText("Select a question or skip by pressing 'Next Question' twice");
+                    selectQ.setText("Select an answer or skip by pressing 'Next Question' twice");
                 } else {
                     selectQ.setText("");
                     //Set skip warning to transparent
