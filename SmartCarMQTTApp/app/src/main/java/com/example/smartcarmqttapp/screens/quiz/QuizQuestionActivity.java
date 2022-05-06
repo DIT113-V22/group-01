@@ -31,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -133,6 +134,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //add questions to question list via helper method --> help us select question
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
+        Collections.shuffle(questionList);
 //        quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
         specifcQuestionList = new ArrayList<>();

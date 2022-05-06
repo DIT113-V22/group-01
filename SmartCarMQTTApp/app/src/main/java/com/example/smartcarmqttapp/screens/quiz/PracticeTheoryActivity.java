@@ -103,6 +103,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 System.out.println("Selected Questions: " + (i+1));
+                numOfQuestionsSeekBar.setAlpha(1);
                 numOfQuestions = i+1;
             }
 
@@ -120,6 +121,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         timerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                timerSeekBar.setAlpha(1);
                 MILLIS = (int)(600000*(1 + ((double)i/timerSeekBar.getMax())));
                 System.out.println("Selected Timer: 10min + " + MILLIS);
             }
@@ -134,6 +136,9 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
             }
         });
+
+        numOfQuestionsSeekBar.setAlpha(0.5f);
+        timerSeekBar.setAlpha(0.5f);
     }
 
     /**
@@ -168,7 +173,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
                 MILLIS = 0;
-                numOfQuestions = 10;
+                numOfQuestions = 15;
             }else if(position == 1) {
                 timerContainer.setVisibility(View.INVISIBLE);
                 numOfQuestionsContainer.setVisibility(View.INVISIBLE);
