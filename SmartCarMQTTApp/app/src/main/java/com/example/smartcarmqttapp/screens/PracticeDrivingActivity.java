@@ -167,8 +167,9 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                     //A crash!!!! Oh no.....
                     double irDistance = Double.parseDouble(CarState.instance.getIRDistance());
                     if(irDistance < 10 && irDistance > 0){
-                        AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.carcrash);
-                        AudioPlayer.instance.playSound(false);
+                        if(AudioPlayer.instance.getMp().isPlaying())
+                            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.carcrash);
+                            AudioPlayer.instance.playSound(false);
                     }
                 });
             });
