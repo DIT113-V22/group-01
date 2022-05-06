@@ -6,7 +6,15 @@ import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+<<<<<<< HEAD
 import android.content.Intent;
+=======
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+>>>>>>> master
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,6 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.smartcarmqttapp.MqttCar;
@@ -24,10 +33,14 @@ import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import pl.droidsonroids.gif.GifImageView;
 
 
-public class PracticeDrivingActivity extends AppCompatActivity {
+public class PracticeDrivingActivity extends AppCompatActivity implements SensorEventListener {
     public MqttCar controller;
     private int clicks = 0;
     private boolean exit = false;
@@ -49,8 +62,21 @@ public class PracticeDrivingActivity extends AppCompatActivity {
 
     private Button toggleDataButton;
     private Dialog sensorDialog;
+<<<<<<< HEAD
     PracticeDrivingActivity pda;
     BottomNavigationView bottomNavigationView;
+=======
+
+    private SensorManager sensorManager;
+    private final float[] accelerometerReading = new float[3];
+    private final float[] magnetometerReading = new float[3];
+
+    private final float[] rotationMatrix = new float[9];
+    private final float[] orientationAngles = new float[3];
+
+    private Switch tilting;
+
+>>>>>>> master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +84,12 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_practice_driving);
         pda = this;
         Navigation.initializeNavigation(this, R.id.practiceDriving);
+<<<<<<< HEAD
         initializeNavBar();
+=======
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+>>>>>>> master
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
                         "Red button is an emergency stop \n \n" +
@@ -83,12 +114,19 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         gyroVal = findViewById(R.id.gyroValue);
         infraredVal = findViewById(R.id.infraValue);
 
-        //sensorDisplayButton = findViewById(R.id.sensorDataButton);
+        tilting = findViewById(R.id.tilting);
+        toggleDataButton = findViewById(R.id.toggleDataBtn);
         sensorDialog = new Dialog(this);
 
-        toggleDataButton = findViewById(R.id.toggleDataBtn);
-
         dashboard();
+        if (CarState.instance.isConnected()) {
+            try {
+                CarState.instance.getConnectedCar().changeSpeed(25.0);
+            }
+            catch(Exception ex) {
+                // ignore
+            }
+        }
 
         toggleDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +193,13 @@ public class PracticeDrivingActivity extends AppCompatActivity {
                     imageView.setImageBitmap(controller.camera.get());
                 });
             });
+
+            try {
+                controller.steerCar(0);
+            }
+            catch (Exception ex) {
+                // ignore
+            }
         }
         else {
             imageView.setVisibility(View.INVISIBLE);
@@ -163,15 +208,88 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Get updates from the accelerometer and magnetometer at a constant rate.
+        // To make batch operations more efficient and reduce power consumption,
+        // provide support for delaying updates to the application.
+        //
+        // In this example, the sensor reporting delay is small enough such that
+        // the application receives an update before the system checks the sensor
+        // readings again.
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (accelerometer != null) {
+            sensorManager.registerListener(this, accelerometer,
+                    SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+        }
+        Sensor magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        if (magneticField != null) {
+            sensorManager.registerListener(this, magneticField,
+                    SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Don't receive any more updates from either sensor.
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
     protected void onStop() {
         if (CarState.instance.isConnected()) {
             CarState.instance.getConnectedCar().listeners.remove("dashboard");
             CarState.instance.getConnectedCar().listeners.remove("camera");
         }
+
         super.onStop();
     }
 
-    private void dashboard(){
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Ignore
+    }
+
+    // Get readings from accelerometer and magnetometer. To simplify calculations,
+    // consider storing these readings as unit vectors.
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            System.arraycopy(event.values, 0, accelerometerReading,
+                    0, accelerometerReading.length);
+        }
+        else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            System.arraycopy(event.values, 0, magnetometerReading,
+                    0, magnetometerReading.length);
+        }
+
+        updateOrientationAngles();
+    }
+
+
+    // Compute the three orientation angles based on the most recent readings from
+    // the device's accelerometer and magnetometer.
+    public void updateOrientationAngles() {
+        // Update rotation matrix, which is needed to update orientation angles.
+        SensorManager.getRotationMatrix(rotationMatrix, null,
+                accelerometerReading, magnetometerReading);
+
+        SensorManager.getOrientation(rotationMatrix, orientationAngles);
+        // "orientationAngles" now has up-to-date information.
+
+        try {
+            long angle = Math.round(-orientationAngles[2] * GYROSCOPE_OFFSET);
+            if (tilting.isChecked()) CarState.instance.getConnectedCar().steerCar(angle);
+        }
+        catch (Exception ex) {
+            // ignore
+        }
+    }
+
+    private void dashboard() {
         TextView speedVal = findViewById(R.id.speedValue);
         TextView distanceVal = findViewById(R.id.distanceValue);
 
@@ -182,6 +300,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             });
         }
     }
+
     /**
      * Constants for determining Car behavior
      */
@@ -208,18 +327,6 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         public static final ChangeMode ANGLE_CHANGE = ChangeMode.ADDITION;
         public static final ChangeMode SPEED_CHANGE = ChangeMode.MULTIPLICATION;
 
-    }
-
-    /**
-     * Prefixes for displaying Sensor readings
-     */
-    public static final class SensorString {
-        public static final String SPEED = "Car Speed: ";
-        public static final String DISTANCE = "Total Distance: ";
-        public static final String GYROSCOPE = "Gyroscope Heading: ";
-        public static final String BLINKER = "Blinker Status: ";
-        public static final String INFRARED = "Infrared Distance: ";
-        public static final String ULTRASONIC = "Ultrasonic Distance: ";
     }
 
     public static final boolean FORCE_UPDATE = false; // upon theoretical data change, immediately updates visible fields

@@ -48,7 +48,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             .setMessage("Would you like to connect to it?")
                             .setPositiveButton("Connect my car!", (theDialog, id) -> {
                                 Intent intent = new Intent(this, ConnectedCarActivity.class);
-                                startActivity(intent);
+                                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            })
+                            .setNegativeButton("NO!", (theDialog, id) -> {
+                                Intent intent = new Intent(this, PracticeDrivingActivity.class);
+                                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             })
                             .create();
 
