@@ -58,7 +58,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         Navigation.initializeNavigation(this, R.id.practiceDriving);
 
         //play sound file and set looping to true
-        AudioPlayer.instance.playSound(this, R.raw.carStartingSound, true);
+        AudioPlayer.instance.playSound(this, R.raw.carstartsound, true);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
@@ -158,6 +158,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             });
         }
         else {
+            AudioPlayer.instance.playSound(getBaseContext(), R.id.disconnectButton, true);
             imageView.setVisibility(View.INVISIBLE);
             screenError.setVisibility(View.VISIBLE);
         }
