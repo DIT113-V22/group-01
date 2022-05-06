@@ -1,12 +1,15 @@
 package com.example.smartcarmqttapp.screens;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,6 +21,7 @@ import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.state.CarState;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import pl.droidsonroids.gif.GifImageView;
@@ -45,14 +49,16 @@ public class PracticeDrivingActivity extends AppCompatActivity {
 
     private Button toggleDataButton;
     private Dialog sensorDialog;
-
+    PracticeDrivingActivity pda;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
+        pda = this;
         Navigation.initializeNavigation(this, R.id.practiceDriving);
-
+        initializeNavBar();
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
                         "Red button is an emergency stop \n \n" +
@@ -384,5 +390,40 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         // Throttle and absolute speed are approximately linearly correlated with k=1.8
         // To obtain percentage integer from ratio, multiply by 100
         return absoluteSpeed / 1.8 * 100;
+    }
+
+    protected void alertQuitQuiz(Runnable onQuit) {
+
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setMessage("Are you really gonna wuss out on me?")
+                .setNegativeButton("Just Kidding!", (theDialog, id) -> {})
+                .setPositiveButton("\uD83D\uDE1E yeahhh..", (theDialog, id) -> {
+                    onQuit.run();
+                })
+                .create();
+
+        dialog.setTitle("Leaving Driver's Seat");
+        dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
+        dialog.show();
+    }
+
+    public void initializeNavBar() {
+
+        // For some reason uncommenting this breaks the app
+//            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+//            bottomNavigationView.setSelectedItemId(R.id.practiceDriving);
+//            bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+//                alertQuitQuiz(() -> Navigation.navigate(pda, item));
+//                return false;
+//            });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        alertQuitQuiz(() -> {
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            overridePendingTransition(0, 0);
+        });
     }
 }
