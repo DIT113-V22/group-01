@@ -189,13 +189,15 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         public static final double INITIAL_SPEED = 0; // speed of car upon initialization
         public static final double INITIAL_ANGLE = 0; // angle of car upon initialization
 
-        public static final double ACCELERATION_FACTOR = 1.1; // multiplication factor for accelerating
-        public static final double DECELERATION_FACTOR = 0.9; // multiplication factor for decelerating
+        public static final double ACCELERATION_FACTOR = 1.5; // multiplication factor for accelerating
+        public static final double DECELERATION_FACTOR = 0.8; // multiplication factor for decelerating
 
         public static final double TURN_LEFT_ANGLE = 10; // addition angle for turning left
         public static final double TURN_RIGHT_ANGLE = -10; // addition angle for turning right
 
-        public static final double MIN_SPEED = 0.05; // threshold for stopping car when decelerating
+        public static final double STARTING_THROTTLE = 10;
+        public static final double MIN_THROTTLE = 5; // threshold for stopping car when decelerating
+        public static final double MAX_THROTTLE = 100; // threshold for accelerating car
 
         public static final ChangeMode ANGLE_CHANGE = ChangeMode.ADDITION;
         public static final ChangeMode SPEED_CHANGE = ChangeMode.MULTIPLICATION;
@@ -232,15 +234,21 @@ public class PracticeDrivingActivity extends AppCompatActivity {
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
      */
     public void onClickAccelerate(View view) throws MqttException {
-        double initialSpeed = controller.speed.get(); // returns 0.138
-        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed); // returns 10
-        double acceleratedSpeed = initialSpeed == 0 ? ControlConstant.STARTING_SPEED : initialSpeed * ControlConstant.ACCELERATION_FACTOR;
-        controller.changeSpeed(acceleratedSpeed);
-
-        if(FORCE_UPDATE) controller.speed.set(acceleratedSpeed);
+        double initialThrottle = controller.throttle.get();
+        double acceleratedThrottle;
+        if(initialThrottle == 0) { // car standing still: start driving
+            acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
+        }else if(initialThrottle > 0) { // car driving: increase speed
+            acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
+        }else { // car driving backwards: increase speed (decrease speed modulus)
+            acceleratedThrottle = initialThrottle / ControlConstant.ACCELERATION_FACTOR;
+        }
+        acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
+        controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
+        controller.throttle.set(acceleratedThrottle); // stores current throttle
 
         // Debugging
-        System.out.println("Accelerating from " + initialSpeed + " % to " + acceleratedSpeed + " %");
+        System.out.println("Accelerating from " + initialThrottle + " % to " + acceleratedThrottle + " %");
 
         /* unopinionated approach to changing speed and angle by allowing user to select change mode.
         double acceleratedSpeed =
@@ -254,15 +262,24 @@ public class PracticeDrivingActivity extends AppCompatActivity {
      * Decreases (multiplication) speed of moving car OR stops movement given speed is below threshold. Bound to button R.id.downButton
      */
     public void onClickDecelerate(View view) throws MqttException {
-        double initialSpeed = controller.speed.get();
-        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed);
-        double deceleratedSpeed = initialSpeed > ControlConstant.MIN_SPEED ? initialSpeed * ControlConstant.DECELERATION_FACTOR : 0;
-        controller.changeSpeed(deceleratedSpeed);
-
-        if(FORCE_UPDATE) controller.speed.set(deceleratedSpeed);
+        double initialThrottle = controller.throttle.get();
+        double deceleratedThrottle;
+        if(initialThrottle == 0) { // car standing still: start driving backwards
+            deceleratedThrottle = -ControlConstant.STARTING_THROTTLE;
+        }else if(initialThrottle > 0) { // car driving: slow down
+            deceleratedThrottle = initialThrottle * ControlConstant.DECELERATION_FACTOR;
+        }else{ // car driving backwards: speed up backwards
+            deceleratedThrottle = initialThrottle / ControlConstant.DECELERATION_FACTOR;
+        }
+        // if after deceleration the speed is (positive) MIN, then car should stop
+        deceleratedThrottle = deceleratedThrottle > 0 && deceleratedThrottle < ControlConstant.MIN_THROTTLE ? 0 : deceleratedThrottle;
+        // speed modulus cant be greater than MAX
+        deceleratedThrottle = Math.max(deceleratedThrottle, -ControlConstant.MAX_THROTTLE);
+        controller.changeSpeed(deceleratedThrottle); // publish to MQTT
+        controller.throttle.set(deceleratedThrottle); // store current throttle
 
         // Debugging
-        System.out.println("Accelerating from " + initialSpeed + " % to " + deceleratedSpeed + " %");
+        System.out.println("Decelerating from " + initialThrottle + " to " + deceleratedThrottle);
     }
 
     /**

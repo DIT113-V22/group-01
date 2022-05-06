@@ -101,6 +101,11 @@ public class MqttCar extends BaseObservable implements IMqttActionListener, Mqtt
     public final ObservableField<LocalDateTime> lastHeartbeat = new ObservableField<>(LocalDateTime.now());
 
     /**
+     * Throttle
+     */
+    public final ObservableField<Double> throttle = new ObservableField<>(0.0);
+
+    /**
      * Speed in m/s.
      */
     public final ObservableField<Double> speed = new ObservableField<>(0.0);
@@ -299,7 +304,7 @@ public class MqttCar extends BaseObservable implements IMqttActionListener, Mqtt
             // For ui updates
             for (Runnable listener : listeners.values()) {
                 listener.run();
-                System.out.println(listener);
+//                System.out.println(listener);
             }
         }
         catch (NumberFormatException ex) {
