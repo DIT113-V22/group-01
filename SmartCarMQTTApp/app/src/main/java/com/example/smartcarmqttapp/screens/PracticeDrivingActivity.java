@@ -110,14 +110,14 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         sensorDialog = new Dialog(this);
 
         dashboard();
-        if (CarState.instance.isConnected()) {
-            try {
-                CarState.instance.getConnectedCar().changeSpeed(25.0);
-            }
-            catch(Exception ex) {
-                // ignore
-            }
-        }
+//        if (CarState.instance.isConnected()) {
+//            try {
+//                CarState.instance.getConnectedCar().changeSpeed(25.0);
+//            }
+//            catch(Exception ex) {
+//                // ignore
+//            }
+//        }
 
         toggleDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -342,6 +342,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         double acceleratedThrottle;
         if(initialThrottle == 0) { // car standing still: start driving
             acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
+        }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
+            acceleratedThrottle = 0;
         }else if(initialThrottle > 0) { // car driving: increase speed
             acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
         }else { // car driving backwards: increase speed (decrease speed modulus)
@@ -370,13 +372,13 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         double deceleratedThrottle;
         if(initialThrottle == 0) { // car standing still: start driving backwards
             deceleratedThrottle = -ControlConstant.STARTING_THROTTLE;
+        }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE){
+            deceleratedThrottle = 0;
         }else if(initialThrottle > 0) { // car driving: slow down
             deceleratedThrottle = initialThrottle * ControlConstant.DECELERATION_FACTOR;
         }else{ // car driving backwards: speed up backwards
             deceleratedThrottle = initialThrottle / ControlConstant.DECELERATION_FACTOR;
         }
-        // if after deceleration the speed is (positive) MIN, then car should stop
-        deceleratedThrottle = deceleratedThrottle > 0 && deceleratedThrottle < ControlConstant.MIN_THROTTLE ? 0 : deceleratedThrottle;
         // speed modulus cant be greater than MAX
         deceleratedThrottle = Math.max(deceleratedThrottle, -ControlConstant.MAX_THROTTLE);
         controller.changeSpeed(deceleratedThrottle); // publish to MQTT
