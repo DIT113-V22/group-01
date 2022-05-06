@@ -153,10 +153,23 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             AudioPlayer.instance.playSound(true);
 
             controller = CarState.instance.getConnectedCar();
+
             controller.listeners.put("camera", () -> {
                     Log.d("ui update", "ui update");
                 runOnUiThread(() -> {
                     imageView.setImageBitmap(controller.camera.get());
+                });
+            });
+
+            controller.listeners.put("crashsounds", () -> {
+                    Log.d("crash sound", "crash sound");
+                runOnUiThread(() -> {
+                    //A crash!!!! Oh no.....
+                    double irDistance = Double.parseDouble(CarState.instance.getIRDistance());
+                    if(irDistance < 10 && irDistance > 0){
+                        AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.carcrash);
+                        AudioPlayer.instance.playSound(false);
+                    }
                 });
             });
         }
