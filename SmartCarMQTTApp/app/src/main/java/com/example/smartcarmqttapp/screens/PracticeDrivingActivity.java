@@ -168,14 +168,11 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         }
 
     }
-    @Override
-    public void onDestroy() {
-        AudioPlayer.instance.stopSound();
-        super.onDestroy();
-    }
 
     @Override
     protected void onStop() {
+        AudioPlayer.instance.stopSound();
+
         if (CarState.instance.isConnected()) {
             CarState.instance.getConnectedCar().listeners.remove("dashboard");
             CarState.instance.getConnectedCar().listeners.remove("camera");
