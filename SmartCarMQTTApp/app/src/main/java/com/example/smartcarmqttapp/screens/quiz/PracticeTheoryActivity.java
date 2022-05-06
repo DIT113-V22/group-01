@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.database.CrushersDataBase;
 import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
@@ -82,7 +83,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         this.categoryQuestions = groupQuestionsByCategory(allQuestions);
 
         initializeElements();
-        initializeNavBar();
+        Navigation.initializeNavigation(this, R.id.practiceTheory);
 
         addModesToModeListView();
         addCategoriesToCategoryListView();
@@ -276,15 +277,5 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         // I tried passing
     }
 
-    private void initializeNavBar() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
-        Intent intent = this.getIntent();
-        intent.putExtra("option_timer", 0);
-        intent.putExtra("option_numOfQuestions", 0);
-        intent.putExtra("option_category", "categoryName");
-
-    }
 
 }
