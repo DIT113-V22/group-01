@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
+import com.example.smartcarmqttapp.model.AudioPlayer;
 import com.example.smartcarmqttapp.state.CarState;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -46,12 +48,17 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     private Button toggleDataButton;
     private Dialog sensorDialog;
 
+    private MediaPlayer mp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
         Navigation.initializeNavigation(this, R.id.practiceDriving);
+
+        //play sound file and set looping to true
+        AudioPlayer.instance.playSound(this, R.raw.carStartingSound, true);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
@@ -368,4 +375,5 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         // To obtain percentage integer from ratio, multiply by 100
         return absoluteSpeed / 1.8 * 100;
     }
+
 }
