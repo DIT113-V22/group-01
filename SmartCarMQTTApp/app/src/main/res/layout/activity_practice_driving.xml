@@ -359,6 +359,24 @@
                         app:srcCompat="@drawable/ic_blinker" />
                 </androidx.cardview.widget.CardView>
 
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="128dp"
+                    android:textOff="OFF"
+                    android:textOn="ON"
+                    android:textSize="25sp"
+                    android:thumb="@drawable/thumb"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton5"
+                    app:layout_constraintHorizontal_bias="0.326"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/leftBlinker"
+                    app:showText="true"
+                    app:track="@drawable/track"
+                    tools:ignore="MissingConstraints" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
