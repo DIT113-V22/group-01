@@ -14,6 +14,11 @@ import javax.sound.sampled.*;
 public class AudioPlayer {
     private MediaPlayer mp;
 
+    /*
+    Sounds under resources.raw folder:
+        Link to reference the carStartingSound: https://www.fesliyanstudios.com/sound-effects-search.php?q=car
+        Link to reference the disconnectedStatic: https://www.soundjay.com/tv-static-sound-effect.html#google_vignette
+     */
     protected AudioPlayer() {}
     public final static AudioPlayer instance = new AudioPlayer();
 
