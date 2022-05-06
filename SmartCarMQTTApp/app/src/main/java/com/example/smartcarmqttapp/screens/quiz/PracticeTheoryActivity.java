@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,13 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.database.CrushersDataBase;
-import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
 import com.example.smartcarmqttapp.model.Question;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +96,9 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         timerSeekBar = findViewById(R.id.timerSeekBar);
         timerTextView = findViewById(R.id.timerTextView);
         numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
+        findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+        findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+        findViewById(R.id.startQuizView).setVisibility(View.INVISIBLE);
 
         numOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -173,6 +173,10 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.VISIBLE);
+                findViewById(R.id.selectedCategoryTextView).setVisibility(View.VISIBLE);
+                findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Practice Quiz");
                 MILLIS = 0;
                 numOfQuestions = 15;
             }else if(position == 1) {
@@ -180,6 +184,11 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.INVISIBLE);
                 timerTextView.setVisibility(View.INVISIBLE);
                 numOfQuestionsTextView.setVisibility(View.INVISIBLE);
+
+                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+                findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+                findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Theory Exam");
                 MILLIS = EXAM_TIME_MILLIS;
                 selectedCategory = "No Category";
                 numOfQuestions = 0;
@@ -188,6 +197,10 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+                findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+                findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Review Questions");
 //                selectedCategory = "Review";
             }
         });
@@ -203,6 +216,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         categoryListView.setAdapter(adapter);
         categoryListView.setOnItemClickListener((adapterView, view, position, id) -> {
             selectedCategory = categories.get(position);
+            ((TextView)findViewById(R.id.selectedCategoryTextView)).setText("Choose a category: " + categories.get(position));
         });
     }
 
