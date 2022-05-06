@@ -57,8 +57,8 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_practice_driving);
         Navigation.initializeNavigation(this, R.id.practiceDriving);
 
+        AudioPlayer.instance.createMP();
         //play sound file and set looping to true
-        AudioPlayer.instance.playSound(this, R.raw.carstartsound, true);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
@@ -149,6 +149,9 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             imageView.setVisibility(View.VISIBLE);
             screenError.setVisibility(View.GONE);
 
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+            AudioPlayer.instance.playSound(true);
+
             controller = CarState.instance.getConnectedCar();
             controller.listeners.put("camera", () -> {
                     Log.d("ui update", "ui update");
@@ -158,10 +161,17 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             });
         }
         else {
-            AudioPlayer.instance.playSound(getBaseContext(), R.id.disconnectButton, true);
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.disconnectedstatic);
+            AudioPlayer.instance.playSound(true);
             imageView.setVisibility(View.INVISIBLE);
             screenError.setVisibility(View.VISIBLE);
         }
+
+    }
+    @Override
+    public void onDestroy() {
+        AudioPlayer.instance.stopSound();
+        super.onDestroy();
     }
 
     @Override

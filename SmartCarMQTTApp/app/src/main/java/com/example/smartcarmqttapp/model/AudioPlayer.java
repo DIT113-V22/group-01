@@ -14,18 +14,27 @@ public class AudioPlayer {
     protected AudioPlayer() {}
     public final static AudioPlayer instance = new AudioPlayer();
 
-    public void playSound(Context context, int idOfFile, boolean looping){
-        mp = MediaPlayer.create(context, idOfFile);
+    public void createMP(){
+        mp = new MediaPlayer();
+    }
+
+    public void chooseSongerino(Context context, int id){
+        this.mp = MediaPlayer.create(context, id);
+    }
+
+    public void playSound(boolean looping){
         mp.start();
         mp.setLooping(true);
     }
 
     public void stopSound(){
-        if(mp.isPlaying() || mp.isLooping()){
+        if(this.mp != null){
             mp.stop();
             mp.release();
         }
     }
 
-
+    public MediaPlayer getMp(){
+        return this.mp;
+    }
 }
