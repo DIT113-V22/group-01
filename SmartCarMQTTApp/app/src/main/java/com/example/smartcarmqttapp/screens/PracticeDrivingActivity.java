@@ -154,7 +154,7 @@ public class PracticeDrivingActivity extends AppCompatActivity {
             imageView.setVisibility(View.VISIBLE);
             screenError.setVisibility(View.GONE);
 
-            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.ferrari);
             AudioPlayer.instance.playSound(true);
 
             controller = CarState.instance.getConnectedCar();
