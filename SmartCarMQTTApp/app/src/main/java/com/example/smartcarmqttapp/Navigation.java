@@ -45,6 +45,10 @@ public class Navigation {
                 AlertDialog dialog = new AlertDialog.Builder(activity)
                         .setMessage("Would you like to connect to it?")
                         .setPositiveButton("Connect my car!", (theDialog, id) -> {
+                            activity.startActivity(new Intent(activity, ConnectedCarActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            activity.overridePendingTransition(0, 0);
+                        })
+                        .setNegativeButton("NO!", (theDialog, id) -> {
                             activity.startActivity(new Intent(activity, PracticeDrivingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             activity.overridePendingTransition(0, 0);
                         })
