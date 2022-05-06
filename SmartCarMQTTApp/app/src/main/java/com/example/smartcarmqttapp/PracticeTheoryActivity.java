@@ -1,6 +1,5 @@
 package com.example.smartcarmqttapp;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,11 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,9 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,26 +30,14 @@ import java.util.Map;
 public class PracticeTheoryActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
-    private Dialog settingsDialog;
-    private ImageView settingsButton;
 
-    private int questionCount = 0;
-
-    //Countdown timer
-    public static final int TEN_MIN_IN_MILLIS = 600000;
-    public static final int FIFTEEN_MIN_IN_MILLIS = 900000;
-    public static final int TWENTY_MIN_IN_MILLIS = 1200000;
-    private TextView timer;
-    private Switch enableTimer;
-    private Dialog timerDialog;
-    private Button tenMin, fifteenMin, twentyMin;
-
-    private static int MILLIS;
-
-    private TextView numOfQuestionsTextView;
-    private TextView timerTextView;
-    private SeekBar numOfQuestionsSeekBar;
+    private TextView warningTextView;
+    private LinearLayout timerContainer;
+    private LinearLayout numOfQuestionsContainer;
     private SeekBar timerSeekBar;
+    private SeekBar numOfQuestionsSeekBar;
+    private TextView timerTextView;
+    private TextView numOfQuestionsTextView;
 
     private List<Question> allQuestions;
 
@@ -79,6 +65,10 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private String selectedMode;
     public static List<Question> selectedQuestions;
 
+    private int EXAM_TIME_MILLIS = 30*60*1000; // exam time in millis
+    private int MILLIS = 0; // default time in millis
+    private int numOfQuestions = 10; // default num of questions
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,16 +85,21 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     }
 
+    // Initializes all interactive view instances
     private void initializeElements() {
-        numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
+        warningTextView = findViewById(R.id.warningTextView);
+        timerContainer = findViewById(R.id.timerContainer);
+        numOfQuestionsContainer = findViewById(R.id.numOfQuestionsContainer);
         numOfQuestionsSeekBar = findViewById(R.id.numOfQuestionsSeekBar);
-        timerTextView = findViewById(R.id.timerTextView);
         timerSeekBar = findViewById(R.id.timerSeekBar);
+        timerTextView = findViewById(R.id.timerTextView);
+        numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
 
         numOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 System.out.println("Selected Questions: " + (i+1));
+                numOfQuestions = i+1;
             }
 
             @Override
@@ -121,8 +116,8 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         timerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-                System.out.println("Selected Timer: 10min + " + 10*(i)/timerSeekBar.getMax());
+                MILLIS = (int)(600000*(1 + ((double)i/timerSeekBar.getMax())));
+                System.out.println("Selected Timer: 10min + " + MILLIS);
             }
 
             @Override
@@ -164,15 +159,15 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         modeListView.setOnItemClickListener((adapterView, view, position, id) -> {
             selectedMode = quizModes.get(position);
             if(position == 1) {
-                numOfQuestionsTextView.setVisibility(View.INVISIBLE);
-                numOfQuestionsSeekBar.setVisibility(View.INVISIBLE);
+                timerContainer.setVisibility(View.INVISIBLE);
+                numOfQuestionsContainer.setVisibility(View.INVISIBLE);
                 timerTextView.setVisibility(View.INVISIBLE);
-                timerSeekBar.setVisibility(View.INVISIBLE);
+                numOfQuestionsTextView.setVisibility(View.INVISIBLE);
             } else {
-                numOfQuestionsTextView.setVisibility(View.VISIBLE);
-                numOfQuestionsSeekBar.setVisibility(View.VISIBLE);
+                timerContainer.setVisibility(View.VISIBLE);
+                numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
-                timerSeekBar.setVisibility(View.VISIBLE);
+                numOfQuestionsTextView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -190,6 +185,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         });
     }
 
+    // Adapter for filling rows in Mode ListView
     class ModeAdapter extends ArrayAdapter<String> {
         Context ctx;
         ArrayList<String> titles;
@@ -228,20 +224,23 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     public void startQuiz(View view) {
         if(selectedMode == null) {
-            System.out.println("Mode not selected");
+            warningTextView.setText("Please select a mode!");
             return;
         }
         if(selectedMode.equals(quizModes.get(0)) && selectedCategory == null) {
-            System.out.println("Category not selected");
+            warningTextView.setText("Please select a category!");
             return;
         }
 
-        selectedQuestions = new ArrayList<Question>();
+        selectedQuestions = new ArrayList<>();
         if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
             selectedQuestions = categoryQuestions.get(selectedCategory);
+            Collections.shuffle(selectedQuestions);
+            selectedQuestions = selectedQuestions.subList(0, numOfQuestions);
             // get only N questions
         } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
             selectedQuestions = allQuestions;
+            MILLIS = EXAM_TIME_MILLIS;
         } else {
             for(Question question: allQuestions) { // Get Questions that need to be reviewed
                 if(question.getNeedsReview() == 1) {

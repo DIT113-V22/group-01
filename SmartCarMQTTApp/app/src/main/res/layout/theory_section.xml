@@ -87,8 +87,9 @@
         android:layout_height="218dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toBottomOf="@+id/cardCategory"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardCategory">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -103,14 +104,37 @@
                 android:gravity="center"
                 android:text="Select Timer length:" />
 
-            <SeekBar
-                android:id="@+id/timerSeekBar"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
+            <LinearLayout
+                android:id="@+id/timerContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:max="20"
-                android:progress="1" />
+                android:layout_height="27dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="10 min" />
+
+                <SeekBar
+                    android:id="@+id/timerSeekBar"
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:max="20"
+                    android:progress="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_vertical"
+                    android:layout_weight="1"
+                    android:text="20 min" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/numOfQuestionsTextView"
@@ -120,14 +144,39 @@
                 android:gravity="center"
                 android:text="Select Number of Questions:" />
 
-            <SeekBar
-                android:id="@+id/numOfQuestionsSeekBar"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
+            <LinearLayout
+                android:id="@+id/numOfQuestionsContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:max="14"
-                android:progress="1" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/minTimerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="1" />
+
+                <SeekBar
+                    android:id="@+id/numOfQuestionsSeekBar"
+                    style="@style/Widget.AppCompat.SeekBar.Discrete"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:max="14"
+                    android:progress="1" />
+
+                <TextView
+                    android:id="@+id/maxTimerTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:text="15" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/startQuizButton"
@@ -142,6 +191,16 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/warningTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#811F1F"
+        app:layout_constraintBottom_toTopOf="@+id/cardMode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textMode"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
