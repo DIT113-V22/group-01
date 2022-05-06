@@ -1,4 +1,4 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -101,5 +101,20 @@ public class Question {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "question='" + question + '\'' +
+                ", firstAnswer='" + firstAnswer + '\'' +
+                ", secondAnswer='" + secondAnswer + '\'' +
+                ", thirdAnswer='" + thirdAnswer + '\'' +
+                ", fourthAnswer='" + fourthAnswer + '\'' +
+                ", correctAnswer=" + correctAnswer +
+                ", explanation='" + explanation + '\'' +
+                ", needsReview=" + needsReview +
+                ", category='" + category + '\'' +
+                '}';
     }
 }

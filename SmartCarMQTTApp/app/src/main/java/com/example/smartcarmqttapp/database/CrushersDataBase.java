@@ -1,11 +1,13 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.example.smartcarmqttapp.QuizContract.*;
+
+import com.example.smartcarmqttapp.model.Question;
+import com.example.smartcarmqttapp.database.QuizContract.*;
 
 import androidx.annotation.Nullable;
 
@@ -14,19 +16,49 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CrushersDataBase extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "CrushersDataBase.db";
-    private static final int DATABASE_VERSION = 1;
+
+    public Context context;
+    public static final String DATABASE_NAME = "crushersDataBase.db";
+    public static final int DATABASE_VERSION = 1;
+
+    public static final String TABLE_NAME = "crushersDataBase";
+
+    public static final String COLUMN_ID = "_ID";
+    public static final String COLUMN_SCORE = "SCORE";
+    public static final String COLUMN_CORRECT_ANSWERS = "CORRECT_ANSWERS";
+    public static final String COLUMN_WRONG_ANSWERS = "WRONG_ANSWERS";
+    public static final String COLUMN_CATEGORY = "CATEGORY";
 
     private SQLiteDatabase db;
 
 
     public CrushersDataBase(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
+
+
+    /*
+    SQL Table for Results of a current Quiz
+
+    --------------------------------------------------------------------
+    | _ID  |  SCORE  |  CORRECT_ANSWERS  |  WRONG_ANSWERS  | CATEGORY  |
+    --------------------------------------------------------------------
+    |      |         |                   |                 |           |
+    --------------------------------------------------------------------
+    */
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         this.db = db;
+
+        String table = "CREATE TABLE " + TABLE_NAME +
+                    " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                   COLUMN_SCORE + " TEXT, " +
+                   COLUMN_CORRECT_ANSWERS + " TEXT, " +
+                   COLUMN_WRONG_ANSWERS + " TEXT, " +
+                   COLUMN_CATEGORY + " TEXT " +") ";
+        db.execSQL(table);
 
         final String CREATE_TABLE = "CREATE TABLE " + QuestionsTable.TABLE_NAME+
             " (" + QuestionsTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -39,15 +71,16 @@ public class CrushersDataBase extends SQLiteOpenHelper {
             QuestionsTable.COLUMN_EXPLANATION + " TEXT, " +
             QuestionsTable.COLUMN_NEEDS_REVIEW + " INTEGER, " +
             QuestionsTable.COLUMN_CATEGORY + " TEXT" + ")";
-    db.execSQL(CREATE_TABLE);
-    populateQuestionsTable();
+        db.execSQL(CREATE_TABLE);
+        populateQuestionsTable();
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int pastVersion, int newVersion) {
-    db.execSQL("DROP TABLE IF EXISTS " + QuestionsTable.TABLE_NAME);
-    onCreate(db);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + QuestionsTable.TABLE_NAME);
+        onCreate(db);
     }
 
     private List<Question> createQuestionsAddToList(){
@@ -533,6 +566,35 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         cv.put(QuestionsTable.COLUMN_CATEGORY, question.getCategory());
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
     }
+
+    public List<Question> getCategoryQuestions(String category){
+        List<Question> questionList = new ArrayList<>();
+        db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT *" +
+                                        " FROM " + QuestionsTable.TABLE_NAME +
+                                        " WHERE " + QuestionsTable.COLUMN_CATEGORY + " = '" + category + "' ", null);
+
+        if(cursor.moveToFirst()){
+            do {
+                Question question = new Question();
+                question.setQuestion(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_QUESTION)));
+                question.setFirstAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER1)));
+                question.setSecondAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER2)));
+                question.setThirdAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER3)));
+                question.setFourthAnswer(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANSWER4)));
+                question.setCorrectAnswer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
+                question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
+                question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
+                question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
+
+                questionList.add(question);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return questionList;
+    }
+
 
     public List<Question> getAllQuestions(){
     List<Question> questionList = new ArrayList<>();
