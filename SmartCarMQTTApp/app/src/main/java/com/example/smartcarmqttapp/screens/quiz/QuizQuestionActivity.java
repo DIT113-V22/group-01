@@ -1,4 +1,4 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.screens.quiz;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -17,17 +17,33 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.smartcarmqttapp.Navigation;
+import com.example.smartcarmqttapp.R;
+import com.example.smartcarmqttapp.database.CrushersDataBase;
+import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
+import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.model.UserAnswer;
+import com.example.smartcarmqttapp.screens.HomeActivity;
 import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+<<<<<<< HEAD:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/QuizQuestionActivity.java
 import java.io.Serializable;
 import java.util.ArrayList;
+=======
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+>>>>>>> master:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/screens/quiz/QuizQuestionActivity.java
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class QuizQuestionActivity extends AppCompatActivity {
+
+    private CrushersDataBase db;
 
     private TextView questionCountText;
     private TextView scoreText;
@@ -35,6 +51,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private ImageView questionImage;
     private Button nextButton;
     private TextView categoryText;
+    private TextView areYouSure;
 
     //Radio buttons
     private RadioGroup radioGroup;
@@ -57,27 +74,32 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private Drawable wrong;
 
     private List<Question> questionList;
+    private List<Question> specifcQuestionList;
+
+    //To keep track of categories covered
+    private HashSet<String> categories;
     private TooltipCompat tooltipCompat;
+
+    private String categorySelected = "No Category";
 
     private BottomNavigationView bottomNavigationView;
     private QuizState quizState;
 
     private static int MILLIS;
+    private int questionCountSelected;
     private int TOTAL_TIME;
     private QuizQuestionActivity zis;
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_question);
         zis = this;
-
-        //staret timer with value from practice theory
         Intent intent = getIntent();
 
+<<<<<<< HEAD:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/QuizQuestionActivity.java
         questionList = PracticeTheoryActivity.selectedQuestions;
         System.out.println(questionList);
 
@@ -86,6 +108,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
         System.out.println("Starting quiz with Timer " + MILLIS);
         System.out.println("And Questions: " + questionList);
 
+=======
+        MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
+>>>>>>> master:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/screens/quiz/QuizQuestionActivity.java
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
 
@@ -95,12 +120,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
         questionCountText = findViewById(R.id.questionCount);
         //questionsLeftText.setText(totalQuestions);
 
+        //View fields
         scoreText = findViewById(R.id.score);
         scoreText.setText(Integer.toString(scoreNumber));
         timer = findViewById(R.id.timer);
         questionImage = findViewById(R.id.questionImage);
         nextButton = findViewById(R.id.nextQuestionBTN);
         categoryText = findViewById(R.id.categoryText);
+        areYouSure = findViewById(R.id.areYouSure);
 
         //Radio buttons
         option1 = findViewById(R.id.option1);
@@ -109,23 +136,54 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4 = findViewById(R.id.option4);
         radioGroup = findViewById(R.id.radioGroup);
 
+        //bottomNavigation bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
+<<<<<<< HEAD:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/QuizQuestionActivity.java
 //        CrushersDataBase db = new CrushersDataBase(this);
 //        questionList = db.getAllQuestions();
         quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
+=======
+        db = new CrushersDataBase(this);
+        questionList = db.getAllQuestions();
+        Collections.shuffle(questionList);
 
-        addQuestion();
+        //Collections for categories and custom question amount quizes
+        categories = new HashSet<>();
+        specifcQuestionList = new ArrayList<>();
+
+        //default values are 0, ""
+        questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
+        categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
+
+        System.out.println(questionCountSelected);
+        System.out.println(categorySelected);
+
+        //Forms custom quiz with question count from previous screen
+        if(questionCountSelected != 0 || !(categorySelected.equals("")))
+            if(!(categorySelected.equals("No Category")))
+                customQuiz(questionCountSelected, categorySelected);
+            else customQuiz(questionCountSelected, "No Category");
+        else {
+            //else start a random quiz -- No settings selected
+            quizState = new QuizState(true, questionList, null, scoreNumber);
+            totalQuestions = questionList.size();
+            addQuestion(questionList);
+        }
+>>>>>>> master:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/screens/quiz/QuizQuestionActivity.java
+
         onNextQuestionButtonClicked();
 
-
+        // bottomNavigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                alertQuitQuiz(() -> navigate(item));
+                alertQuitQuiz(() -> Navigation.navigate(zis, item));
                 return false;
             }
         });
@@ -137,6 +195,43 @@ public class QuizQuestionActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });
+    }
+
+    protected void customQuiz(int questionCountSelected, String categorySelected) {
+        Random rand = new Random();
+        //quiz with a specific category and question count
+        if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
+            questionList = db.getCategoryQuestions(categorySelected);
+            System.out.println(questionList);
+            for (int i = 0; i < questionCountSelected; i++) {
+                int randomIndex = rand.nextInt(questionList.size());
+                specifcQuestionList.add(questionList.get(randomIndex));
+            }
+            totalQuestions = questionCountSelected;
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            addQuestion(specifcQuestionList);
+        //random quiz with only the amount of selected questions
+        } else if (questionCountSelected != 0) {
+            for (int i = 0; i < questionCountSelected; i++) {
+                int randomIndex = rand.nextInt(questionList.size());
+                specifcQuestionList.add(questionList.get(randomIndex));
+            }
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            totalQuestions = questionCountSelected;
+            addQuestion(specifcQuestionList);
+        //if they selected the question count and a category then this happens
+        } else if (!categorySelected.equals("No Category")) {
+            //quiz with only selected category question
+            specifcQuestionList = db.getCategoryQuestions(categorySelected);
+            totalQuestions = specifcQuestionList.size();
+            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            addQuestion(specifcQuestionList);
+        }
+        else{
+            quizState = new QuizState(true, questionList, null, scoreNumber);
+            totalQuestions = questionList.size();
+            addQuestion(questionList);
+        }
     }
 
     protected void alertQuitQuiz(Runnable onQuit) {
@@ -151,38 +246,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         dialog.setTitle("Leaving Quiz");
         dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
         dialog.show();
-    }
-
-    protected boolean navigate(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.connectedCar:
-                startActivity(new Intent(getApplicationContext(), ConnectedCarActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.practiceDriving:
-                startActivity(new Intent(getApplicationContext(), PracticeDrivingActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.home:
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.practiceTheory:
-                startActivity(new Intent(getApplicationContext(), PracticeTheoryActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            case R.id.aboutUs:
-                startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-
-            default:
-                return false;
-        }
     }
 
     /**
@@ -204,6 +267,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         explanationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO: add explanations to each of the questions
                 option1.setTooltipText("Ipsum lorens, this should explain the nature of why the chosen option is correct");
             }
         });
@@ -216,6 +280,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView selectQ = findViewById(R.id.selectQuestion);
+                areYouSure.setText("");
+
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select a question or skip by pressing 'Next Question' twice");
                 } else {
@@ -265,6 +331,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 checkAnswerBtn.setBackgroundResource(android.R.drawable.btn_default);
                 //if radio buttons are disabled or there were two clicks on next question button (skip)
+                areYouSure.setText("");
 
                 if(!option1.isClickable() || clicks == 1){
                     if (currentQuestionNum == totalQuestions) {
@@ -274,7 +341,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                     else{
                         resetRadioButtons();
-                        addQuestion();
+                        if (new Intent().getIntExtra("", 0) != 0)
+                            addQuestion(specifcQuestionList);
+                        else
+                            addQuestion(questionList);
                     }
 
                     if(clicks == 1){
@@ -283,12 +353,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     }
                     //reset the skip feature
                     clicks = 0;
-
-                    //When the amount of questions finish
                 }
                 else{
-                    //Set text to say: please confirm an answer or click again to skip
-                    TextView areYouSure = findViewById(R.id.areYouSure);
                     areYouSure.setText("Are you sure you want to skip?");
                     clicks++;
                 }
@@ -307,13 +373,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
      *  - all answer choices
      *  - current answer (assigns correct answer to check which radio button is correct
      */
-    public void addQuestion(){
-        if(currentQuestionNum == totalQuestions){
-            nextButton.setText("Finish Quiz");
-        }
-
+    public void addQuestion(List<Question> questionList){
         radioGroup.clearCheck();
         Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
+        categories.add(currentQuestion.getCategory());
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
@@ -376,7 +439,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     private void finishQuiz(int timeTaken) {
-        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber));
+        //Saves categories in a string list, since database doesnt support list feature
+        String categoryList = "";
+        for(String categories : categories){
+            categoryList = categoryList + " " + categories;
+        }
+        results_db.open().finishQuiz(scoreNumber, scoreNumber, (totalQuestions - scoreNumber), categoryList);
         results_db.close();
 
         Intent intent = new Intent(QuizQuestionActivity.this, QuizResultActivity.class);

@@ -1,4 +1,4 @@
-package com.example.smartcarmqttapp;
+package com.example.smartcarmqttapp.database;
 
 import android.provider.BaseColumns;
 
