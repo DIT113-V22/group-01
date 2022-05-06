@@ -1,6 +1,7 @@
 package com.example.smartcarmqttapp.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
@@ -11,9 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
@@ -49,6 +52,8 @@ public class PracticeDrivingActivity extends AppCompatActivity {
     private Dialog sensorDialog;
 
     private MediaPlayer mp;
+
+    private SwitchCompat switchCompat;
 
 
     @Override
@@ -398,4 +403,20 @@ public class PracticeDrivingActivity extends AppCompatActivity {
         return absoluteSpeed / 1.8 * 100;
     }
 
+    /**
+     * Car sound can be enabled or disabled
+     */
+    public void onClickSoundOn(View view) {
+        switchCompat = findViewById(R.id.switchButton);
+
+        switchCompat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (switchCompat.isChecked())
+                    AudioPlayer.instance.playSound(true);
+                else
+                    AudioPlayer.instance.getMp().pause();
+            }
+        });
+    }
 }

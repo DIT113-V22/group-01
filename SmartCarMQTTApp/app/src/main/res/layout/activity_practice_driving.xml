@@ -369,6 +369,8 @@
                     android:textOn="ON"
                     android:textSize="25sp"
                     android:thumb="@drawable/thumb"
+                    android:onClick="onClickSoundOn"
+                    android:checked="true"
                     app:layout_constraintEnd_toStartOf="@+id/imageButton5"
                     app:layout_constraintHorizontal_bias="0.326"
                     app:layout_constraintStart_toStartOf="parent"
