@@ -29,14 +29,8 @@ import com.example.smartcarmqttapp.screens.HomeActivity;
 import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-<<<<<<< HEAD:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/QuizQuestionActivity.java
 import java.io.Serializable;
 import java.util.ArrayList;
-=======
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
->>>>>>> master:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/screens/quiz/QuizQuestionActivity.java
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -99,7 +93,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         zis = this;
         Intent intent = getIntent();
 
-<<<<<<< HEAD:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/QuizQuestionActivity.java
         questionList = PracticeTheoryActivity.selectedQuestions;
         System.out.println(questionList);
 
@@ -108,9 +101,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         System.out.println("Starting quiz with Timer " + MILLIS);
         System.out.println("And Questions: " + questionList);
 
-=======
-        MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
->>>>>>> master:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/screens/quiz/QuizQuestionActivity.java
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
 
@@ -141,39 +131,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
-<<<<<<< HEAD:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/QuizQuestionActivity.java
 //        CrushersDataBase db = new CrushersDataBase(this);
 //        questionList = db.getAllQuestions();
         quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
-=======
-        db = new CrushersDataBase(this);
-        questionList = db.getAllQuestions();
-        Collections.shuffle(questionList);
-
-        //Collections for categories and custom question amount quizes
-        categories = new HashSet<>();
-        specifcQuestionList = new ArrayList<>();
-
-        //default values are 0, ""
-        questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
-        categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
-
-        System.out.println(questionCountSelected);
-        System.out.println(categorySelected);
-
-        //Forms custom quiz with question count from previous screen
-        if(questionCountSelected != 0 || !(categorySelected.equals("")))
-            if(!(categorySelected.equals("No Category")))
-                customQuiz(questionCountSelected, categorySelected);
-            else customQuiz(questionCountSelected, "No Category");
-        else {
-            //else start a random quiz -- No settings selected
-            quizState = new QuizState(true, questionList, null, scoreNumber);
-            totalQuestions = questionList.size();
-            addQuestion(questionList);
-        }
->>>>>>> master:SmartCarMQTTApp/app/src/main/java/com/example/smartcarmqttapp/screens/quiz/QuizQuestionActivity.java
 
         onNextQuestionButtonClicked();
 
