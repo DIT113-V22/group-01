@@ -78,9 +78,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //staret timer with value from practice theory
         Intent intent = getIntent();
 
+        questionList = PracticeTheoryActivity.selectedQuestions;
+        System.out.println(questionList);
+
         Bundle extras = intent.getExtras();
         MILLIS = extras.getInt("TIMER_VALUE", 0);
-        questionList = (List<Question>)extras.getSerializable("questionList");
         System.out.println("Starting quiz with Timer " + MILLIS);
         System.out.println("And Questions: " + questionList);
 
@@ -111,8 +113,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
-        CrushersDataBase db = new CrushersDataBase(this);
-        questionList = db.getAllQuestions();
+//        CrushersDataBase db = new CrushersDataBase(this);
+//        questionList = db.getAllQuestions();
         quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
 

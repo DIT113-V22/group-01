@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -32,9 +32,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMode"
-        android:layout_width="379dp"
-        android:layout_height="204dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="381dp"
+        android:layout_height="191dp"
+        android:layout_marginTop="32dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +52,13 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardCategory"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginBottom="256dp"
+        android:layout_width="375dp"
+        android:layout_height="152dp"
+        android:layout_marginBottom="288dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent">
 
         <ListView
@@ -83,16 +83,16 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="372dp"
+        android:layout_height="218dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintTop_toBottomOf="@+id/cardCategory"
-        tools:layout_editor_absoluteX="1dp" >
+        tools:layout_editor_absoluteX="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:max="15"
+                android:max="14"
                 android:progress="1" />
 
             <Button
@@ -134,12 +134,13 @@
                 android:layout_width="180dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
                 android:minHeight="48dp"
-                android:text="START QUIZ"
                 android:onClick="startQuiz"
-                />
+                android:text="START QUIZ" />
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

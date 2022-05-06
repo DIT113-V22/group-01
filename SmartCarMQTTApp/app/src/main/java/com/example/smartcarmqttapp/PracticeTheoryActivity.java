@@ -48,10 +48,10 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     private static int MILLIS;
 
-    TextView numOfQuestionsTextView;
-    TextView timerTextView;
-    SeekBar numOfQuestionsSeekBar;
-    SeekBar timerSeekBar;
+    private TextView numOfQuestionsTextView;
+    private TextView timerTextView;
+    private SeekBar numOfQuestionsSeekBar;
+    private SeekBar timerSeekBar;
 
     private List<Question> allQuestions;
 
@@ -77,12 +77,12 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     private String selectedCategory;
     private String selectedMode;
+    public static List<Question> selectedQuestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theory_section);
-//        goToQuiz();
         CrushersDataBase db = new CrushersDataBase(this);
         allQuestions = db.getAllQuestions();
         this.categoryQuestions = groupQuestionsByCategory(allQuestions);
@@ -93,107 +93,48 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         addModesToModeListView();
         addCategoriesToCategoryListView();
 
-        //Countdown timer
-//        enableTimer = findViewById(R.id.enableTimer);
-//
-//        tenMin = findViewById(R.id.tenMin);
-//
-//        fifteenMin = findViewById(R.id.fifteenMin);
-//
-//        twentyMin = findViewById(R.id.twentyMin);
-//
-//        timerDialog = new Dialog(this);
-//
-//        timer = findViewById(R.id.timer);
-//
-//        enableTimer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if(enableTimer.isChecked()) {
-//                    timerDialog.setContentView(R.layout.timer_dialog);
-//                    timerDialog.show();
-//                }
-//                else {
-//                    timerDialog.cancel();
-//                    MILLIS = 0;
-//                }
-//
-//            }
-//        });
-//
-//        settingsDialog = new Dialog(this);
-//        settingsButton = findViewById(R.id.settingsImage);
-//
-//        settingsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                settingsDialog.setContentView(R.layout.settings_dialog);
-//                settingsDialog.show();
-//
-//                Button button = settingsDialog.findViewById(R.id.confirmBtn);
-//                button.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        EditText enterQnumber = settingsDialog.findViewById(R.id.editTextNumber);
-//
-//                        questionCount = Integer.parseInt(enterQnumber.getText().toString());
-//                        if(questionCount > 10 || questionCount < 1){
-//                            TextView t = settingsDialog.findViewById(R.id.warningForNums);
-//                            t.setText("Enter a number ranging between 1 - 10");
-//                            t.setTextColor(Color.RED);
-//                        }
-//                        else{
-//                            settingsDialog.cancel();
-//                            Toast.makeText(getBaseContext(),
-//                                    "Setting successfully updated!",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//        });
-
-
     }
-
-//    public void goToQuiz(){
-//        Button button = findViewById(R.id.practiceQuiz);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
-//                intent.putExtra("TIMER_VALUE", MILLIS);
-//                startActivity(intent);
-//
-//            }
-//        });
-//    }
-//
-//    public void buttonOnClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.tenMin:
-//                MILLIS = TEN_MIN_IN_MILLIS;
-//                timerDialog.cancel();
-//                break;
-//            case R.id.fifteenMin:
-//                MILLIS = FIFTEEN_MIN_IN_MILLIS;
-//                timerDialog.cancel();
-//                break;
-//            case R.id.twentyMin:
-//                MILLIS = TWENTY_MIN_IN_MILLIS;
-//                timerDialog.cancel();
-//                break;
-//            default:
-//                break;
-//        }
-//
-//    }
 
     private void initializeElements() {
         numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
         numOfQuestionsSeekBar = findViewById(R.id.numOfQuestionsSeekBar);
         timerTextView = findViewById(R.id.timerTextView);
         timerSeekBar = findViewById(R.id.timerSeekBar);
+
+        numOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                System.out.println("Selected Questions: " + (i+1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        timerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+                System.out.println("Selected Timer: 10min + " + 10*(i)/timerSeekBar.getMax());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     /**
@@ -240,9 +181,13 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
     // Populates Category ListView with pre-defined strings
     private void addCategoriesToCategoryListView() {
+        ArrayList<String> categories = new ArrayList<>(this.categoryQuestions.keySet());
         ListView categoryListView = findViewById(R.id.listCategory);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, this.categoryQuestions.keySet().toArray());
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categories);
         categoryListView.setAdapter(adapter);
+        categoryListView.setOnItemClickListener((adapterView, view, position, id) -> {
+            selectedCategory = categories.get(position);
+        });
     }
 
     class ModeAdapter extends ArrayAdapter<String> {
@@ -291,7 +236,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             return;
         }
 
-        List<Question> selectedQuestions = new ArrayList<Question>();
+        selectedQuestions = new ArrayList<Question>();
         if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
             selectedQuestions = categoryQuestions.get(selectedCategory);
             // get only N questions
@@ -307,9 +252,8 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
         Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
         intent.putExtra("TIMER_VALUE", MILLIS);
-        intent.putExtra("questionList", (Serializable) selectedQuestions);
         startActivity(intent);
-
+        // I tried passing
     }
 
     private void initializeNavBar() {
