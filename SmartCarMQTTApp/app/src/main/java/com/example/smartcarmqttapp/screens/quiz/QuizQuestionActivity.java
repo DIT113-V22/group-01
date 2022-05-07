@@ -100,8 +100,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         String category = extras.getString("category");
         int numberOfQuestions = extras.getInt("numOfQuestions");
 
-        System.out.println("Starting quiz with Timer " + MILLIS);
-
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
 
@@ -127,15 +125,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4 = findViewById(R.id.option4);
         radioGroup = findViewById(R.id.radioGroup);
 
-        //bottomNavigation bar
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
         //add questions to question list via helper method --> help us select question
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
         Collections.shuffle(questionList);
-//        quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
         specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
@@ -171,7 +164,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
             questionList = db.getCategoryQuestions(categorySelected);
-            System.out.println(questionList);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
                 specifcQuestionList.add(questionList.get(randomIndex));

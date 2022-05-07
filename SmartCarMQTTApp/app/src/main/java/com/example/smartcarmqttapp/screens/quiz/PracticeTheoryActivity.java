@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -18,22 +17,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.database.CrushersDataBase;
-import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
 import com.example.smartcarmqttapp.model.Question;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PracticeTheoryActivity extends AppCompatActivity {
-
-    private BottomNavigationView bottomNavigationView;
 
     private TextView warningTextView;
     private LinearLayout timerContainer;
@@ -82,7 +78,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         this.categoryQuestions = groupQuestionsByCategory(allQuestions);
 
         initializeElements();
-        initializeNavBar();
+        Navigation.initializeNavigation(this, R.id.practiceTheory);
 
         addModesToModeListView();
         addCategoriesToCategoryListView();
@@ -98,11 +94,13 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         timerSeekBar = findViewById(R.id.timerSeekBar);
         timerTextView = findViewById(R.id.timerTextView);
         numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
+        findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+        findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+        findViewById(R.id.startQuizView).setVisibility(View.INVISIBLE);
 
         numOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                System.out.println("Selected Questions: " + (i+1));
                 numOfQuestionsSeekBar.setAlpha(1);
                 numOfQuestions = i+1;
             }
@@ -123,7 +121,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 timerSeekBar.setAlpha(1);
                 MILLIS = (int)(600000*(1 + ((double)i/timerSeekBar.getMax())));
-                System.out.println("Selected Timer: 10min + " + MILLIS);
             }
 
             @Override
@@ -172,6 +169,10 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.VISIBLE);
+                findViewById(R.id.selectedCategoryTextView).setVisibility(View.VISIBLE);
+                findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Practice Quiz");
                 MILLIS = 0;
                 numOfQuestions = 15;
             }else if(position == 1) {
@@ -179,6 +180,11 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.INVISIBLE);
                 timerTextView.setVisibility(View.INVISIBLE);
                 numOfQuestionsTextView.setVisibility(View.INVISIBLE);
+
+                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+                findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+                findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Theory Exam");
                 MILLIS = EXAM_TIME_MILLIS;
                 selectedCategory = "No Category";
                 numOfQuestions = 0;
@@ -187,7 +193,10 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
-//                selectedCategory = "Review";
+                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+                findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+                findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Review Questions");
             }
         });
 
@@ -202,6 +211,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         categoryListView.setAdapter(adapter);
         categoryListView.setOnItemClickListener((adapterView, view, position, id) -> {
             selectedCategory = categories.get(position);
+            ((TextView)findViewById(R.id.selectedCategoryTextView)).setText("Choose a category: " + categories.get(position));
         });
     }
 
@@ -251,23 +261,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             selectedCategory = "No Category";
         }
 
-//        selectedQuestions = new ArrayList<>();
-//        if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
-//            selectedQuestions = categoryQuestions.get(selectedCategory);
-//            Collections.shuffle(selectedQuestions);
-//            selectedQuestions = selectedQuestions.subList(0, numOfQuestions);
-//            // get only N questions
-//        } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
-//            selectedQuestions = allQuestions;
-//            MILLIS = EXAM_TIME_MILLIS;
-//        } else {
-//            for(Question question: allQuestions) { // Get Questions that need to be reviewed
-//                if(question.getNeedsReview() == 1) {
-//                    selectedQuestions.add(question);
-//                }
-//            }
-//        }
-
         Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
         intent.putExtra("TIMER_VALUE", MILLIS);
         intent.putExtra("numOfQuestions", numOfQuestions);
@@ -276,15 +269,5 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         // I tried passing
     }
 
-    private void initializeNavBar() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
-        Intent intent = this.getIntent();
-        intent.putExtra("option_timer", 0);
-        intent.putExtra("option_numOfQuestions", 0);
-        intent.putExtra("option_category", "categoryName");
-
-    }
 
 }
