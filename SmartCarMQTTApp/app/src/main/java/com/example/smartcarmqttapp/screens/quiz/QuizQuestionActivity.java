@@ -125,10 +125,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4 = findViewById(R.id.option4);
         radioGroup = findViewById(R.id.radioGroup);
 
-        //bottomNavigation bar
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
         //add questions to question list via helper method --> help us select question
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();

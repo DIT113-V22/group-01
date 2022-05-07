@@ -1,10 +1,13 @@
 package com.example.smartcarmqttapp.screens;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.media.MediaPlayer;
 import android.content.Intent;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -13,6 +16,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,6 +28,7 @@ import android.widget.TextView;
 import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
+import com.example.smartcarmqttapp.model.AudioPlayer;
 import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -54,9 +59,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     private Button toggleDataButton;
     private Dialog sensorDialog;
-    PracticeDrivingActivity pda;
-    BottomNavigationView bottomNavigationView;
+    PracticeDrivingActivity zis;
 
+    private SwitchCompat switchCompat;
     private SensorManager sensorManager;
     private final float[] accelerometerReading = new float[3];
     private final float[] magnetometerReading = new float[3];
@@ -65,15 +70,29 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     private final float[] orientationAngles = new float[3];
 
     private Switch tilting;
+    private boolean crashed = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
-        Navigation.initializeNavigation(this, R.id.practiceDriving);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        pda = this;
+        zis = this;
+
+        // bottomNavigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.practiceDriving);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                alertQuitDriving(() -> Navigation.navigate(zis, item));
+                return false;
+            }
+        });
+
+        AudioPlayer.instance.createMP();
+        //play sound file and set looping to true
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
@@ -100,6 +119,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         infraredVal = findViewById(R.id.infraValue);
 
         tilting = findViewById(R.id.tilting);
+        switchCompat = findViewById(R.id.switchButton);
         toggleDataButton = findViewById(R.id.toggleDataBtn);
         sensorDialog = new Dialog(this);
 
@@ -163,13 +183,36 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             imageView.setVisibility(View.VISIBLE);
             screenError.setVisibility(View.GONE);
 
+            if (switchCompat.isChecked()) {
+                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.ferrari);
+                AudioPlayer.instance.playSound(false);
+            }
+
             controller = CarState.instance.getConnectedCar();
+
             controller.listeners.put("camera", () -> {
                 runOnUiThread(() -> {
                     imageView.setImageBitmap(controller.camera.get());
                 });
             });
 
+            controller.listeners.put("crashsounds", () -> {
+                    Log.d("crash sound", "crash sound");
+                runOnUiThread(() -> {
+                    //A crash!!!! Oh no.....
+                    double irDistance = CarState.instance.getConnectedCar().ir_distance.get();
+                    if (!crashed && irDistance < 10 && irDistance > 0){
+                        if (switchCompat.isChecked()) {
+                            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.carcrash);
+                            AudioPlayer.instance.playSound(false);
+                            crashed = true;
+                        }
+                    }
+                    else {
+                        crashed = false;
+                    }
+                });
+            });
             try {
                 controller.steerCar(0);
             }
@@ -178,9 +221,15 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             }
         }
         else {
+            if (switchCompat.isChecked()) {
+                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.disconnectedstatic);
+                AudioPlayer.instance.playSound(true);
+            }
+
             imageView.setVisibility(View.INVISIBLE);
             screenError.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
@@ -216,9 +265,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     @Override
     protected void onStop() {
+        AudioPlayer.instance.stopSound();
+
         if (CarState.instance.isConnected()) {
             CarState.instance.getConnectedCar().listeners.remove("dashboard");
             CarState.instance.getConnectedCar().listeners.remove("camera");
+            CarState.instance.getConnectedCar().listeners.remove("crashsounds");
         }
 
         super.onStop();
@@ -282,14 +334,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
      */
     public static final class ControlConstant {
 
-        enum ChangeMode {
-            ADDITION, MULTIPLICATION;
-        }
-
-        public static final double STARTING_SPEED = 10; // new speed of car when accelerating with no speed (percentage integer)
-        public static final double INITIAL_SPEED = 0; // speed of car upon initialization
-        public static final double INITIAL_ANGLE = 0; // angle of car upon initialization
-
         public static final double ACCELERATION_FACTOR = 1.5; // multiplication factor for accelerating
         public static final double DECELERATION_FACTOR = 0.8; // multiplication factor for decelerating
 
@@ -299,25 +343,10 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         public static final double STARTING_THROTTLE = 10;
         public static final double MIN_THROTTLE = 5; // threshold for stopping car when decelerating
         public static final double MAX_THROTTLE = 100; // threshold for accelerating car
-
-        public static final ChangeMode ANGLE_CHANGE = ChangeMode.ADDITION;
-        public static final ChangeMode SPEED_CHANGE = ChangeMode.MULTIPLICATION;
-
     }
 
     public static final boolean FORCE_UPDATE = false; // upon theoretical data change, immediately updates visible fields
     public static final double GYROSCOPE_OFFSET = 180;
-
-    /* ToDo:
-     * Bind buttons to methods
-     * Add method bodies
-     * Update text views
-     * Create UI
-     * If doesn't work, move debugging statements before controller access
-     * Test functionality
-     * VERY IMPORTANT: #changeSpeed takes throttle percentage integer (20), but speed.get() returns m/s.
-     * When calculating accelerated speed, use map for (speed in m/s) -> (speed in %) to throttle properly.
-     */
 
     /**
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
@@ -325,10 +354,17 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     public void onClickAccelerate(View view) throws MqttException {
         double initialThrottle = controller.throttle.get();
         double acceleratedThrottle;
+
+        if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+            AudioPlayer.instance.playSound(true);
+        }
+
         if(initialThrottle == 0) { // car standing still: start driving
             acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
         }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
             acceleratedThrottle = 0;
+            AudioPlayer.instance.getMp().pause();
         }else if(initialThrottle > 0) { // car driving: increase speed
             acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
         }else { // car driving backwards: increase speed (decrease speed modulus)
@@ -345,10 +381,17 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     public void onClickDecelerate(View view) throws MqttException {
         double initialThrottle = controller.throttle.get();
         double deceleratedThrottle;
+
+        if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+            AudioPlayer.instance.playSound(true);
+        }
+
         if(initialThrottle == 0) { // car standing still: start driving backwards
             deceleratedThrottle = -ControlConstant.STARTING_THROTTLE;
         }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE){
             deceleratedThrottle = 0;
+            AudioPlayer.instance.getMp().pause();
         }else if(initialThrottle > 0) { // car driving: slow down
             deceleratedThrottle = initialThrottle * ControlConstant.DECELERATION_FACTOR;
         }else{ // car driving backwards: speed up backwards
@@ -433,49 +476,48 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     }
 
     /**
-     * Stops blinking. Bound to button ###
-     * UI Implementation left for Milestone 6: Manual Driving
-     */
-    public void onClickBlinkOff(View view) throws MqttException {
-        controller.blinkDirection(MqttCar.BlinkerDirection.Off);
-
-        if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Off);
-    }
-
-    /**
      * Engages Emergency Stop and stops car. Bound to button ###
      * UI Implementation left for Milestone 6: Manual Driving
      */
     public void onClickEmergencyStop(View view) throws MqttException {
         controller.emergencyStop();
+        AudioPlayer.instance.getMp().pause();
     }
 
-    // Utility methods
-
-    public double getThrottleFromAbsoluteSpeed(double absoluteSpeed) {
-        // Throttle and absolute speed are approximately linearly correlated with k=1.8
-        // To obtain percentage integer from ratio, multiply by 100
-        return absoluteSpeed / 1.8 * 100;
+    /**
+     * Car sound can be enabled or disabled
+     */
+    public void onClickSoundOn(View view) {
+        if (switchCompat.isChecked()) {
+            AudioPlayer.instance.getMp().start();
+        }
+        else {
+            AudioPlayer.instance.getMp().pause();
+        }
     }
 
-    protected void alertQuitQuiz(Runnable onQuit) {
+    protected void alertQuitDriving(Runnable onQuit) {
+        if (CarState.instance.isConnected()) {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setMessage("Are you really gonna wuss out on me?")
+                    .setNegativeButton("Just Kidding!", (theDialog, id) -> {})
+                    .setPositiveButton("\uD83D\uDE1E yeahhh..", (theDialog, id) -> {
+                        onQuit.run();
+                    })
+                    .create();
 
-        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setMessage("Are you really gonna wuss out on me?")
-                .setNegativeButton("Just Kidding!", (theDialog, id) -> {})
-                .setPositiveButton("\uD83D\uDE1E yeahhh..", (theDialog, id) -> {
-                    onQuit.run();
-                })
-                .create();
-
-        dialog.setTitle("Leaving Driver's Seat");
-        dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
-        dialog.show();
+            dialog.setTitle("Leaving Driver's Seat");
+            dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
+            dialog.show();
+        }
+        else {
+            onQuit.run();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        alertQuitQuiz(() -> {
+        alertQuitDriving(() -> {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });
