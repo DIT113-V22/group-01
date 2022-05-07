@@ -98,7 +98,6 @@ public class ConnectedCarActivity extends AppCompatActivity {
                     "🚗 Going to manual driving",
                     Toast.LENGTH_SHORT
             ).show();
-            Thread.sleep(1000);
 
             startActivity(
                 new Intent(ConnectedCarActivity.this, PracticeDrivingActivity.class)

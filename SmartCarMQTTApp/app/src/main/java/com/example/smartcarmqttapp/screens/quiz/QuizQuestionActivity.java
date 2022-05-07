@@ -29,6 +29,7 @@ import com.example.smartcarmqttapp.screens.HomeActivity;
 import com.example.smartcarmqttapp.state.QuizState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -94,7 +95,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
         zis = this;
         Intent intent = getIntent();
 
-        MILLIS = intent.getIntExtra("TIMER_VALUE", 0);
+        Bundle extras = intent.getExtras();
+        MILLIS = extras.getInt("TIMER_VALUE", 0);
+        String category = extras.getString("category");
+        int numberOfQuestions = extras.getInt("numOfQuestions");
+
+        System.out.println("Starting quiz with Timer " + MILLIS);
+
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
 
@@ -125,32 +132,16 @@ public class QuizQuestionActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
 
         //add questions to question list via helper method --> help us select question
-        db = new CrushersDataBase(this);
+        CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
         Collections.shuffle(questionList);
-
-        //Collections for categories and custom question amount quizes
-        categories = new HashSet<>();
+//        quizState = new QuizState(true, questionList, null, scoreNumber);
+        totalQuestions = questionList.size();
         specifcQuestionList = new ArrayList<>();
+        categories = new HashSet<>();
+        this.db = new CrushersDataBase(this);
 
-        //default values are 0, ""
-        questionCountSelected = intent.getIntExtra("OPTION_QUESTIONS", 0);
-        categorySelected = intent.getStringExtra("CATEGORY_SELECTED");
-
-        System.out.println(questionCountSelected);
-        System.out.println(categorySelected);
-
-        //Forms custom quiz with question count from previous screen
-        if(questionCountSelected != 0 || !(categorySelected.equals("")))
-            if(!(categorySelected.equals("No Category")))
-                customQuiz(questionCountSelected, categorySelected);
-            else customQuiz(questionCountSelected, "No Category");
-        else {
-            //else start a random quiz -- No settings selected
-            quizState = new QuizState(true, questionList, null, scoreNumber);
-            totalQuestions = questionList.size();
-            addQuestion(questionList);
-        }
+        customQuiz(numberOfQuestions, category);
 
         onNextQuestionButtonClicked();
 
@@ -175,6 +166,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     protected void customQuiz(int questionCountSelected, String categorySelected) {
+
         Random rand = new Random();
         //quiz with a specific category and question count
         if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
