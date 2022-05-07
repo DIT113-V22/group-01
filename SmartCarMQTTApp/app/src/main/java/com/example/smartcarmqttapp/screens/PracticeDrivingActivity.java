@@ -1,6 +1,5 @@
 package com.example.smartcarmqttapp.screens;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -14,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -30,9 +28,6 @@ import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -76,10 +71,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
-        pda = this;
         Navigation.initializeNavigation(this, R.id.practiceDriving);
-        initializeNavBar();
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        pda = this;
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("\nUse the arrow keys to maneuver the car \n \n" +
@@ -171,7 +165,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
             controller = CarState.instance.getConnectedCar();
             controller.listeners.put("camera", () -> {
-                    Log.d("ui update", "ui update");
                 runOnUiThread(() -> {
                     imageView.setImageBitmap(controller.camera.get());
                 });
@@ -344,16 +337,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
         controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
         controller.throttle.set(acceleratedThrottle); // stores current throttle
-
-        // Debugging
-        System.out.println("Accelerating from " + initialThrottle + " % to " + acceleratedThrottle + " %");
-
-        /* unopinionated approach to changing speed and angle by allowing user to select change mode.
-        double acceleratedSpeed =
-                ControlConstant.SPEED_CHANGE == ControlConstant.ChangeMode.MULTIPLICATION ?
-                        initialSpeed * ControlConstant.ACCELERATION_FACTOR :
-                        initialSpeed + ControlConstant.ACCELERATION_FACTOR;
-         */
     }
 
     /**
@@ -375,16 +358,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         deceleratedThrottle = Math.max(deceleratedThrottle, -ControlConstant.MAX_THROTTLE);
         controller.changeSpeed(deceleratedThrottle); // publish to MQTT
         controller.throttle.set(deceleratedThrottle); // store current throttle
-
-        // Debugging
-        System.out.println("Decelerating from " + initialThrottle + " to " + deceleratedThrottle);
     }
 
     /**
      * Increases (addition) wheel angle of car. Bound to button R.id.leftButton
      */
     public void onClickRotateLeft(View view) throws MqttException {
-//        double initialAngle = controller.gyroscopeHeading.get();
         double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
         controller.steerCar(rotatedAngle);
@@ -392,15 +371,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
         if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
-        // Debugging
-        System.out.println("Rotating Right from " + initialAngle + " deg to " + rotatedAngle + " deg");
     }
 
     /**
      * Decreases (addition) wheel angle of car. Bound to button R.id.rightButton
      */
     public void onClickRotateRight(View view) throws MqttException {
-//        double initialAngle = controller.gyroscopeHeading.get();
         double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
         controller.steerCar(rotatedAngle);
@@ -408,8 +384,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
         if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
-        // Debugging
-        System.out.println("Rotating Left from " + initialAngle + " deg to " + rotatedAngle + " deg");
     }
 
     /**
@@ -497,18 +471,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         dialog.setTitle("Leaving Driver's Seat");
         dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
         dialog.show();
-    }
-
-    public void initializeNavBar() {
-
-        // For some reason uncommenting this breaks the app
-//            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-//            bottomNavigationView.setSelectedItemId(R.id.practiceDriving);
-//            bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-//                alertQuitQuiz(() -> Navigation.navigate(pda, item));
-//                return false;
-//            });
-
     }
 
     @Override

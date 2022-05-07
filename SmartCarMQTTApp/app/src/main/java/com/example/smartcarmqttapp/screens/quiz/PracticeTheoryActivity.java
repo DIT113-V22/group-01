@@ -103,7 +103,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         numOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                System.out.println("Selected Questions: " + (i+1));
                 numOfQuestionsSeekBar.setAlpha(1);
                 numOfQuestions = i+1;
             }
@@ -124,7 +123,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 timerSeekBar.setAlpha(1);
                 MILLIS = (int)(600000*(1 + ((double)i/timerSeekBar.getMax())));
-                System.out.println("Selected Timer: 10min + " + MILLIS);
             }
 
             @Override
@@ -201,7 +199,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
                 findViewById(R.id.startQuizView).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.selectedModeTextView)).setText("Choose a mode: Review Questions");
-//                selectedCategory = "Review";
             }
         });
 
@@ -265,23 +262,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         if(selectedMode.equals(quizModes.get(0)) && selectedCategory == null) {
             selectedCategory = "No Category";
         }
-
-//        selectedQuestions = new ArrayList<>();
-//        if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
-//            selectedQuestions = categoryQuestions.get(selectedCategory);
-//            Collections.shuffle(selectedQuestions);
-//            selectedQuestions = selectedQuestions.subList(0, numOfQuestions);
-//            // get only N questions
-//        } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
-//            selectedQuestions = allQuestions;
-//            MILLIS = EXAM_TIME_MILLIS;
-//        } else {
-//            for(Question question: allQuestions) { // Get Questions that need to be reviewed
-//                if(question.getNeedsReview() == 1) {
-//                    selectedQuestions.add(question);
-//                }
-//            }
-//        }
 
         Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
         intent.putExtra("TIMER_VALUE", MILLIS);

@@ -304,7 +304,6 @@ public class MqttCar extends BaseObservable implements IMqttActionListener, Mqtt
             // For ui updates
             for (Runnable listener : listeners.values()) {
                 listener.run();
-//                System.out.println(listener);
             }
         }
         catch (NumberFormatException ex) {
@@ -331,7 +330,6 @@ public class MqttCar extends BaseObservable implements IMqttActionListener, Mqtt
         final long secondsSinceLastHeartbeat = Duration.between(lastHeartbeat.get(), LocalDateTime.now()).getSeconds();
 
         if (secondsSinceLastHeartbeat > CONNECTION_TIMEOUT && !heartbeatLost) {
-            System.out.println("Connection lost");
             heartbeatLost = true;
             onConnectionLost.run();
         }
