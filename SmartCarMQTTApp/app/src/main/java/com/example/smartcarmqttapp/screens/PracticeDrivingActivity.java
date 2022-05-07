@@ -1,5 +1,6 @@
 package com.example.smartcarmqttapp.screens;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
@@ -15,15 +16,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
@@ -59,7 +59,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     private Button toggleDataButton;
     private Dialog sensorDialog;
-    PracticeDrivingActivity pda;
+    PracticeDrivingActivity zis;
     BottomNavigationView bottomNavigationView;
 
     private MediaPlayer mp;
@@ -79,9 +79,19 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_driving);
-        Navigation.initializeNavigation(this, R.id.practiceDriving);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        pda = this;
+        zis = this;
+
+        // bottomNavigation bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                alertQuitDriving(() -> Navigation.navigate(zis, item));
+                return false;
+            }
+        });
 
         AudioPlayer.instance.createMP();
         //play sound file and set looping to true
@@ -314,14 +324,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
      */
     public static final class ControlConstant {
 
-        enum ChangeMode {
-            ADDITION, MULTIPLICATION;
-        }
-
-        public static final double STARTING_SPEED = 10; // new speed of car when accelerating with no speed (percentage integer)
-        public static final double INITIAL_SPEED = 0; // speed of car upon initialization
-        public static final double INITIAL_ANGLE = 0; // angle of car upon initialization
-
         public static final double ACCELERATION_FACTOR = 1.5; // multiplication factor for accelerating
         public static final double DECELERATION_FACTOR = 0.8; // multiplication factor for decelerating
 
@@ -331,25 +333,10 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         public static final double STARTING_THROTTLE = 10;
         public static final double MIN_THROTTLE = 5; // threshold for stopping car when decelerating
         public static final double MAX_THROTTLE = 100; // threshold for accelerating car
-
-        public static final ChangeMode ANGLE_CHANGE = ChangeMode.ADDITION;
-        public static final ChangeMode SPEED_CHANGE = ChangeMode.MULTIPLICATION;
-
     }
 
     public static final boolean FORCE_UPDATE = false; // upon theoretical data change, immediately updates visible fields
     public static final double GYROSCOPE_OFFSET = 180;
-
-    /* ToDo:
-     * Bind buttons to methods
-     * Add method bodies
-     * Update text views
-     * Create UI
-     * If doesn't work, move debugging statements before controller access
-     * Test functionality
-     * VERY IMPORTANT: #changeSpeed takes throttle percentage integer (20), but speed.get() returns m/s.
-     * When calculating accelerated speed, use map for (speed in m/s) -> (speed in %) to throttle properly.
-     */
 
     /**
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
@@ -506,10 +493,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             }
         });
     }
-}
-    protected void alertQuitQuiz(Runnable onQuit) {
 
-        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
+    protected void alertQuitDriving(Runnable onQuit) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("Are you really gonna wuss out on me?")
                 .setNegativeButton("Just Kidding!", (theDialog, id) -> {})
                 .setPositiveButton("\uD83D\uDE1E yeahhh..", (theDialog, id) -> {
@@ -524,7 +510,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     @Override
     public void onBackPressed() {
-        alertQuitQuiz(() -> {
+        alertQuitDriving(() -> {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });

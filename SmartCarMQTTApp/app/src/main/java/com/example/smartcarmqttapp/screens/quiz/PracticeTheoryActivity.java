@@ -31,8 +31,6 @@ import java.util.Map;
 
 public class PracticeTheoryActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
-
     private TextView warningTextView;
     private LinearLayout timerContainer;
     private LinearLayout numOfQuestionsContainer;
