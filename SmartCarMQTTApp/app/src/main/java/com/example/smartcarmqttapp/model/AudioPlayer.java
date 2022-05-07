@@ -16,19 +16,21 @@ public class AudioPlayer {
 
     public void createMP(){
         mp = new MediaPlayer();
+        mp.setVolume(100, 100);
     }
 
     public void chooseSongerino(Context context, int id){
+        stopSound();
         this.mp = MediaPlayer.create(context, id);
     }
 
     public void playSound(boolean looping){
         mp.start();
-        mp.setLooping(true);
+        mp.setLooping(looping);
     }
 
     public void stopSound(){
-        if(this.mp != null){
+        if (this.mp != null){
             mp.stop();
             mp.release();
         }
