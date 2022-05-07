@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.media.MediaPlayer;
+import android.content.Intent;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -29,11 +30,9 @@ import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.model.AudioPlayer;
 import com.example.smartcarmqttapp.state.CarState;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -60,6 +59,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     private Button toggleDataButton;
     private Dialog sensorDialog;
+    PracticeDrivingActivity pda;
+    BottomNavigationView bottomNavigationView;
 
     private MediaPlayer mp;
 
@@ -80,6 +81,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         setContentView(R.layout.activity_practice_driving);
         Navigation.initializeNavigation(this, R.id.practiceDriving);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        pda = this;
 
         AudioPlayer.instance.createMP();
         //play sound file and set looping to true
@@ -113,14 +115,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         sensorDialog = new Dialog(this);
 
         dashboard();
-        if (CarState.instance.isConnected()) {
-            try {
-                CarState.instance.getConnectedCar().changeSpeed(25.0);
-            }
-            catch(Exception ex) {
-                // ignore
-            }
-        }
 
         toggleDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +180,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             controller = CarState.instance.getConnectedCar();
 
             controller.listeners.put("camera", () -> {
-                    Log.d("ui update", "ui update");
                 runOnUiThread(() -> {
                     imageView.setImageBitmap(controller.camera.get());
                 });
@@ -329,13 +322,15 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         public static final double INITIAL_SPEED = 0; // speed of car upon initialization
         public static final double INITIAL_ANGLE = 0; // angle of car upon initialization
 
-        public static final double ACCELERATION_FACTOR = 1.1; // multiplication factor for accelerating
-        public static final double DECELERATION_FACTOR = 0.9; // multiplication factor for decelerating
+        public static final double ACCELERATION_FACTOR = 1.5; // multiplication factor for accelerating
+        public static final double DECELERATION_FACTOR = 0.8; // multiplication factor for decelerating
 
         public static final double TURN_LEFT_ANGLE = 10; // addition angle for turning left
         public static final double TURN_RIGHT_ANGLE = -10; // addition angle for turning right
 
-        public static final double MIN_SPEED = 0.05; // threshold for stopping car when decelerating
+        public static final double STARTING_THROTTLE = 10;
+        public static final double MIN_THROTTLE = 5; // threshold for stopping car when decelerating
+        public static final double MAX_THROTTLE = 100; // threshold for accelerating car
 
         public static final ChangeMode ANGLE_CHANGE = ChangeMode.ADDITION;
         public static final ChangeMode SPEED_CHANGE = ChangeMode.MULTIPLICATION;
@@ -360,44 +355,47 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
      * Increases (multiplication) speed of moving car OR begin movement of standing car. Bound to button R.id.upButton
      */
     public void onClickAccelerate(View view) throws MqttException {
-        double initialSpeed = controller.speed.get(); // returns 0.138
-        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed); // returns 10
-        double acceleratedSpeed = initialSpeed == 0 ? ControlConstant.STARTING_SPEED : initialSpeed * ControlConstant.ACCELERATION_FACTOR;
-        controller.changeSpeed(acceleratedSpeed);
-
-        if(FORCE_UPDATE) controller.speed.set(acceleratedSpeed);
-
-        // Debugging
-        System.out.println("Accelerating from " + initialSpeed + " % to " + acceleratedSpeed + " %");
-
-        /* unopinionated approach to changing speed and angle by allowing user to select change mode.
-        double acceleratedSpeed =
-                ControlConstant.SPEED_CHANGE == ControlConstant.ChangeMode.MULTIPLICATION ?
-                        initialSpeed * ControlConstant.ACCELERATION_FACTOR :
-                        initialSpeed + ControlConstant.ACCELERATION_FACTOR;
-         */
+        double initialThrottle = controller.throttle.get();
+        double acceleratedThrottle;
+        if(initialThrottle == 0) { // car standing still: start driving
+            acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
+        }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
+            acceleratedThrottle = 0;
+        }else if(initialThrottle > 0) { // car driving: increase speed
+            acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
+        }else { // car driving backwards: increase speed (decrease speed modulus)
+            acceleratedThrottle = initialThrottle / ControlConstant.ACCELERATION_FACTOR;
+        }
+        acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
+        controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
+        controller.throttle.set(acceleratedThrottle); // stores current throttle
     }
 
     /**
      * Decreases (multiplication) speed of moving car OR stops movement given speed is below threshold. Bound to button R.id.downButton
      */
     public void onClickDecelerate(View view) throws MqttException {
-        double initialSpeed = controller.speed.get();
-        initialSpeed = getThrottleFromAbsoluteSpeed(initialSpeed);
-        double deceleratedSpeed = initialSpeed > ControlConstant.MIN_SPEED ? initialSpeed * ControlConstant.DECELERATION_FACTOR : 0;
-        controller.changeSpeed(deceleratedSpeed);
-
-        if(FORCE_UPDATE) controller.speed.set(deceleratedSpeed);
-
-        // Debugging
-        System.out.println("Accelerating from " + initialSpeed + " % to " + deceleratedSpeed + " %");
+        double initialThrottle = controller.throttle.get();
+        double deceleratedThrottle;
+        if(initialThrottle == 0) { // car standing still: start driving backwards
+            deceleratedThrottle = -ControlConstant.STARTING_THROTTLE;
+        }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE){
+            deceleratedThrottle = 0;
+        }else if(initialThrottle > 0) { // car driving: slow down
+            deceleratedThrottle = initialThrottle * ControlConstant.DECELERATION_FACTOR;
+        }else{ // car driving backwards: speed up backwards
+            deceleratedThrottle = initialThrottle / ControlConstant.DECELERATION_FACTOR;
+        }
+        // speed modulus cant be greater than MAX
+        deceleratedThrottle = Math.max(deceleratedThrottle, -ControlConstant.MAX_THROTTLE);
+        controller.changeSpeed(deceleratedThrottle); // publish to MQTT
+        controller.throttle.set(deceleratedThrottle); // store current throttle
     }
 
     /**
      * Increases (addition) wheel angle of car. Bound to button R.id.leftButton
      */
     public void onClickRotateLeft(View view) throws MqttException {
-//        double initialAngle = controller.gyroscopeHeading.get();
         double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
         controller.steerCar(rotatedAngle);
@@ -405,15 +403,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
         if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
-        // Debugging
-        System.out.println("Rotating Right from " + initialAngle + " deg to " + rotatedAngle + " deg");
     }
 
     /**
      * Decreases (addition) wheel angle of car. Bound to button R.id.rightButton
      */
     public void onClickRotateRight(View view) throws MqttException {
-//        double initialAngle = controller.gyroscopeHeading.get();
         double initialAngle = controller.wheelAngle.get();
         double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
         controller.steerCar(rotatedAngle);
@@ -421,8 +416,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
         if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
 
-        // Debugging
-        System.out.println("Rotating Left from " + initialAngle + " deg to " + rotatedAngle + " deg");
     }
 
     /**
@@ -511,6 +504,29 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
                 else
                     AudioPlayer.instance.getMp().pause();
             }
+        });
+    }
+}
+    protected void alertQuitQuiz(Runnable onQuit) {
+
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setMessage("Are you really gonna wuss out on me?")
+                .setNegativeButton("Just Kidding!", (theDialog, id) -> {})
+                .setPositiveButton("\uD83D\uDE1E yeahhh..", (theDialog, id) -> {
+                    onQuit.run();
+                })
+                .create();
+
+        dialog.setTitle("Leaving Driver's Seat");
+        dialog.setIcon(R.drawable.ic_baseline_follow_the_signs_24);
+        dialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        alertQuitQuiz(() -> {
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            overridePendingTransition(0, 0);
         });
     }
 }
