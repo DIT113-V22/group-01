@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:padding="10dp">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:itemBackground="@color/white"
         app:itemIconTint="@drawable/selector"
@@ -20,10 +20,9 @@
         app:menu="@menu/menu" />
 
     <TextView
-        android:id="@+id/textCategory"
+        android:id="@+id/selectedCategoryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:text="Choose a category:"
         app:layout_constraintBottom_toTopOf="@+id/cardCategory"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,8 +32,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMode"
         android:layout_width="381dp"
-        android:layout_height="191dp"
+        android:layout_height="200dp"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="20dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,13 +53,14 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardCategory"
         android:layout_width="375dp"
-        android:layout_height="152dp"
-        android:layout_marginBottom="288dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:cardCornerRadius="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/startQuizView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardMode">
 
         <ListView
             android:id="@+id/listCategory"
@@ -72,7 +73,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textMode"
+        android:id="@+id/selectedModeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -83,13 +84,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/startQuizView"
         android:layout_width="372dp"
-        android:layout_height="218dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardCategory">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,8 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:max="20"
-                    android:progress="1"
-                    />
+                    android:progress="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,7 +201,7 @@
         android:textColor="#811F1F"
         app:layout_constraintBottom_toTopOf="@+id/cardMode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textMode"
+        app:layout_constraintStart_toEndOf="@+id/selectedModeTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
