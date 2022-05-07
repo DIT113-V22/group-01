@@ -2,12 +2,14 @@ package com.example.smartcarmqttapp.screens.quiz;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.database.CrushersDataBase;
@@ -36,12 +39,15 @@ public class PracticeTheoryActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     private TextView warningTextView;
-    private LinearLayout timerContainer;
-    private LinearLayout numOfQuestionsContainer;
-    private SeekBar timerSeekBar;
-    private SeekBar numOfQuestionsSeekBar;
+    private ConstraintLayout timerContainer;
+    private ConstraintLayout numOfQuestionsContainer;
     private TextView timerTextView;
     private TextView numOfQuestionsTextView;
+
+    private final int BUTTON_PRESSED_COLOR = Color.rgb(142, 36, 170);
+    private final int BUTTON_COLOR = Color.rgb(186, 104, 200);
+    private final int VIEW_COLOR = Color.rgb(255, 255, 255);
+    private final int SELECTED_VIEW_COLOR = Color.rgb(220, 220, 220);
 
     private List<Question> allQuestions;
 
@@ -94,51 +100,85 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         warningTextView = findViewById(R.id.warningTextView);
         timerContainer = findViewById(R.id.timerContainer);
         numOfQuestionsContainer = findViewById(R.id.numOfQuestionsContainer);
-        numOfQuestionsSeekBar = findViewById(R.id.numOfQuestionsSeekBar);
-        timerSeekBar = findViewById(R.id.timerSeekBar);
         timerTextView = findViewById(R.id.timerTextView);
         numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
 
-        numOfQuestionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        Button timerOffButton = (Button)findViewById(R.id.timerOffButton);
+        Button tenMinuteTimerButton = (Button)findViewById(R.id.tenMinuteTimerButton);
+        Button fifteenMinuteTimerButton = (Button)findViewById(R.id.fifteenMinuteTimerButton);
+        Button fiveQuestionButton = (Button)findViewById(R.id.fiveQuestionButton);
+        Button tenQuestionButton = (Button)findViewById(R.id.tenQuestionButton);
+        Button fifteenQuestionButton = (Button)findViewById(R.id.fifteenQuestionButton);
+
+        timerOffButton.setBackgroundColor(BUTTON_COLOR);
+        tenMinuteTimerButton.setBackgroundColor(BUTTON_COLOR);
+        fifteenMinuteTimerButton.setBackgroundColor(BUTTON_COLOR);
+        fiveQuestionButton.setBackgroundColor(BUTTON_COLOR);
+        tenQuestionButton.setBackgroundColor(BUTTON_COLOR);
+        fifteenQuestionButton.setBackgroundColor(BUTTON_COLOR);
+
+        timerOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                System.out.println("Selected Questions: " + (i+1));
-                numOfQuestionsSeekBar.setAlpha(1);
-                numOfQuestions = i+1;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        timerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                timerSeekBar.setAlpha(1);
-                MILLIS = (int)(600000*(1 + ((double)i/timerSeekBar.getMax())));
-                System.out.println("Selected Timer: 10min + " + MILLIS);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+            public void onClick(View view) {
+                MILLIS = 0;
+                timerOffButton.setBackgroundColor(BUTTON_PRESSED_COLOR);
+                tenMinuteTimerButton.setBackgroundColor(BUTTON_COLOR);
+                fifteenMinuteTimerButton.setBackgroundColor(BUTTON_COLOR);
             }
         });
 
-        numOfQuestionsSeekBar.setAlpha(0.5f);
-        timerSeekBar.setAlpha(0.5f);
+        tenMinuteTimerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MILLIS = 10*60*1000;
+                timerOffButton.setBackgroundColor(BUTTON_COLOR);
+                tenMinuteTimerButton.setBackgroundColor(BUTTON_PRESSED_COLOR);
+                fifteenMinuteTimerButton.setBackgroundColor(BUTTON_COLOR);
+            }
+        });
+
+        fifteenMinuteTimerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MILLIS = 15*60*1000;
+                timerOffButton.setBackgroundColor(BUTTON_COLOR);
+                tenMinuteTimerButton.setBackgroundColor(BUTTON_COLOR);
+                fifteenMinuteTimerButton.setBackgroundColor(BUTTON_PRESSED_COLOR);
+            }
+        });
+
+        // Number of Questions buttons
+
+        fiveQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                numOfQuestions = 5;
+                fiveQuestionButton.setBackgroundColor(BUTTON_PRESSED_COLOR);
+                tenQuestionButton.setBackgroundColor(BUTTON_COLOR);
+                fifteenQuestionButton.setBackgroundColor(BUTTON_COLOR);
+            }
+        });
+
+        tenQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                numOfQuestions = 10;
+                fiveQuestionButton.setBackgroundColor(BUTTON_COLOR);
+                tenQuestionButton.setBackgroundColor(BUTTON_PRESSED_COLOR);
+                fifteenQuestionButton.setBackgroundColor(BUTTON_COLOR);
+            }
+        });
+
+        fifteenQuestionButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                numOfQuestions = 15;
+                fiveQuestionButton.setBackgroundColor(BUTTON_COLOR);
+                tenQuestionButton.setBackgroundColor(BUTTON_COLOR);
+                fifteenQuestionButton.setBackgroundColor(BUTTON_PRESSED_COLOR);
+            }
+        });
     }
 
     /**
@@ -165,20 +205,37 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
         ModeAdapter modeAdapter = new ModeAdapter(this, quizModes, quizModesDescription, quizModeImages);
         ListView modeListView = findViewById(R.id.listMode);
+
+        modeListView.setAdapter(modeAdapter);
+
+
+        View[] modeViews = new View[3];
+
         modeListView.setOnItemClickListener((adapterView, view, position, id) -> {
+            if(modeViews[position] == null) modeViews[position] = view;
+            if(modeViews[0] != null) modeViews[0].setBackgroundColor(VIEW_COLOR);
+            if(modeViews[1] != null) modeViews[1].setBackgroundColor(VIEW_COLOR);
+            if(modeViews[2] != null) modeViews[2].setBackgroundColor(VIEW_COLOR);
+
+            view.setBackgroundColor(SELECTED_VIEW_COLOR);
+
             selectedMode = quizModes.get(position);
+
             if(position == 0) {
                 timerContainer.setVisibility(View.VISIBLE);
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.VISIBLE);
                 MILLIS = 0;
                 numOfQuestions = 15;
+
             }else if(position == 1) {
                 timerContainer.setVisibility(View.INVISIBLE);
                 numOfQuestionsContainer.setVisibility(View.INVISIBLE);
                 timerTextView.setVisibility(View.INVISIBLE);
                 numOfQuestionsTextView.setVisibility(View.INVISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
                 MILLIS = EXAM_TIME_MILLIS;
                 selectedCategory = "No Category";
                 numOfQuestions = 0;
@@ -187,11 +244,11 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
 //                selectedCategory = "Review";
             }
         });
 
-        modeListView.setAdapter(modeAdapter);
     }
 
     // Populates Category ListView with pre-defined strings
@@ -200,7 +257,17 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         ListView categoryListView = findViewById(R.id.listCategory);
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categories);
         categoryListView.setAdapter(adapter);
+
+        View[] categoryViews = new View[3];
+
         categoryListView.setOnItemClickListener((adapterView, view, position, id) -> {
+
+            if(categoryViews[position] == null) categoryViews[position] = view;
+            if(categoryViews[0] != null) categoryViews[0].setBackgroundColor(VIEW_COLOR);
+            if(categoryViews[1] != null) categoryViews[1].setBackgroundColor(VIEW_COLOR);
+            if(categoryViews[2] != null) categoryViews[2].setBackgroundColor(VIEW_COLOR);
+
+            view.setBackgroundColor(SELECTED_VIEW_COLOR);
             selectedCategory = categories.get(position);
         });
     }
@@ -250,23 +317,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         if(selectedMode.equals(quizModes.get(0)) && selectedCategory == null) {
             selectedCategory = "No Category";
         }
-
-//        selectedQuestions = new ArrayList<>();
-//        if(selectedMode.equals(quizModes.get(0))) { // Get Questions only from selected category
-//            selectedQuestions = categoryQuestions.get(selectedCategory);
-//            Collections.shuffle(selectedQuestions);
-//            selectedQuestions = selectedQuestions.subList(0, numOfQuestions);
-//            // get only N questions
-//        } else if(selectedMode.equals(quizModes.get(1))) { // Get Questions from all categories
-//            selectedQuestions = allQuestions;
-//            MILLIS = EXAM_TIME_MILLIS;
-//        } else {
-//            for(Question question: allQuestions) { // Get Questions that need to be reviewed
-//                if(question.getNeedsReview() == 1) {
-//                    selectedQuestions.add(question);
-//                }
-//            }
-//        }
 
         Intent intent = new Intent(PracticeTheoryActivity.this, QuizQuestionActivity.class);
         intent.putExtra("TIMER_VALUE", MILLIS);
