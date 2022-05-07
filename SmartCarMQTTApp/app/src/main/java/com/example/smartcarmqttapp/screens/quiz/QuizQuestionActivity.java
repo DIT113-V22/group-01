@@ -100,8 +100,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         String category = extras.getString("category");
         int numberOfQuestions = extras.getInt("numOfQuestions");
 
-        System.out.println("Starting quiz with Timer " + MILLIS);
-
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
 
@@ -127,15 +125,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option4 = findViewById(R.id.option4);
         radioGroup = findViewById(R.id.radioGroup);
 
-        //bottomNavigation bar
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
         //add questions to question list via helper method --> help us select question
         CrushersDataBase db = new CrushersDataBase(this);
         questionList = db.getAllQuestions();
         Collections.shuffle(questionList);
-//        quizState = new QuizState(true, questionList, null, scoreNumber);
         totalQuestions = questionList.size();
         specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
@@ -169,9 +162,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         Random rand = new Random();
         //quiz with a specific category and question count
-        if(!categorySelected.equals("No Category") && questionCountSelected != 0) {
+        if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
             questionList = db.getCategoryQuestions(categorySelected);
-            System.out.println(questionList);
             for (int i = 0; i < questionCountSelected; i++) {
                 int randomIndex = rand.nextInt(questionList.size());
                 specifcQuestionList.add(questionList.get(randomIndex));
@@ -232,16 +224,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         Button nextQuestionButton = findViewById(R.id.nextQuestionBTN);
         Button checkAnswerBtn = findViewById(R.id.checkAnswer);
 
-        explanationButton = findViewById(correctAnswer);
-        explanationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: add explanations to each of the questions
-                option1.setTooltipText("Ipsum lorens, this should explain the nature of why the chosen option is correct");
-            }
-        });
-
-        if(currentQuestionNum == totalQuestions){
+        if (currentQuestionNum == totalQuestions){
             nextQuestionButton.setText("Finish Quiz");
         }
 
@@ -264,6 +247,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     option2.setClickable(false);
                     option3.setClickable(false);
                     option4.setClickable(false);
+
+                    // show the explanation
+                    Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum - 1);
+                    TextView explanation = findViewById(R.id.explanation);
+                    explanation.setText(currentQuestion.getExplanation());
 
                     //show the user that they also cant re-press the button
                     Drawable drawable = getDrawable(R.drawable.button_border);
@@ -307,8 +295,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         //when the question count finished, go to the results screen
                         finishQuiz(TOTAL_TIME - MILLIS);
                     }
-
-                    else{
+                    else {
+                        TextView explanation = findViewById(R.id.explanation);
+                        explanation.setText("");
                         resetRadioButtons();
                         if (new Intent().getIntExtra("", 0) != 0)
                             addQuestion(specifcQuestionList);

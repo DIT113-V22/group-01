@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,22 +20,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.database.CrushersDataBase;
-import com.example.smartcarmqttapp.database.CrushersDataBaseManager;
 import com.example.smartcarmqttapp.model.Question;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PracticeTheoryActivity extends AppCompatActivity {
-
-    private BottomNavigationView bottomNavigationView;
 
     private TextView warningTextView;
     private ConstraintLayout timerContainer;
@@ -88,7 +84,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         this.categoryQuestions = groupQuestionsByCategory(allQuestions);
 
         initializeElements();
-        initializeNavBar();
+        Navigation.initializeNavigation(this, R.id.practiceTheory);
 
         addModesToModeListView();
         addCategoriesToCategoryListView();
@@ -102,6 +98,9 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         numOfQuestionsContainer = findViewById(R.id.numOfQuestionsContainer);
         timerTextView = findViewById(R.id.timerTextView);
         numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
+        findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+        findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
+        findViewById(R.id.startQuizView).setVisibility(View.INVISIBLE);
 
         Button timerOffButton = (Button)findViewById(R.id.timerOffButton);
         Button tenMinuteTimerButton = (Button)findViewById(R.id.tenMinuteTimerButton);
@@ -269,6 +268,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
             view.setBackgroundColor(SELECTED_VIEW_COLOR);
             selectedCategory = categories.get(position);
+            ((TextView)findViewById(R.id.selectedCategoryTextView)).setText("Choose a category: " + categories.get(position));
         });
     }
 
@@ -326,15 +326,5 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         // I tried passing
     }
 
-    private void initializeNavBar() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
-
-        Intent intent = this.getIntent();
-        intent.putExtra("option_timer", 0);
-        intent.putExtra("option_numOfQuestions", 0);
-        intent.putExtra("option_category", "categoryName");
-
-    }
 
 }
