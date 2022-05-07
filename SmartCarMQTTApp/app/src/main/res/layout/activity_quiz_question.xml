@@ -62,7 +62,7 @@
                             android:id="@+id/scorePrompt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Score:"
+                            android:text="Score: "
                             android:textSize="14dp" />
 
                         <TextView
@@ -144,10 +144,22 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/tv7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Explanation"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/explanation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
                 android:id="@+id/areYouSure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:textAlignment="viewEnd" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
