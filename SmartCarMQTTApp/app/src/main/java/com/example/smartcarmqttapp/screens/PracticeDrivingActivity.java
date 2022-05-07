@@ -110,14 +110,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         sensorDialog = new Dialog(this);
 
         dashboard();
-//        if (CarState.instance.isConnected()) {
-//            try {
-//                CarState.instance.getConnectedCar().changeSpeed(25.0);
-//            }
-//            catch(Exception ex) {
-//                // ignore
-//            }
-//        }
 
         toggleDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
