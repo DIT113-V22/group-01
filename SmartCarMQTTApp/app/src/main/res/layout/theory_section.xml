@@ -19,27 +19,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu" />
 
-<<<<<<< HEAD
     <androidx.cardview.widget.CardView
         android:id="@+id/cardMode"
         android:layout_width="381dp"
         android:layout_height="wrap_content"
-=======
-    <TextView
-        android:id="@+id/selectedCategoryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose a category:"
-        app:layout_constraintBottom_toTopOf="@+id/cardCategory"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardMode"
-        android:layout_width="381dp"
-        android:layout_height="200dp"
->>>>>>> 45a4db36c36824ba34ba24478afecd09c8be7c2d
         android:layout_marginTop="32dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="15dp"
@@ -61,17 +44,9 @@
         android:id="@+id/cardCategory"
         android:layout_width="375dp"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomCardView"
         app:layout_constraintEnd_toEndOf="parent"
-=======
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/startQuizView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
->>>>>>> 45a4db36c36824ba34ba24478afecd09c8be7c2d
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardMode">
 
@@ -97,17 +72,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
-<<<<<<< HEAD
         android:id="@+id/bottomCardView"
         android:layout_width="372dp"
         android:layout_height="wrap_content"
-=======
-        android:id="@+id/startQuizView"
-        android:layout_width="372dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
->>>>>>> 45a4db36c36824ba34ba24478afecd09c8be7c2d
         app:cardCornerRadius="15dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -137,7 +106,6 @@
                 <Button
                     android:id="@+id/timerOffButton"
                     android:layout_width="wrap_content"
-<<<<<<< HEAD
                     android:layout_height="48dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -145,22 +113,6 @@
                     android:text="OFF"
                     />
                     android:textSize="15sp" />
-=======
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:text="10 min" />
-
-                <SeekBar
-                    android:id="@+id/timerSeekBar"
-                    style="@style/Widget.AppCompat.SeekBar.Discrete"
-                    android:layout_width="240dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:max="20"
-                    android:progress="1" />
->>>>>>> 45a4db36c36824ba34ba24478afecd09c8be7c2d
 
                 <Button
                     android:id="@+id/tenMinuteTimerButton"

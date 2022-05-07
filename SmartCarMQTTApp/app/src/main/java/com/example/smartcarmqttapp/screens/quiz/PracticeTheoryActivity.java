@@ -98,9 +98,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         numOfQuestionsContainer = findViewById(R.id.numOfQuestionsContainer);
         timerTextView = findViewById(R.id.timerTextView);
         numOfQuestionsTextView = findViewById(R.id.numOfQuestionsTextView);
-        findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
-        findViewById(R.id.selectedCategoryTextView).setVisibility(View.INVISIBLE);
-        findViewById(R.id.startQuizView).setVisibility(View.INVISIBLE);
 
         Button timerOffButton = (Button)findViewById(R.id.timerOffButton);
         Button tenMinuteTimerButton = (Button)findViewById(R.id.tenMinuteTimerButton);
@@ -243,7 +240,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsContainer.setVisibility(View.VISIBLE);
                 timerTextView.setVisibility(View.VISIBLE);
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
-                findViewById(R.id.cardCategory).setVisibility(View.INVISIBLE);
+                findViewById(R.id.cardCategory).setVisibility(View.VISIBLE);
 //                selectedCategory = "Review";
             }
         });
@@ -268,7 +265,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
 
             view.setBackgroundColor(SELECTED_VIEW_COLOR);
             selectedCategory = categories.get(position);
-            ((TextView)findViewById(R.id.selectedCategoryTextView)).setText("Choose a category: " + categories.get(position));
         });
     }
 
