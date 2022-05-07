@@ -4,11 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"
         android:src="@mipmap/ic_launcher"
         android:id="@+id/quizLogo"
         />
@@ -24,8 +26,8 @@
             android:text="Main Title"
             android:textColor="#000"
             android:textStyle="bold"
-            android:layout_margin="5dp"
-            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:textSize="18sp"
             android:id="@+id/textViewTitle"
             />
 
@@ -35,8 +37,8 @@
             android:text="Sub Title"
             android:textColor="#a9a9a9"
             android:textStyle="bold"
-            android:layout_margin="5dp"
-            android:textSize="15sp"
+            android:layout_margin="2dp"
+            android:textSize="14sp"
             android:id="@+id/textViewSubtitle"
             />
 
