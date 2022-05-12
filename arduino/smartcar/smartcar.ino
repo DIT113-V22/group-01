@@ -111,7 +111,7 @@ void setup() {
       smartCar.setAngle(message.toInt());
     } else if (topic == ESTOP_TOPIC) {
       smartCar.setSpeed(0);
-      mqtt.publish(ESTOP_TOPIC, "Emergency Stop. Speed has been set to zero.");
+      smartCar.setAngle(0);
       Serial.println("smartCar has stopped");
     } else if (topic == BLINKERS_TOPIC) {
       if (message == "left") {
