@@ -16,10 +16,11 @@ public class Question {
     //needsReview is stored as int as SQLite does not have BIT or BOOLEAN data types. Will store true as 1 and false as 0.
     private int needsReview;
     private String category;
+    private String animation;
 
     public Question(){}
 
-    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category) {
+    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category, String animation) {
         this.question = question;
         this.firstAnswer = firstAnswer;
         this.secondAnswer = secondAnswer;
@@ -29,6 +30,7 @@ public class Question {
         this.explanation = explanation;
         this.needsReview = needsReview;
         this.category = category;
+        this.animation = animation;
     }
 
     public String getQuestion() {
@@ -103,6 +105,14 @@ public class Question {
         this.category = category;
     }
 
+    public String getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(String animation) {
+        this.animation = animation;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -115,6 +125,7 @@ public class Question {
                 ", explanation='" + explanation + '\'' +
                 ", needsReview=" + needsReview +
                 ", category='" + category + '\'' +
+                ", animation='" + animation + '\'' +
                 '}';
     }
 }

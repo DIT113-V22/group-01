@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.database.QuizContract.*;
 
@@ -81,7 +82,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
             QuestionsTable.COLUMN_CORRECT_ANSWER + " INTEGER," +
             QuestionsTable.COLUMN_EXPLANATION + " TEXT, " +
             QuestionsTable.COLUMN_NEEDS_REVIEW + " INTEGER, " +
-            QuestionsTable.COLUMN_CATEGORY + " TEXT" + ")";
+            QuestionsTable.COLUMN_CATEGORY + " TEXT, " +
+            QuestionsTable.COLUMN_ANIMATION + " TEXT" + ")";
         db.execSQL(CREATE_TABLE);
         populateQuestionsTable();
 
@@ -106,7 +108,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Towing on a motorway/clearway is not permitted. Exception: If a car makes an emergency stop on a motorway/clearway, then it can be towed away, but it can only be towed along the hard shoulder and only up until the nearest suitable exit.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("In which situation does the so-called priority-to-the-right rule apply?",
                         "When driving out of a petrol station",
@@ -116,7 +119,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "When approaching a junction in a built-up area without road signs",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline100),
 
                 new Question("When is it permitted to park on the left-hand side of the road?",
                         "Parking on the left is never permitted",
@@ -126,7 +130,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Cars may only stop or park on the right-hand side of the road, in the direction of traffic. Exception: If the road is one-way, or if there is a railway or tramway track on the right-hand side, then cars may park on the left-hand side of the road.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline110),
 
                 new Question("In which case are all of these vehicles permitted to drive on a motorway?",
                         "Cars, buses and mopeds",
@@ -136,7 +141,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Not permitted on motorways: Cyclists, pedestrians, mopeds, tractors and heavy machinery",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline120),
 
                 new Question("Which vehicles must be fitted with red triangular reflectors at their rear?",
                         "Goods vehicles",
@@ -146,7 +152,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "There are several different vehicles that have reflectors, but only trailers are required to have red triangular reflectors at the rear.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("You intend to turn around when you are approaching a roundabout. Are you allowed to use the roundabout to turn around (i.e. drive all the way around the roundabout and come back on the same road in the opposite direction)?",
                         "Yes, but it is not recommended",
@@ -156,7 +163,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Using a roundabout to turn is recommended as this is considered safer than making a U-turn.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("What is the highway speed limit?",
                         "150km/hr",
@@ -166,7 +174,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "110km/hr is generally highway speed limit, although newer highways such as the E4 and E6 increase this to 120km/hr.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline150),
 
                 new Question("You have stopped for a red light at a pedestrian crossing. When it turns green, there are still children on the pedestrian crossing. What should you do?",
                         "Start driving slowly and wave at them to make them hurry up",
@@ -176,7 +185,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Although the light is green, you should hold off on doing anything until all of the pedestrians have cleared the crossing.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline160),
 
                 new Question("You are driving on a motorway with a coupled braked trailer. How fast are you allowed to drive?",
                         "70 km/h",
@@ -186,7 +196,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "A car with a coupled braked trailer may not drive faster than 80 km/h.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("You are driving on a motorway and approaching an entry. Which of these statements is correct?",
                         "I must give way to any vehicles that are about to enter the motorway",
@@ -196,7 +207,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "When approaching an entry on a motorway, you should facilitate the entrance of other vehicles onto the motorway. There is a mutual interaction here, which means that neither you nor the traffic on the entry have to give way.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline180),
 
                 new Question("Which of the following vehicles are you permitted to drive with a category B driving licence?",
                         "Private car with trailer, regardless of its weight",
@@ -206,7 +218,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "If the total weight exceeds 3.5 tonnes, then the vehicle counts as heavy goods vehicle. A category B licence does not entitle you to drive a heavy goods vehicle. You need a category A licence for heavy motorcycle.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("You have projecting cargo that protrudes by two metres at the front and the back of your car. Do you need to mark the cargo when driving in the dark?",
                         "Yes, with white reflectors and a white light at the front and with red reflectors and a red light at the rear",
@@ -216,7 +229,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Load which protrudes at the front of the vehicle or by more than one metre at the rear of the vehicle must be marked with red/yellow flags in daylight. In the dark, the load must be marked with red lights and red reflectors at the rear and white lights and white reflectors at the front.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("You are driving on a road with a speed limit of 70 km/h. You see a bus in front of you that has just stopped to set down passengers. What should you do?",
                         "On this road, I must give way to the bus driver before he drives back on to the carriageway",
@@ -226,7 +240,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "If you are driving on a road with a speed limit of 50 km/h or lower, you are obliged to give way to buses which indicate that they are driving out from a bus stop. If the road has several lanes, then this rule only applies if you are driving in the right lane. You do not have a duty to give way if the speed limit is 60 km/h or higher.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("Which of these statements about yellow curb markings is true?",
                         "I can park here but for no longer than 24 hours",
@@ -236,7 +251,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "The yellow marking indicates that you are allowed to stop here but that parking is prohibited.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        null),
 
                 new Question("You are driving in a roundabout. A car approaching from the right is about to enter the roundabout. Which options is correct?",
                         "I should stop and give way to the other car",
@@ -246,7 +262,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "All vehicles entering a roundabout must give way to traffic that is already in the roundabout.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline230),
 
 
                 //CATEGORY 2: Environment
@@ -258,7 +275,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Oxides are harmful to not only the environment by causing acidification and eutrophication, but also impact our mucus membranes and airways.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("For environmental reasons, you must not wash your car on a paved driveway that slopes down towards the street. Why not?",
                         "The street can be damaged by chemicals that run off from your car",
@@ -268,7 +286,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Manholes divert rainwater to the nearest watercourse and do not purify the water of any chemicals.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("Does a car-roof box affect fuel consumption?",
                         "Yes, but only if the roof box is loaded",
@@ -278,7 +297,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Roof boxes increase the car’s air resistance and therefore increase fuel consumption as well",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("What is the advantage of friction tyres compared to summer tyres?",
                         "They decrease fuel consumption",
@@ -288,7 +308,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Winter tyres improve road grip to minimize sliding and accidents during winter conditions",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("You are approaching a junction where you intend turn. Which way driving is best from an environmental point of view?",
                         "Put the gear into neutral before making the turn",
@@ -298,7 +319,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "Engine braking does not use any fuel from the engine cylinders and relies instead on the car’s kinetic energy. This means that no additional fuel is combusted and emissions are therefore decreased.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("How can you reduce your emissions?",
                         "By always starting in a high gear",
@@ -309,7 +331,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "If you accelerate and brake frequently, your fuel consumption will increase. You should therefore try to keep a steady speed. Some vehicles are equipped with cruise control which makes it easier for you to maintain a steady speed.\n" +
                                 "The higher the RPM, the higher your fuel consumption. You should therefore drive in as high a gear as possible.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("From an environmental perspective, is it better to start your engine before or after scraping frost off your windshield?",
                         "It is better because the engine gets to warm up before I begin driving",
@@ -319,7 +342,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Warming up your engine by letting it run idle increases emissions as the engine uses up fuel unnecessarily when you are not driving.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("How is fuel consumption impacted by having low tyre pressure?",
                         "It is not affected",
@@ -329,7 +353,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "To reduce fuel consumption, it is important that you regularly check the air pressure in your tires. Too low air pressure leads to increased fuel consumption and impaired road conditions.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("Which of the following options does not affect fuel consumption?",
                         "Air conditioning",
@@ -339,7 +364,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "Service brakes do not impact fuel consumption because they do not require fuel to be activated.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("Shorter journeys mean more emissions per kilometre compared with longer journeys. What percentage of car journeys made in Sweden are shorter than five kilometres?",
                         "65 %",
@@ -349,7 +375,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "Daily commuting, shopping, etc",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("How can you reduce your emissions and thereby reduce your impact on the environment?",
                         "By using tyres that have low rolling resistance and the correct air pressure",
@@ -359,7 +386,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "By reducing tyre friction and increasing tyre air pressure, less fuel will be consumed as there is overall less rolling resistance from the tyres.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("Which fuel is best from an environmental perspective?",
                         "Ethanol",
@@ -369,7 +397,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Ethanol is best from an environmental perspective as it is a renewable fuel and therefore does not have as much of an impact on the greenhouse effect.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("Which of the following options determine how much vehicle tax you will have to pay on your car?",
                         "The year of manufacture",
@@ -379,7 +408,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Vehicle tax is determined based on your vehicle’s emissions of carbon dioxide (CO2).",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("Generally, does the size of the car’s engine affect fuel consumption?",
                         "Yes, a big engine will normally uses more fuel",
@@ -389,7 +419,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Statistically, larger engines use more fuel. This is to be expected as it increases vehicle load.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
                 new Question("You are about to go out for a drive. Will the length of your journey affect your car’s emissions per kilometre?",
                         "Yes, emissions per kilometre are greater on longer journeys than on shorter ones",
@@ -399,7 +430,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "The catalytic converter removes harmful emissions from the car’s exhaust fumes. It only works when it has reached its working temperature. During cold starts and short journeys, exhaust fumes will therefore not be purified and the emission of hazardous substances will be significantly increased.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        null),
 
 
 
@@ -413,7 +445,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "The earlier you plan and adjust your speed, the easier it will be to avoid getting into a dangerous traffic situation.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline397),
 
                 new Question("How tall does a child have to be to sit in a seat with an airbag?",
                         "At least 80 cm",
@@ -423,7 +456,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "140 cm is the legal height requirement",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("What is meant by a single-vehicle accident?",
                         "An accident in which two vehicles collide",
@@ -433,7 +467,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Single vehicle accidents are the most common type of accident outside of built-up areas. Many accidents occur at dawn and when it is dark. This is partially due to tiredness.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline417),
 
                 new Question("What is the purpose of the so-called three-second rule?",
                         "To assess how long my stopping distance is",
@@ -443,7 +478,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "You can use the three-second rule by selecting an object such as a verge reflector post or a pit in the road. When the vehicle in front of you passes the mark/object, you start counting the seconds. If it takes less than three seconds until you pass the mark/object, then you are driving too close.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("You are out driving at night, in the dark, and you are approaching another vehicle. Where should you position your car?",
                         "Towards the right-hand side of the road",
@@ -453,7 +489,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "It can be difficult to spot obstacles or animals at the side of the road in the dark. You should therefore position your car towards the centre line so as not to drive too closely to the right-hand side of the road",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("What is the legal drink-drive limit?",
                         "0.3 parts per thousand",
@@ -463,7 +500,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "The limit for drink-driving in Sweden is 0.2 parts per thousand.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("You have been driving at a high speed over a long period of time and become speed blind. What is the greatest risk of speed blindness?",
                         "I will start driving too slowly unless I keep a close eye on the speedometre",
@@ -473,7 +511,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Speed blindness means that you find it difficult to judge what speed you are doing and it feels as if you are driving more slowly than you really are. This may cause you to misjudge distances,",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("Which of these statements is true about inexperienced drivers?",
                         "They often fix their gaze close in front of the car",
@@ -483,7 +522,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Newly qualified drivers- Keep their gaze too close to the car - Focus more on stationary objects - Are more passive and scan smaller areas",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("What is the most common type of accident caused by a tired driver?",
                         "Accidents when overtaking",
@@ -493,7 +533,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Tired drivers are more likely to crash their car according to Trafikverket",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("Which of these statements about reaction time is true?",
                         "It is shorter at higher speeds",
@@ -503,7 +544,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "If you need to choose between different ways to react then your reaction time will be longer.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("What is the best way to improve road safety?",
                         "Only drive during daytime",
@@ -513,7 +555,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Stress can impact decision making and driving ability. If you have more time, you can plan your driving and drive in peace without having to rush or stress.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("What is the most important thing to consider when it comes to driving safely around a bend?",
                         "Adjusting speed",
@@ -523,7 +566,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "It is very important that you adjust your speed when going around bends, especially in slippery road conditions.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("What is the best way to avoid ending up in a dangerous situation?",
                         "Driving at a low speed all the time",
@@ -533,7 +577,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "The best way to avoid dangerous situations is to drive defensively: take it easy, plan your journey and keep good safety margins.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("You are driving at 30 km/h and increase your speed to 60 km/h. How will your braking distance be affected by this acceleration?",
                         "It will double",
@@ -543,7 +588,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "The braking distance changes exponentially.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        null),
 
                 new Question("When should you use your rear fog light?",
                         "When there is poor visibility and it is difficult for the driver behind to see me",
@@ -553,7 +599,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "The rear fog lamps emit a very strong and dazzling light. You should therefore only use your rear fog lights when visibility is significantly reduced.",
                         0,
-                        "Safety and Best Practices")
+                        "Safety and Best Practices",
+                        null)
                 );
     }
 
@@ -575,6 +622,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         cv.put(QuestionsTable.COLUMN_EXPLANATION, question.getExplanation());
         cv.put(QuestionsTable.COLUMN_NEEDS_REVIEW, question.getNeedsReview());
         cv.put(QuestionsTable.COLUMN_CATEGORY, question.getCategory());
+        cv.put(QuestionsTable.COLUMN_ANIMATION, question.getAnimation());
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
     }
 
@@ -597,6 +645,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                 question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
                 question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
                 question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
+                question.setAnimation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANIMATION)));
 
                 questionList.add(question);
 
@@ -624,6 +673,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
         question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
         question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
+        question.setAnimation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ANIMATION)));
 
         questionList.add(question);
 
