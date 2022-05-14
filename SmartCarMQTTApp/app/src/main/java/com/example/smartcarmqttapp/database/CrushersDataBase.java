@@ -17,6 +17,17 @@ import java.util.List;
 
 public class CrushersDataBase extends SQLiteOpenHelper {
 
+    /*
+    Animations under resources.raw.animations folder:
+        Links to reference the animations:
+        https://www.youtube.com/watch?v=P4lPmo9o-GY
+        https://www.qld.gov.au/transport/safety/rules/road/give-way
+        https://www.youtube.com/watch?v=EGg1SGN6WvI
+        https://www.youtube.com/watch?v=FeS2Sf9b1Wk
+        https://www.youtube.com/watch?v=4LYSTb_RTK4
+        https://www.youtube.com/watch?v=P4lPmo9o-GY
+     */
+
     public Context context;
     public static final String DATABASE_NAME = "crushersDataBase.db";
     public static final int DATABASE_VERSION = 2;
