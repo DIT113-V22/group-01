@@ -89,6 +89,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private int questionCountSelected;
     private int TOTAL_TIME;
     private QuizQuestionActivity zis;
+    private Question currentQuestion;
+
+    private VideoView questionVideo;
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
 
@@ -136,6 +139,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
         this.db = new CrushersDataBase(this);
+
+        questionVideo = findViewById(R.id.videoScreen);
 
         customQuiz(numberOfQuestions, category);
 
@@ -236,6 +241,16 @@ public class QuizQuestionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 TextView selectQ = findViewById(R.id.selectQuestion);
                 areYouSure.setText("");
+                //TODO Uncomment with updated question class
+                /*
+                if(currentQuestion.getVideoID != null) {
+                    questionImage.setVisibility(View.INVISIBLE);
+                    questionVideo.setVisibility(View.VISIBLE);
+                    //TODO Add question url to videoplayer here
+                    //initializeVideoPlayer(currentQuestion.getVideoID);
+                }
+
+                 */
 
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select an answer or skip by pressing 'Next Question' twice");
@@ -336,15 +351,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
      */
     public void addQuestion(List<Question> questionList){
         radioGroup.clearCheck();
-        Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
+        currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
         categories.add(currentQuestion.getCategory());
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
         categoryText.setText(currentQuestion.getCategory());
 
-        //TODO Add question url to videoplayer here
-        //initializeVideoPlayer(currentQuestion.getVideoID);
+        //TODO Set illustration to imageview!!!!!!!!!!!!!!
 
         //this makes sure that when the answer is checked
         //it can correctly color the correct answer and wrong answers

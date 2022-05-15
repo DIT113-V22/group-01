@@ -103,9 +103,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/videoScreen"
-                    android:layout_centerInParent="true">
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible">
 
                 </VideoView>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/questionImage">
+
+                </ImageView>
             </FrameLayout>
 
             <RadioGroup
