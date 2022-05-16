@@ -20,6 +20,7 @@ tool
 
 extends Node
 
+
 var server = "127.0.0.1"
 var port = 1883
 var client_id = "client_id"
@@ -35,23 +36,17 @@ var lw_msg = null
 var lw_qos = 0
 var lw_retain = false
 
-var _timer = null
-
-signal received_message(topic, message)
-
-#func _init(client_id, server, port=0, user=null, password=null, keepalive=0,ssl=false, ssl_params={}):
-#	self.server = server
-#	if port == 0:
-#		port = 8883 if ssl else 1883
-#	self.port = port
-#	self.client_id = client_id
+#func _init():
+#	self.server = "127.0.0.1"
+#	self.port = 1883
+#	self.client_id = "client_id"
 #	self.client = null
-#	self.ssl = ssl
-#	self.ssl_params = ssl_params
+#	self.ssl = false
+#	self.ssl_params = null
 #	self.pid = 0
-#	self.user = user
-#	self.pswd = password
-#	self.keepalive = keepalive
+#	self.user = null
+#	self.pswd = null
+#	self.keepalive = 0
 #	self.lw_topic = null
 #	self.lw_msg = null
 #	self.lw_qos = 0

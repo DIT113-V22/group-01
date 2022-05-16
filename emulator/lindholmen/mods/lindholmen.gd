@@ -1,21 +1,29 @@
-extends Reference
+extends Node
 
 var mod_name: String = "Lindholmen"
 
+#var onReady = load("res://addons/plugins/mqtt.gd")
+#var mqtt = onReady._init()
+
+const DefaultManager = preload("res://addons/plugins/mqtt.gd") # Relative path
+onready var mqtt = DefaultManager.new()
+
 func init(global) -> void:
-	Mqtt.connect_to_server()
-	Mqtt.subscribe("/smartcar/heartbeat")
-	Mqtt.subscribe("/smartcar/spawnLocation")
-	print(Mqtt.check_msg())
+	mqtt.connect_to_server()
+	mqtt.subscribe("/smartcar/heartbeat")
+	mqtt.subscribe("/smartcar/spawnLocation")
+	print(mqtt.check_msg())
 	global.register_environment("Lindholmen", load("res://environments/lindholmen.tscn"))
 
 #Input handler which checks what spawn point was selected
 func _input(event):
-	var spawn_location = Mqtt.check_msg()
+	#var spawn1 = $SpawnLoc1.position
+	var spawn_location = mqtt.check_msg()
 	#set spawn point
 	match spawn_location:
 		"spawn location 1":
-			#set vehicle spawn
+			#lolol
+			#$VehicleSpawn.set("spawn 1", spawn1)
 			print("opening spawn 1")
 		"spawn location 2":
 			#set vehicle spawn
