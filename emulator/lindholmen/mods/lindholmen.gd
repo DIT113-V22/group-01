@@ -29,13 +29,13 @@ func _input(event):
 			#$VehicleSpawn.set("spawn 1", spawn1)
 			print("opening spawn 1")
 		"spawn location 2":
-			#set vehicle spawn
+			#$VehicleSpawn.set("spawn 2", spawn2)
 			print("opening spawn 2")
 		"spawn location 3":
-			#set vehicle spawn
+			#$VehicleSpawn.set("spawn 3", spawn3)
 			print("opening spawn 3")
 		_:
-			print("error")
+			print(spawn1)
 	
 	
 	## Get the instance of the car and set it to the spawn point

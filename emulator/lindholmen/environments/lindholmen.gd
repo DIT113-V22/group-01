@@ -1,6 +1,9 @@
 extends Spatial
 
 var json
+onready var spawn1 = get_node("SpawnLoc1")
+onready var spawn2 = get_node("SpawnLoc2")
+
 
 func _ready():
 	$HTTPRequest.connect("request_completed", self, "_on_request_completed")
@@ -24,4 +27,9 @@ func get_input():
 	return json
 	
 func get_spawn1():
-	return $SpawnLoc1.position
+	if (spawn1 != null):
+		return spawn1.get_position_in_parent()
+	else:
+		return "hello world"
+#func get_spawn2():
+#	return spawn2.global_position
