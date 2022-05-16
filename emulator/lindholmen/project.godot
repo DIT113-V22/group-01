@@ -20,7 +20,7 @@ Mqtt="*res://addons/plugins/mqtt.gd"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/plugins/plugin.cfg" )
+enabled=PoolStringArray(  )
 
 [physics]
 

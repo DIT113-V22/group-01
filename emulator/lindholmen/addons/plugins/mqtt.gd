@@ -20,6 +20,9 @@ tool
 
 extends Node
 
+var _timer = null
+
+signal received_message(topic, message)
 
 var server = "127.0.0.1"
 var port = 1883
@@ -137,24 +140,24 @@ func connect_to_server(clean_session=true):
 	assert(error == 0)
 	var data = ret[1]
 	assert(data[0] == 0x20 and data[1] == 0x02)
-	if data[3] != 0:
-		push_error(data[3])
+	#if data[3] != 0:
+	#	push_error(data[3])
 
 	# Setup timer to check for incoming messages
-	_timer = Timer.new()
-	add_child(_timer)
-
-	_timer.connect("timeout", self, "_on_Timer_timeout")
-	_timer.set_wait_time(1.0)
-	_timer.set_one_shot(false) # Make sure it loops
-	_timer.start()
+#	_timer = Timer.new()
+#	add_child(_timer)
+#
+#	_timer.connect("timeout", self, "_on_Timer_timeout")
+#	_timer.set_wait_time(1.0)
+#	_timer.set_one_shot(false) # Make sure it loops
+#	_timer.start()
 
 	return data[2] & 1
 
 func disconnect_from_server():
 	self.client.put_u16(0xE000)
 	self.client.disconnect_from_host()
-	_timer.stop()
+#	_timer.stop()
 	
 func ping():
 	self.client.put_u16(0xC000)
