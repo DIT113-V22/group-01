@@ -6,15 +6,15 @@ const something = preload("res://environments/lindholmen.gd")
 var http = something.new()
 
 var json = http.get_input()
-var spawn1 = http.get_spawn1()
-#const DefaultManager = preload("res://addons/plugins/mqtt.gd") # Relative path
-#onready var mqtt = DefaultManager.new()
+
+#north of lindholmen
+var spawn1Coordinates = Transform(Basis(),Vector3(-942.974, 51.919, -263.916))
+#lindholmen parking lot
+var spawn2Coordinates = Transform(Basis(), Vector3(-845.957, 49.522, -503.148))
+#infront of Patricia building
+var spawn3Coordinates = Transform(Basis(), Vector3(-736.535, 49.522, -588.707))
 
 func init(global) -> void:
-#	mqtt.connect_to_server()
-#	mqtt.subscribe("/smartcar/heartbeat")
-#	mqtt.subscribe("/smartcar/spawnLocation")
-#	print(mqtt.check_msg())
 	global.register_environment("Lindholmen", load("res://environments/lindholmen.tscn"))
 
 #Input handler which checks what spawn point was selected
@@ -25,23 +25,11 @@ func _input(event):
 	#set spawn point
 	match spawn_location:
 		"spawn location 1":
-			#lolol
-			#$VehicleSpawn.set("spawn 1", spawn1)
+			$VehicleSpawn.global_transform = spawn1Coordinates
 			print("opening spawn 1")
 		"spawn location 2":
-			#$VehicleSpawn.set("spawn 2", spawn2)
+			$VehicleSpawn.global_transform = spawn2Coordinates
 			print("opening spawn 2")
 		"spawn location 3":
-			#$VehicleSpawn.set("spawn 3", spawn3)
+			$VehicleSpawn.global_transform = spawn3Coordinates
 			print("opening spawn 3")
-		_:
-			print(spawn1)
-	
-	
-	## Get the instance of the car and set it to the spawn point
-	
-	#if event.is_action_pressed("spawn location 1"):
-	#	print("Changing Spawn point...")
-	#	#$VehicleSpawn.set(spawnLocation1.instance())
-	#else:
-	#	print("No spawn location found")
