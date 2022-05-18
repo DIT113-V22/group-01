@@ -5,12 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.database.QuizContract.*;
+import com.example.smartcarmqttapp.R;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +75,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
             QuestionsTable.COLUMN_CORRECT_ANSWER + " INTEGER," +
             QuestionsTable.COLUMN_EXPLANATION + " TEXT, " +
             QuestionsTable.COLUMN_NEEDS_REVIEW + " INTEGER, " +
+            QuestionsTable.COLUMN_ILLUSTRATION + " INTEGER, " +
             QuestionsTable.COLUMN_CATEGORY + " TEXT" + ")";
         db.execSQL(CREATE_TABLE);
         populateQuestionsTable();
@@ -83,9 +89,36 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /*
+    public void storeImage(Question question){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            Bitmap bitmap = question.getImage();
+
+            imageByteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageByteArrayOutputStream);
+
+            byteImage=imageByteArrayOutputStream.toByteArray();
+            ContentValues imageContentValues = new ContentValues();
+
+            imageContentValues.put("question");
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+     */
+
+
+
     private List<Question> createQuestionsAddToList(){
         //Place holder question values (3 topics(categories), 15 questions each)
         return Arrays.asList(
+
+
                 //CATEGORY 1: Basic Traffic Rules and Signs
                 new Question("Your friend’s car has broken down on the motorway and he asks you to tow him. Is this allowed?",
                         "Yes, but I may not drive faster than 20 km/h",
@@ -95,7 +128,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Towing on a motorway/clearway is not permitted. Exception: If a car makes an emergency stop on a motorway/clearway, then it can be towed away, but it can only be towed along the hard shoulder and only up until the nearest suitable exit.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q1),
 
                 new Question("In which situation does the so-called priority-to-the-right rule apply?",
                         "When driving out of a petrol station",
@@ -105,7 +139,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "When approaching a junction in a built-up area without road signs",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q2),
 
                 new Question("When is it permitted to park on the left-hand side of the road?",
                         "Parking on the left is never permitted",
@@ -115,7 +150,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Cars may only stop or park on the right-hand side of the road, in the direction of traffic. Exception: If the road is one-way, or if there is a railway or tramway track on the right-hand side, then cars may park on the left-hand side of the road.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q3),
 
                 new Question("In which case are all of these vehicles permitted to drive on a motorway?",
                         "Cars, buses and mopeds",
@@ -125,7 +161,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Not permitted on motorways: Cyclists, pedestrians, mopeds, tractors and heavy machinery",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q4),
 
                 new Question("Which vehicles must be fitted with red triangular reflectors at their rear?",
                         "Goods vehicles",
@@ -135,7 +172,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "There are several different vehicles that have reflectors, but only trailers are required to have red triangular reflectors at the rear.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q5),
 
                 new Question("You intend to turn around when you are approaching a roundabout. Are you allowed to use the roundabout to turn around (i.e. drive all the way around the roundabout and come back on the same road in the opposite direction)?",
                         "Yes, but it is not recommended",
@@ -145,7 +183,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Using a roundabout to turn is recommended as this is considered safer than making a U-turn.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q6),
 
                 new Question("What is the highway speed limit?",
                         "150km/hr",
@@ -155,7 +194,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "110km/hr is generally highway speed limit, although newer highways such as the E4 and E6 increase this to 120km/hr.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q7),
 
                 new Question("You have stopped for a red light at a pedestrian crossing. When it turns green, there are still children on the pedestrian crossing. What should you do?",
                         "Start driving slowly and wave at them to make them hurry up",
@@ -165,7 +205,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Although the light is green, you should hold off on doing anything until all of the pedestrians have cleared the crossing.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q8),
 
                 new Question("You are driving on a motorway with a coupled braked trailer. How fast are you allowed to drive?",
                         "70 km/h",
@@ -175,7 +216,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "A car with a coupled braked trailer may not drive faster than 80 km/h.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q9),
 
                 new Question("You are driving on a motorway and approaching an entry. Which of these statements is correct?",
                         "I must give way to any vehicles that are about to enter the motorway",
@@ -185,7 +227,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "When approaching an entry on a motorway, you should facilitate the entrance of other vehicles onto the motorway. There is a mutual interaction here, which means that neither you nor the traffic on the entry have to give way.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q10),
 
                 new Question("Which of the following vehicles are you permitted to drive with a category B driving licence?",
                         "Private car with trailer, regardless of its weight",
@@ -195,7 +238,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "If the total weight exceeds 3.5 tonnes, then the vehicle counts as heavy goods vehicle. A category B licence does not entitle you to drive a heavy goods vehicle. You need a category A licence for heavy motorcycle.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q11),
 
                 new Question("You have projecting cargo that protrudes by two metres at the front and the back of your car. Do you need to mark the cargo when driving in the dark?",
                         "Yes, with white reflectors and a white light at the front and with red reflectors and a red light at the rear",
@@ -205,7 +249,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Load which protrudes at the front of the vehicle or by more than one metre at the rear of the vehicle must be marked with red/yellow flags in daylight. In the dark, the load must be marked with red lights and red reflectors at the rear and white lights and white reflectors at the front.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q12),
 
                 new Question("You are driving on a road with a speed limit of 70 km/h. You see a bus in front of you that has just stopped to set down passengers. What should you do?",
                         "On this road, I must give way to the bus driver before he drives back on to the carriageway",
@@ -215,7 +260,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "If you are driving on a road with a speed limit of 50 km/h or lower, you are obliged to give way to buses which indicate that they are driving out from a bus stop. If the road has several lanes, then this rule only applies if you are driving in the right lane. You do not have a duty to give way if the speed limit is 60 km/h or higher.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q13),
 
                 new Question("Which of these statements about yellow curb markings is true?",
                         "I can park here but for no longer than 24 hours",
@@ -225,7 +271,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "The yellow marking indicates that you are allowed to stop here but that parking is prohibited.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q14),
 
                 new Question("You are driving in a roundabout. A car approaching from the right is about to enter the roundabout. Which options is correct?",
                         "I should stop and give way to the other car",
@@ -235,9 +282,10 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "All vehicles entering a roundabout must give way to traffic that is already in the roundabout.",
                         0,
-                        "Basic Traffic Rules and Signs"),
+                        "Basic Traffic Rules and Signs",
+                        R.raw.t1q15)
 
-
+/*
                 //CATEGORY 2: Environment
                 new Question("Which substances are found in vehicle exhaust fumes and harmful to humans and/or the environment?",
                         "Oxygen, hydrogen and helium",
@@ -543,6 +591,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "The rear fog lamps emit a very strong and dazzling light. You should therefore only use your rear fog lights when visibility is significantly reduced.",
                         0,
                         "Safety and Best Practices")
+                        */
                 );
     }
 
@@ -563,6 +612,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         cv.put(QuestionsTable.COLUMN_CORRECT_ANSWER, question.getCorrectAnswer());
         cv.put(QuestionsTable.COLUMN_EXPLANATION, question.getExplanation());
         cv.put(QuestionsTable.COLUMN_NEEDS_REVIEW, question.getNeedsReview());
+        cv.put(QuestionsTable.COLUMN_ILLUSTRATION, question.getImage());
         cv.put(QuestionsTable.COLUMN_CATEGORY, question.getCategory());
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
     }
@@ -585,6 +635,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                 question.setCorrectAnswer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
                 question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
                 question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
+                question.setImage(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ILLUSTRATION)));
                 question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
 
                 questionList.add(question);
@@ -612,6 +663,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         question.setCorrectAnswer(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CORRECT_ANSWER)));
         question.setExplanation(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_EXPLANATION)));
         question.setNeedsReview(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_NEEDS_REVIEW)));
+        question.setImage(cursor.getInt(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_ILLUSTRATION)));
         question.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(QuestionsTable.COLUMN_CATEGORY)));
 
         questionList.add(question);

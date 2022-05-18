@@ -1,5 +1,7 @@
 package com.example.smartcarmqttapp.model;
 
+import android.graphics.Bitmap;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -16,10 +18,11 @@ public class Question {
     //needsReview is stored as int as SQLite does not have BIT or BOOLEAN data types. Will store true as 1 and false as 0.
     private int needsReview;
     private String category;
+    private int image;
 
     public Question(){}
 
-    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category) {
+    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category, int image) {
         this.question = question;
         this.firstAnswer = firstAnswer;
         this.secondAnswer = secondAnswer;
@@ -29,6 +32,7 @@ public class Question {
         this.explanation = explanation;
         this.needsReview = needsReview;
         this.category = category;
+        this.image = image;
     }
 
     public String getQuestion() {
@@ -103,6 +107,14 @@ public class Question {
         this.category = category;
     }
 
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -115,6 +127,7 @@ public class Question {
                 ", explanation='" + explanation + '\'' +
                 ", needsReview=" + needsReview +
                 ", category='" + category + '\'' +
+                ", illustration=" + image + '\'' +
                 '}';
     }
 }
