@@ -2,10 +2,8 @@ extends Node
 
 var mod_name: String = "Lindholmen"
 
-const something = preload("res://environments/lindholmen.gd")
-var http = something.new()
-
-var json = http.get_input()
+var packet
+var server := UDPServer.new()
 
 #north of lindholmen
 var spawn1Coordinates = Transform(Basis(),Vector3(-942.974, 51.919, -263.916))
@@ -17,19 +15,40 @@ var spawn3Coordinates = Transform(Basis(), Vector3(-736.535, 49.522, -588.707))
 func init(global) -> void:
 	global.register_environment("Lindholmen", load("res://environments/lindholmen.tscn"))
 
-#Input handler which checks what spawn point was selected
+func init_cam_pos() -> Transform:
+	return $CamPosition.global_transform
+
+func get_spawn_position(hint: String) -> Transform:
+	#$VehicleSpawn.global_transform = Transform(Basis(),Vector3(-942.974, 51.919, -263.916))
+	return $VehicleSpawn.global_transform
+
+func _ready():
+	server.listen(8080, "127.0.0.1")
+	
+func _process(delta):
+	server.poll()
+	if server.is_connection_available():
+		var peer : PacketPeerUDP = server.take_connection()
+		packet = peer.get_packet()
+		
+		print("Received data: %s" % [packet.get_string_from_utf8()])
+		
+		peer.put_packet(packet)
+	else:
+		print("Connection is NOT available")
 
 func _input(event):
-	var spawn_location = json
-	#do some handling with the parsed json
-	#set spawn point
-	match spawn_location:
-		"spawn location 1":
-			$VehicleSpawn.global_transform = spawn1Coordinates
-			print("opening spawn 1")
-		"spawn location 2":
-			$VehicleSpawn.global_transform = spawn2Coordinates
-			print("opening spawn 2")
-		"spawn location 3":
-			$VehicleSpawn.global_transform = spawn3Coordinates
-			print("opening spawn 3")
+	if(packet != null):
+		var spawn_location = packet.get_string_from_utf8()
+		#do some handling with the parsed json
+		#set spawn point
+		match spawn_location:
+			"spawn1":
+				$VehicleSpawn.global_transform = spawn1Coordinates
+				print("opening spawn 1")
+			"spawn2":
+				$VehicleSpawn.global_transform = spawn2Coordinates
+				print("opening spawn 2")
+			"spawn3":
+				$VehicleSpawn.global_transform = spawn3Coordinates
+				print("opening spawn 3")

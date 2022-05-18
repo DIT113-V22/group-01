@@ -14,7 +14,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.IpSecManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +35,17 @@ import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -79,6 +92,15 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         setContentView(R.layout.activity_practice_driving);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         zis = this;
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        try {
+            sendSpawnToSketch("spawn1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // bottomNavigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -521,5 +543,30 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });
+    }
+
+    public void sendSpawnToSketch(String spawnChoice) throws Exception {
+
+        Thread thread = new Thread(() -> {
+            try{
+                int port = 8080;
+                String urlAddress = "127.0.0.1";
+
+                InetAddress address = InetAddress.getByName(urlAddress);
+                DatagramSocket socket = new DatagramSocket(port);
+
+                byte[] buf = spawnChoice.getBytes(StandardCharsets.UTF_8);
+                DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
+
+                socket.send(packet);
+
+                socket.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+        //run for a second then close - just long enough for the packet to send
+        thread.run();
+        thread.interrupt();
     }
 }
