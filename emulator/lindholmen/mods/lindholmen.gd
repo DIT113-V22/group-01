@@ -6,7 +6,7 @@ var packet
 var server := UDPServer.new()
 
 #north of lindholmen
-var spawn1Coordinates = Transform(Basis(),Vector3(-942.974, 51.919, -263.916))
+var spawn1Coordinates = Transform(Basis(), Vector3(-942.974, 51.919, -263.916))
 #lindholmen parking lot
 var spawn2Coordinates = Transform(Basis(), Vector3(-845.957, 49.522, -503.148))
 #infront of Patricia building
@@ -23,7 +23,7 @@ func get_spawn_position(hint: String) -> Transform:
 	return $VehicleSpawn.global_transform
 
 func _ready():
-	server.listen(8080, "127.0.0.1")
+	server.listen(10010, "127.0.0.1")
 	
 func _process(delta):
 	server.poll()
@@ -31,11 +31,12 @@ func _process(delta):
 		var peer : PacketPeerUDP = server.take_connection()
 		packet = peer.get_packet()
 		
+		print("        ")
+		print("Below confirms that a packet has been received")
 		print("Received data: %s" % [packet.get_string_from_utf8()])
+		print("        ")
 		
 		peer.put_packet(packet)
-	else:
-		print("Connection is NOT available")
 
 func _input(event):
 	if(packet != null):

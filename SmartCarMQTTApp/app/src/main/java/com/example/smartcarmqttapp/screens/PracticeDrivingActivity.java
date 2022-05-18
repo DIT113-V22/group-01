@@ -549,11 +549,11 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
         Thread thread = new Thread(() -> {
             try{
-                int port = 8080;
+                int port = 10010;
                 String urlAddress = "127.0.0.1";
 
                 InetAddress address = InetAddress.getByName(urlAddress);
-                DatagramSocket socket = new DatagramSocket(port);
+                DatagramSocket socket = new DatagramSocket(port, address);
 
                 byte[] buf = spawnChoice.getBytes(StandardCharsets.UTF_8);
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
@@ -566,7 +566,6 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             }
         });
         //run for a second then close - just long enough for the packet to send
-        thread.run();
-        thread.interrupt();
+        thread.start();
     }
 }
