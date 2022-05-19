@@ -414,7 +414,93 @@ public class MainActivityTest {
 
     }
 
+    @Test
+    public void _QuizShouldDisplayBasicTrafficRulesCategory() {
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ViewInteraction cardView = onView(
+                allOf(withId(R.id.theoryCard)));
+        cardView.perform(click());
 
+
+        DataInteraction linearLayout = onData(anything())
+                .inAdapterView(allOf(withId(R.id.listMode)))
+                .atPosition(0);
+        linearLayout.perform(click());
+
+        DataInteraction linearLayout2 = onData(anything())
+                .inAdapterView(allOf(withId(R.id.listCategory)))
+                .atPosition(0);
+        linearLayout2.perform(click());
+
+        ViewInteraction materialButton3 = onView(
+                allOf(withId(R.id.startQuizButton)));
+        materialButton3.perform(click());
+
+        assert getText(onView(withId(R.id.categoryText))).equals("Basic Traffic Rules and Signs");
+    }
+
+    @Test
+    public void _QuizShouldDisplaySafetyAndBestPracticesCategory() {
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ViewInteraction cardView = onView(
+                allOf(withId(R.id.theoryCard)));
+        cardView.perform(click());
+
+
+        DataInteraction linearLayout = onData(anything())
+                .inAdapterView(allOf(withId(R.id.listMode)))
+                .atPosition(0);
+        linearLayout.perform(click());
+
+        DataInteraction linearLayout2 = onData(anything())
+                .inAdapterView(allOf(withId(R.id.listCategory)))
+                .atPosition(1);
+        linearLayout2.perform(click());
+
+        ViewInteraction materialButton3 = onView(
+                allOf(withId(R.id.startQuizButton)));
+        materialButton3.perform(click());
+
+        assert getText(onView(withId(R.id.categoryText))).equals("Safety and Best Practices");
+    }
+
+    @Test
+    public void _QuizShouldDisplayEnvironmentCategory() {
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ViewInteraction cardView = onView(
+                allOf(withId(R.id.theoryCard)));
+        cardView.perform(click());
+
+
+        DataInteraction linearLayout = onData(anything())
+                .inAdapterView(allOf(withId(R.id.listMode)))
+                .atPosition(0);
+        linearLayout.perform(click());
+
+        DataInteraction linearLayout2 = onData(anything())
+                .inAdapterView(allOf(withId(R.id.listCategory)))
+                .atPosition(2);
+        linearLayout2.perform(click());
+
+        ViewInteraction materialButton3 = onView(
+                allOf(withId(R.id.startQuizButton)));
+        materialButton3.perform(click());
+
+        assert getText(onView(withId(R.id.categoryText))).equals("Environment");
+    }
+    
     public String getText(ViewInteraction matcher){
         String[] text = {null};
         matcher.perform(new ViewAction() {
