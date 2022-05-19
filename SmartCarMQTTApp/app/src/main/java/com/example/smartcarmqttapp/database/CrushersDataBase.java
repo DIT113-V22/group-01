@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.database.QuizContract.*;
+import com.example.smartcarmqttapp.model.Result;
 
 import androidx.annotation.Nullable;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class CrushersDataBase extends SQLiteOpenHelper {
 
     /*
-    Animations under resources.raw.animations folder:
+    Animations under resources.raw folder:
         Links to reference the animations:
         https://www.youtube.com/watch?v=P4lPmo9o-GY
         https://www.qld.gov.au/transport/safety/rules/road/give-way

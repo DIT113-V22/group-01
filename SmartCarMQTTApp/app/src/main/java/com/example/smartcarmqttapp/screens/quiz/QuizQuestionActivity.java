@@ -241,16 +241,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 TextView selectQ = findViewById(R.id.selectQuestion);
                 areYouSure.setText("");
-                //TODO Uncomment with updated question class
-                /*
-                if(currentQuestion.getVideoID != null) {
-                    questionImage.setVisibility(View.INVISIBLE);
-                    questionVideo.setVisibility(View.VISIBLE);
-                    //TODO Add question url to videoplayer here
-                    //initializeVideoPlayer(currentQuestion.getVideoID);
-                }
 
-                 */
+                // Displaying animations for those questions that have one
+                if (!(currentQuestion.getAnimation() == null)) {
+//                    questionImage.setVisibility(View.INVISIBLE);
+                    questionVideo.setVisibility(View.VISIBLE);
+                    questionVideo.start();
+                    initializeVideoPlayer(currentQuestion.getAnimation());
+                }
 
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select an answer or skip by pressing 'Next Question' twice");
@@ -317,6 +315,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         TextView explanation = findViewById(R.id.explanation);
                         explanation.setText("");
                         resetRadioButtons();
+                        questionVideo.setVisibility(View.INVISIBLE);
                         if (new Intent().getIntExtra("", 0) != 0)
                             addQuestion(specifcQuestionList);
                         else
@@ -358,7 +357,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
         scoreText.setText(Integer.toString(scoreNumber));
         categoryText.setText(currentQuestion.getCategory());
 
-        //TODO Set illustration to imageview!!!!!!!!!!!!!!
 
         //this makes sure that when the answer is checked
         //it can correctly color the correct answer and wrong answers
@@ -378,7 +376,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 break;
         }
         //sets all the textFields to the current question
-        questionImage.setImageBitmap(null);
+        //questionImage.setImageBitmap(null);
         //TextView textView = findViewById(R.id.textReplacingImage);
         //textView.setText(currentQuestion.getQuestion());
         option1.setText(currentQuestion.getFirstAnswer());
