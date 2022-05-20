@@ -51,6 +51,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private ImageView questionImage;
     private Button nextButton;
     private TextView categoryText;
+    private TextView questionText;
     private TextView areYouSure;
 
     //Radio buttons
@@ -123,6 +124,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.nextQuestionBTN);
         categoryText = findViewById(R.id.categoryText);
         areYouSure = findViewById(R.id.areYouSure);
+        questionText = findViewById(R.id.questionText);
+        questionImage = findViewById(R.id.questionImage);
 
         //Radio buttons
         option1 = findViewById(R.id.option1);
@@ -356,9 +359,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
+        questionText.setText(currentQuestion.getQuestion());
         categoryText.setText(currentQuestion.getCategory());
-
-        //TODO Set illustration to imageview!!!!!!!!!!!!!!
+        
+        questionImage.setBackgroundResource(currentQuestion.getImage());
 
         //this makes sure that when the answer is checked
         //it can correctly color the correct answer and wrong answers
