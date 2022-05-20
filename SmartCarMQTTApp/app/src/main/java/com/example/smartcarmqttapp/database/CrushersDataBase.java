@@ -24,7 +24,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
 
     public Context context;
     public static final String DATABASE_NAME = "crushersDataBase.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public static final String TABLE_NAME = "crushersDataBase";
 
@@ -283,9 +283,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "All vehicles entering a roundabout must give way to traffic that is already in the roundabout.",
                         0,
                         "Basic Traffic Rules and Signs",
-                        R.raw.t1q15)
+                        R.raw.t1q15),
 
-/*
                 //CATEGORY 2: Environment
                 new Question("Which substances are found in vehicle exhaust fumes and harmful to humans and/or the environment?",
                         "Oxygen, hydrogen and helium",
@@ -295,7 +294,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Oxides are harmful to not only the environment by causing acidification and eutrophication, but also impact our mucus membranes and airways.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q1),
 
                 new Question("For environmental reasons, you must not wash your car on a paved driveway that slopes down towards the street. Why not?",
                         "The street can be damaged by chemicals that run off from your car",
@@ -305,7 +305,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Manholes divert rainwater to the nearest watercourse and do not purify the water of any chemicals.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q2),
 
                 new Question("Does a car-roof box affect fuel consumption?",
                         "Yes, but only if the roof box is loaded",
@@ -315,7 +316,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Roof boxes increase the car’s air resistance and therefore increase fuel consumption as well",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q3),
 
                 new Question("What is the advantage of friction tyres compared to summer tyres?",
                         "They decrease fuel consumption",
@@ -325,7 +327,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Winter tyres improve road grip to minimize sliding and accidents during winter conditions",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q4),
 
                 new Question("You are approaching a junction where you intend turn. Which way driving is best from an environmental point of view?",
                         "Put the gear into neutral before making the turn",
@@ -335,7 +338,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "Engine braking does not use any fuel from the engine cylinders and relies instead on the car’s kinetic energy. This means that no additional fuel is combusted and emissions are therefore decreased.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q5),
 
                 new Question("How can you reduce your emissions?",
                         "By always starting in a high gear",
@@ -346,7 +350,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "If you accelerate and brake frequently, your fuel consumption will increase. You should therefore try to keep a steady speed. Some vehicles are equipped with cruise control which makes it easier for you to maintain a steady speed.\n" +
                                 "The higher the RPM, the higher your fuel consumption. You should therefore drive in as high a gear as possible.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q6),
 
                 new Question("From an environmental perspective, is it better to start your engine before or after scraping frost off your windshield?",
                         "It is better because the engine gets to warm up before I begin driving",
@@ -356,7 +361,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Warming up your engine by letting it run idle increases emissions as the engine uses up fuel unnecessarily when you are not driving.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q7),
 
                 new Question("How is fuel consumption impacted by having low tyre pressure?",
                         "It is not affected",
@@ -366,7 +372,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "To reduce fuel consumption, it is important that you regularly check the air pressure in your tires. Too low air pressure leads to increased fuel consumption and impaired road conditions.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q8),
 
                 new Question("Which of the following options does not affect fuel consumption?",
                         "Air conditioning",
@@ -376,7 +383,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "Service brakes do not impact fuel consumption because they do not require fuel to be activated.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q9),
 
                 new Question("Shorter journeys mean more emissions per kilometre compared with longer journeys. What percentage of car journeys made in Sweden are shorter than five kilometres?",
                         "65 %",
@@ -386,7 +394,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "Daily commuting, shopping, etc",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q10),
 
                 new Question("How can you reduce your emissions and thereby reduce your impact on the environment?",
                         "By using tyres that have low rolling resistance and the correct air pressure",
@@ -396,7 +405,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "By reducing tyre friction and increasing tyre air pressure, less fuel will be consumed as there is overall less rolling resistance from the tyres.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q11),
 
                 new Question("Which fuel is best from an environmental perspective?",
                         "Ethanol",
@@ -406,7 +416,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Ethanol is best from an environmental perspective as it is a renewable fuel and therefore does not have as much of an impact on the greenhouse effect.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q12),
 
                 new Question("Which of the following options determine how much vehicle tax you will have to pay on your car?",
                         "The year of manufacture",
@@ -416,7 +427,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Vehicle tax is determined based on your vehicle’s emissions of carbon dioxide (CO2).",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q13),
 
                 new Question("Generally, does the size of the car’s engine affect fuel consumption?",
                         "Yes, a big engine will normally uses more fuel",
@@ -424,9 +436,10 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "No, the size of the engine does not affect fuel consumption",
                         "No, engine performance and efficiency is the only factor",
                         1,
-                        "Statistically, larger engines use more fuel. This is to be expected as it increases vehicle load.",
+                        "Statistically, larger engines use more fuel as they consume more fuel per revolution and increase vehicle load.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q14),
 
                 new Question("You are about to go out for a drive. Will the length of your journey affect your car’s emissions per kilometre?",
                         "Yes, emissions per kilometre are greater on longer journeys than on shorter ones",
@@ -436,7 +449,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "The catalytic converter removes harmful emissions from the car’s exhaust fumes. It only works when it has reached its working temperature. During cold starts and short journeys, exhaust fumes will therefore not be purified and the emission of hazardous substances will be significantly increased.",
                         0,
-                        "Environment"),
+                        "Environment",
+                        R.raw.t2q15),
 
 
 
@@ -450,7 +464,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "The earlier you plan and adjust your speed, the easier it will be to avoid getting into a dangerous traffic situation.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q1),
 
                 new Question("How tall does a child have to be to sit in a seat with an airbag?",
                         "At least 80 cm",
@@ -460,7 +475,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "140 cm is the legal height requirement",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q2),
 
                 new Question("What is meant by a single-vehicle accident?",
                         "An accident in which two vehicles collide",
@@ -470,7 +486,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Single vehicle accidents are the most common type of accident outside of built-up areas. Many accidents occur at dawn and when it is dark. This is partially due to tiredness.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q3),
 
                 new Question("What is the purpose of the so-called three-second rule?",
                         "To assess how long my stopping distance is",
@@ -480,7 +497,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "You can use the three-second rule by selecting an object such as a verge reflector post or a pit in the road. When the vehicle in front of you passes the mark/object, you start counting the seconds. If it takes less than three seconds until you pass the mark/object, then you are driving too close.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q4),
 
                 new Question("You are out driving at night, in the dark, and you are approaching another vehicle. Where should you position your car?",
                         "Towards the right-hand side of the road",
@@ -490,7 +508,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "It can be difficult to spot obstacles or animals at the side of the road in the dark. You should therefore position your car towards the centre line so as not to drive too closely to the right-hand side of the road",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q5),
 
                 new Question("What is the legal drink-drive limit?",
                         "0.3 parts per thousand",
@@ -500,7 +519,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "The limit for drink-driving in Sweden is 0.2 parts per thousand.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q6),
 
                 new Question("You have been driving at a high speed over a long period of time and become speed blind. What is the greatest risk of speed blindness?",
                         "I will start driving too slowly unless I keep a close eye on the speedometre",
@@ -510,7 +530,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "Speed blindness means that you find it difficult to judge what speed you are doing and it feels as if you are driving more slowly than you really are. This may cause you to misjudge distances,",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q7),
 
                 new Question("Which of these statements is true about inexperienced drivers?",
                         "They often fix their gaze close in front of the car",
@@ -520,7 +541,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "Newly qualified drivers- Keep their gaze too close to the car - Focus more on stationary objects - Are more passive and scan smaller areas",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q8),
 
                 new Question("What is the most common type of accident caused by a tired driver?",
                         "Accidents when overtaking",
@@ -530,7 +552,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Tired drivers are more likely to crash their car according to Trafikverket",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q9),
 
                 new Question("Which of these statements about reaction time is true?",
                         "It is shorter at higher speeds",
@@ -540,7 +563,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         4,
                         "If you need to choose between different ways to react then your reaction time will be longer.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q10),
 
                 new Question("What is the best way to improve road safety?",
                         "Only drive during daytime",
@@ -550,7 +574,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "Stress can impact decision making and driving ability. If you have more time, you can plan your driving and drive in peace without having to rush or stress.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q11),
 
                 new Question("What is the most important thing to consider when it comes to driving safely around a bend?",
                         "Adjusting speed",
@@ -560,7 +585,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "It is very important that you adjust your speed when going around bends, especially in slippery road conditions.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q12),
 
                 new Question("What is the best way to avoid ending up in a dangerous situation?",
                         "Driving at a low speed all the time",
@@ -570,7 +596,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         2,
                         "The best way to avoid dangerous situations is to drive defensively: take it easy, plan your journey and keep good safety margins.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q13),
 
                 new Question("You are driving at 30 km/h and increase your speed to 60 km/h. How will your braking distance be affected by this acceleration?",
                         "It will double",
@@ -580,7 +607,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         3,
                         "The braking distance changes exponentially.",
                         0,
-                        "Safety and Best Practices"),
+                        "Safety and Best Practices",
+                        R.raw.t3q14),
 
                 new Question("When should you use your rear fog light?",
                         "When there is poor visibility and it is difficult for the driver behind to see me",
@@ -590,8 +618,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         1,
                         "The rear fog lamps emit a very strong and dazzling light. You should therefore only use your rear fog lights when visibility is significantly reduced.",
                         0,
-                        "Safety and Best Practices")
-                        */
+                        "Safety and Best Practices",
+                        R.raw.t3q15)
                 );
     }
 
