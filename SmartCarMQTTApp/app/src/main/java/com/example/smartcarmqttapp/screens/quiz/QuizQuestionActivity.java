@@ -361,8 +361,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         scoreText.setText(Integer.toString(scoreNumber));
         questionText.setText(currentQuestion.getQuestion());
         categoryText.setText(currentQuestion.getCategory());
-
-        //TODO Set illustration to imageview!!!!!!!!!!!!!!
+        
         questionImage.setBackgroundResource(currentQuestion.getImage());
 
         //this makes sure that when the answer is checked
