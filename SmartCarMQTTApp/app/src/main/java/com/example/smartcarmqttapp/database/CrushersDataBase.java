@@ -33,6 +33,8 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         https://www.youtube.com/watch?v=FeS2Sf9b1Wk
         https://www.youtube.com/watch?v=4LYSTb_RTK4
         https://www.youtube.com/watch?v=P4lPmo9o-GY
+        https://www.youtube.com/watch?v=_S2lyaMgBQ8
+        https://www.vicroads.vic.gov.au/safety-and-road-rules/driver-safety/safe-driving-tips
      */
 
     public Context context;
@@ -102,31 +104,6 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + QuestionsTable.TABLE_NAME);
         onCreate(db);
     }
-
-    /*
-    public void storeImage(Question question){
-        try {
-            SQLiteDatabase db = this.getWritableDatabase();
-            Bitmap bitmap = question.getImage();
-
-            imageByteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageByteArrayOutputStream);
-
-            byteImage=imageByteArrayOutputStream.toByteArray();
-            ContentValues imageContentValues = new ContentValues();
-
-            imageContentValues.put("question");
-
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-     */
-
-
 
     private List<Question> createQuestionsAddToList(){
         //Place holder question values (3 topics(categories), 15 questions each)
@@ -404,10 +381,10 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                                 "The higher the RPM, the higher your fuel consumption. You should therefore drive in as high a gear as possible.",
                         0,
                         "Environment",
-                        null,
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline292,
                         R.raw.t2q6
                         ),
-
+                        
                 new Question("From an environmental perspective, is it better to start your engine before or after scraping frost off your windshield?",
                         "It is better because the engine gets to warm up before I begin driving",
                         "It is not better because it increases fuel consumption unnecessarily ",
@@ -469,7 +446,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "By reducing tyre friction and increasing tyre air pressure, less fuel will be consumed as there is overall less rolling resistance from the tyres.",
                         0,
                         "Environment",
-                        null,
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline383,
                         R.raw.t2q11
                         ),
 
@@ -577,9 +554,9 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "You can use the three-second rule by selecting an object such as a verge reflector post or a pit in the road. When the vehicle in front of you passes the mark/object, you start counting the seconds. If it takes less than three seconds until you pass the mark/object, then you are driving too close.",
                         0,
                         "Safety and Best Practices",
-                        null,
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline427,
                         R.raw.t3q4
-                ),
+                ), 
 
                 new Question("You are out driving at night, in the dark, and you are approaching another vehicle. Where should you position your car?",
                         "Towards the right-hand side of the road",
@@ -694,7 +671,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
                         "The best way to avoid dangerous situations is to drive defensively: take it easy, plan your journey and keep good safety margins.",
                         0,
                         "Safety and Best Practices",
-                        null,
+                        "android.resource://" + context.getPackageName() + "/" + R.raw.qline574,
                         R.raw.t3q13
                 ),
 
