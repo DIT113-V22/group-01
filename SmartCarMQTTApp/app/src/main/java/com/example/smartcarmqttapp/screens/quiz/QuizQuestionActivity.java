@@ -8,16 +8,20 @@ import androidx.appcompat.widget.TooltipCompat;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
@@ -47,6 +51,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private ImageView questionImage;
     private Button nextButton;
     private TextView categoryText;
+    private TextView questionText;
     private TextView areYouSure;
 
     //Radio buttons
@@ -85,6 +90,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private int questionCountSelected;
     private int TOTAL_TIME;
     private QuizQuestionActivity zis;
+    private Question currentQuestion;
+
+    private VideoView questionVideo;
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
 
@@ -113,10 +121,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
         scoreText = findViewById(R.id.score);
         scoreText.setText(Integer.toString(scoreNumber));
         timer = findViewById(R.id.timer);
-        questionImage = findViewById(R.id.questionImage);
         nextButton = findViewById(R.id.nextQuestionBTN);
         categoryText = findViewById(R.id.categoryText);
         areYouSure = findViewById(R.id.areYouSure);
+        questionText = findViewById(R.id.questionText);
+        questionImage = findViewById(R.id.questionImage);
 
         //Radio buttons
         option1 = findViewById(R.id.option1);
@@ -133,6 +142,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
         this.db = new CrushersDataBase(this);
+
+        questionVideo = findViewById(R.id.videoScreen);
 
         customQuiz(numberOfQuestions, category);
 
@@ -230,6 +241,16 @@ public class QuizQuestionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 TextView selectQ = findViewById(R.id.selectQuestion);
                 areYouSure.setText("");
+                //TODO Uncomment with updated question class
+                /*
+                if(currentQuestion.getVideoID != null) {
+                    questionImage.setVisibility(View.INVISIBLE);
+                    questionVideo.setVisibility(View.VISIBLE);
+                    //TODO Add question url to videoplayer here
+                    //initializeVideoPlayer(currentQuestion.getVideoID);
+                }
+
+                 */
 
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select an answer or skip by pressing 'Next Question' twice");
@@ -330,12 +351,15 @@ public class QuizQuestionActivity extends AppCompatActivity {
      */
     public void addQuestion(List<Question> questionList){
         radioGroup.clearCheck();
-        Question currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
+        currentQuestion = quizState.getCurrentQuestion(currentQuestionNum);
         categories.add(currentQuestion.getCategory());
         currentQuestionNum++;
         questionCountText.setText(currentQuestionNum + " / " + quizState.getQuestions().size());
         scoreText.setText(Integer.toString(scoreNumber));
+        questionText.setText(currentQuestion.getQuestion());
         categoryText.setText(currentQuestion.getCategory());
+        
+        questionImage.setBackgroundResource(currentQuestion.getImage());
 
         //this makes sure that when the answer is checked
         //it can correctly color the correct answer and wrong answers
@@ -356,8 +380,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         }
         //sets all the textFields to the current question
         questionImage.setImageBitmap(null);
-        TextView textView = findViewById(R.id.textReplacingImage);
-        textView.setText(currentQuestion.getQuestion());
+        //TextView textView = findViewById(R.id.textReplacingImage);
+        //textView.setText(currentQuestion.getQuestion());
         option1.setText(currentQuestion.getFirstAnswer());
         option2.setText(currentQuestion.getSecondAnswer());
         option3.setText(currentQuestion.getThirdAnswer());
@@ -470,5 +494,17 @@ public class QuizQuestionActivity extends AppCompatActivity {
         option3.setBackground(wrong);
         option4.setBackground(right);
         option4.setTypeface(null, Typeface.BOLD);
+    }
+
+    public void initializeVideoPlayer(String imageURL) {
+        VideoView videoView = findViewById(R.id.videoScreen);
+        String videoPath = imageURL; //question.getVideoId
+        Uri uri = Uri.parse(videoPath);
+        videoView.setVideoURI(uri);
+
+
+        MediaController controller = new MediaController(this);
+        videoView.setMediaController(controller);
+        controller.setAnchorView(videoView);
     }
 }

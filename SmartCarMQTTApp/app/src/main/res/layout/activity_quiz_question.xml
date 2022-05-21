@@ -95,21 +95,32 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/questionImage"
-                android:layout_width="404dp"
-                android:layout_height="263dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone"
-                app:srcCompat="@drawable/custombanner" />
-
             <TextView
-                android:id="@+id/textReplacingImage"
+                android:id="@+id/questionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Question text"
-                android:textSize="18dp" />
+                android:textSize="14sp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <VideoView
+                    android:id="@+id/videoScreen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="invisible">
+
+                </VideoView>
+
+                <ImageView
+                    android:id="@+id/questionImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp">
+
+                </ImageView>
+            </FrameLayout>
 
             <RadioGroup
                 android:id="@+id/radioGroup"
