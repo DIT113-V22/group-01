@@ -1,5 +1,7 @@
 package com.example.smartcarmqttapp.model;
 
+import android.graphics.Bitmap;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -17,10 +19,13 @@ public class Question {
     private int needsReview;
     private String category;
     private String animation;
+    private int image;
 
     public Question(){}
 
-    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category, String animation) {
+
+
+    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String fourthAnswer, int correctAnswer, String explanation, int needsReview, String category, String animation, int image) {
         this.question = question;
         this.firstAnswer = firstAnswer;
         this.secondAnswer = secondAnswer;
@@ -31,6 +36,7 @@ public class Question {
         this.needsReview = needsReview;
         this.category = category;
         this.animation = animation;
+        this.image = image;
     }
 
     public String getQuestion() {
@@ -112,6 +118,13 @@ public class Question {
     public void setAnimation(String animation) {
         this.animation = animation;
     }
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
 
     @Override
     public String toString() {
@@ -126,6 +139,7 @@ public class Question {
                 ", needsReview=" + needsReview +
                 ", category='" + category + '\'' +
                 ", animation='" + animation + '\'' +
+                ", illustration=" + image + '\'' +
                 '}';
     }
 }
