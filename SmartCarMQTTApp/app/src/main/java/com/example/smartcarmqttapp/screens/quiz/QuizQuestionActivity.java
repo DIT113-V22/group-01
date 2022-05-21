@@ -241,16 +241,14 @@ public class QuizQuestionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 TextView selectQ = findViewById(R.id.selectQuestion);
                 areYouSure.setText("");
-                //TODO Uncomment with updated question class
-                /*
-                if(currentQuestion.getVideoID != null) {
+
+                // Displaying animations for those questions that have one
+                if (!(currentQuestion.getAnimation() == null)) {
                     questionImage.setVisibility(View.INVISIBLE);
                     questionVideo.setVisibility(View.VISIBLE);
-                    //TODO Add question url to videoplayer here
-                    //initializeVideoPlayer(currentQuestion.getVideoID);
+                    questionVideo.start();
+                    initializeVideoPlayer(currentQuestion.getAnimation());
                 }
-
-                 */
 
                 if (radioGroup.getCheckedRadioButtonId() == -1) {
                     selectQ.setText("Select an answer or skip by pressing 'Next Question' twice");
@@ -278,9 +276,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     //switch case for setting style of correct answer
                     if (radioGroup.getCheckedRadioButtonId() == correctAnswer) {
                         scoreNumber++;
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum, true));
+                        // num and index differ by 1
+                        quizState.answerQuestion(new UserAnswer(currentQuestionNum-1, true));
                     } else {
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                        quizState.answerQuestion(new UserAnswer(currentQuestionNum-1, false));
                     }
 
                     switch (correctAnswer) {
@@ -317,6 +316,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                         TextView explanation = findViewById(R.id.explanation);
                         explanation.setText("");
                         resetRadioButtons();
+                        questionVideo.setVisibility(View.INVISIBLE);
                         if (new Intent().getIntExtra("", 0) != 0)
                             addQuestion(specifcQuestionList);
                         else
@@ -358,7 +358,8 @@ public class QuizQuestionActivity extends AppCompatActivity {
         scoreText.setText(Integer.toString(scoreNumber));
         questionText.setText(currentQuestion.getQuestion());
         categoryText.setText(currentQuestion.getCategory());
-        
+
+        questionImage.setVisibility(View.VISIBLE);
         questionImage.setBackgroundResource(currentQuestion.getImage());
 
         //this makes sure that when the answer is checked
@@ -379,7 +380,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 break;
         }
         //sets all the textFields to the current question
-        questionImage.setImageBitmap(null);
+        //questionImage.setImageBitmap(null);
         //TextView textView = findViewById(R.id.textReplacingImage);
         //textView.setText(currentQuestion.getQuestion());
         option1.setText(currentQuestion.getFirstAnswer());
