@@ -170,36 +170,33 @@ public class QuizQuestionActivity extends AppCompatActivity {
     }
 
     protected void customQuiz(int questionCountSelected, String categorySelected) {
-
-        Random rand = new Random();
         //quiz with a specific category and question count
         if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
             questionList = db.getCategoryQuestions(categorySelected);
+            Collections.shuffle(questionList);
             for (int i = 0; i < questionCountSelected; i++) {
-                int randomIndex = rand.nextInt(questionList.size());
-                specifcQuestionList.add(questionList.get(randomIndex));
+                specifcQuestionList.add(questionList.get(i));
             }
             totalQuestions = questionCountSelected;
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
-        //random quiz with only the amount of selected questions
+            //random quiz with only the amount of selected questions
         } else if (questionCountSelected != 0) {
+            Collections.shuffle(questionList);
             for (int i = 0; i < questionCountSelected; i++) {
-                int randomIndex = rand.nextInt(questionList.size());
-                specifcQuestionList.add(questionList.get(randomIndex));
+                specifcQuestionList.add(questionList.get(i));
             }
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             totalQuestions = questionCountSelected;
             addQuestion(specifcQuestionList);
-        //if they selected the question count and a category then this happens
+            //if they selected the question count and a category then this happens
         } else if (!categorySelected.equals("No Category")) {
             //quiz with only selected category question
             specifcQuestionList = db.getCategoryQuestions(categorySelected);
             totalQuestions = specifcQuestionList.size();
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
             addQuestion(specifcQuestionList);
-        }
-        else{
+        } else { // exam with all questions
             quizState = new QuizState(true, questionList, null, scoreNumber);
             totalQuestions = questionList.size();
             addQuestion(questionList);
