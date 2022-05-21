@@ -1,6 +1,5 @@
 extends Spatial
 
-
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -15,8 +14,8 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func init_cam_pos() -> Transform:
+func init_cam_pos() -> Basis:
 	return $CamPosition.global_transform
-	
+
 func get_spawn_position(hint: String) -> Transform:
 	return $VehicleSpawn.global_transform
