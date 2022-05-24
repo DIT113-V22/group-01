@@ -92,9 +92,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private QuizQuestionActivity zis;
     private Question currentQuestion;
 
+    private Question currentQ;
+
     private VideoView questionVideo;
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +172,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         });
     }
 
-    protected void customQuiz(int questionCountSelected, String categorySelected) {
+    public List<Question> customQuiz(int questionCountSelected, String categorySelected) {
         //quiz with a specific category and question count
         if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
             questionList = db.getCategoryQuestions(categorySelected);
@@ -179,6 +182,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
             }
             totalQuestions = questionCountSelected;
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
             addQuestion(specifcQuestionList);
             //random quiz with only the amount of selected questions
         } else if (questionCountSelected != 0) {
@@ -187,6 +191,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
                 specifcQuestionList.add(questionList.get(i));
             }
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
             totalQuestions = questionCountSelected;
             addQuestion(specifcQuestionList);
             //if they selected the question count and a category then this happens
@@ -195,12 +200,19 @@ public class QuizQuestionActivity extends AppCompatActivity {
             specifcQuestionList = db.getCategoryQuestions(categorySelected);
             totalQuestions = specifcQuestionList.size();
             quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
+            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
             addQuestion(specifcQuestionList);
         } else { // exam with all questions
             quizState = new QuizState(true, questionList, null, scoreNumber);
+            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
             totalQuestions = questionList.size();
             addQuestion(questionList);
         }
+
+        if(specifcQuestionList.size() == 0){
+            return questionList;
+        }
+        else return specifcQuestionList;
     }
 
     protected void alertQuitQuiz(Runnable onQuit) {
@@ -277,9 +289,9 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     if (radioGroup.getCheckedRadioButtonId() == correctAnswer) {
                         scoreNumber++;
                         // num and index differ by 1
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum-1, true));
+                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, true), false);
                     } else {
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum-1, false));
+                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, false), false);
                     }
 
                     switch (correctAnswer) {
@@ -325,7 +337,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                     if(clicks == 1){
                         //if question was skipped the current question is flagged as 'incorrect'
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
                     }
                     //reset the skip feature
                     clicks = 0;
@@ -401,7 +413,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 for (; currentQuestionNum < totalQuestions; currentQuestionNum++) {
-                    quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                    quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
                 }
 
                 AlertDialog dialog = new AlertDialog.Builder(zis)

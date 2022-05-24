@@ -49,10 +49,10 @@ public class QuizState {
         this.options = new HashMap<>();
     }
 
-    // Empty constructor
-    public QuizState() {
 
-    }
+    public static QuizState instance = new QuizState();
+    // Empty constructor
+    private QuizState() {}
 
     /**
      * Helper methods
@@ -60,19 +60,21 @@ public class QuizState {
 
     // Submits an answer for the current question
     // DO NOT call for questions when the user runs out of time
-    public void answerQuestion(UserAnswer answer) {
-        if (questions.get(currentPointer).getCorrectAnswer() == answer.getIndex()) {
+    public void answerQuestion(Question question, UserAnswer answer, boolean isTest) {
+        if (question.getCorrectAnswer() == answer.getIndex()) {
             // Answer is correct. Increase the score and remove from review
             incrementScore();
-            questions.get(currentPointer).setNeedsReview(
-                questions.get(currentPointer).getNeedsReview() - 1
+            question.setNeedsReview(
+                    question.getNeedsReview() - 1
             );
         } else {
             // Answer is incorrect. Add question to review
-             questions.get(currentPointer).setNeedsReview(2);
+            question.setNeedsReview(2);
         }
         //currentAnswers.add(answer); // adds answer to list of current answers
-        incrementCurrentPointer(); // increases question number
+        if(!isTest){
+            incrementCurrentPointer(); // increases question number
+        }
     }
 
     public Question getCurrentQuestion(int currentPointer) {
