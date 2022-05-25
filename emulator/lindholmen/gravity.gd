@@ -1,4 +1,4 @@
-extends Spatial
+extends KinematicBody
 
 var gravity = 9.8
 var capncrunch = Vector3()
@@ -19,5 +19,5 @@ func _process(delta):
 	if not is_on_floor():
 		capncrunch.y -= gravity * delta
 		
-move_and_slide(capncrunch, Vector3.UP)
+	move_and_slide(capncrunch, Vector3.UP)
 
