@@ -107,9 +107,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         Bundle extras = intent.getExtras();
-        MILLIS = extras.getInt("TIMER_VALUE", 0);
-        String category = extras.getString("category");
-        int numberOfQuestions = extras.getInt("numOfQuestions");
+        String category = "";
+        int numberOfQuestions = 0;
+        if (extras != null) {
+            MILLIS = extras.getInt("TIMER_VALUE", 0);
+            category = extras.getString("category");
+            numberOfQuestions = extras.getInt("numOfQuestions");
+        }
 
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
@@ -138,20 +142,31 @@ public class QuizQuestionActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radioGroup);
 
         //add questions to question list via helper method --> help us select question
-        CrushersDataBase db = new CrushersDataBase(this);
-        questionList = db.getAllQuestions();
+        this.db = new CrushersDataBase(this);
+        questionList = this.db.getAllQuestions();
         Collections.shuffle(questionList);
         totalQuestions = questionList.size();
         specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
-        this.db = new CrushersDataBase(this);
 
         questionVideo = findViewById(R.id.videoScreen);
 
-        customQuiz(numberOfQuestions, category);
-
+        //no options chosen -- generic quiz
+        if (numberOfQuestions == 0 && category.equals("")) {
+            quizState = new QuizState(true, questionList, null, 0);
+            quizState.customQuiz(numberOfQuestions, categorySelected, this.db, questionList);
+            addQuestion(questionList);
+        }
+        else {
+            quizState = new QuizState(true, specifcQuestionList, null, 0);
+            quizState.customQuiz(numberOfQuestions, category, this.db, specifcQuestionList);
+            addQuestion(specifcQuestionList);
+        }
+        totalQuestions = quizState.getQuestions().size();
+        currentQ = quizState.getCurrentQuestion();
         onNextQuestionButtonClicked();
 
+        this.db.close();
         // bottomNavigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
@@ -170,49 +185,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });
-    }
-
-    public List<Question> customQuiz(int questionCountSelected, String categorySelected) {
-        //quiz with a specific category and question count
-        if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
-            questionList = db.getCategoryQuestions(categorySelected);
-            Collections.shuffle(questionList);
-            for (int i = 0; i < questionCountSelected; i++) {
-                specifcQuestionList.add(questionList.get(i));
-            }
-            totalQuestions = questionCountSelected;
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
-            addQuestion(specifcQuestionList);
-            //random quiz with only the amount of selected questions
-        } else if (questionCountSelected != 0) {
-            Collections.shuffle(questionList);
-            for (int i = 0; i < questionCountSelected; i++) {
-                specifcQuestionList.add(questionList.get(i));
-            }
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
-            totalQuestions = questionCountSelected;
-            addQuestion(specifcQuestionList);
-            //if they selected the question count and a category then this happens
-        } else if (!categorySelected.equals("No Category")) {
-            //quiz with only selected category question
-            specifcQuestionList = db.getCategoryQuestions(categorySelected);
-            totalQuestions = specifcQuestionList.size();
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
-            addQuestion(specifcQuestionList);
-        } else { // exam with all questions
-            quizState = new QuizState(true, questionList, null, scoreNumber);
-            currentQ = quizState.getCurrentQuestion(quizState.getCurrentPointer());
-            totalQuestions = questionList.size();
-            addQuestion(questionList);
-        }
-
-        if(specifcQuestionList.size() == 0){
-            return questionList;
-        }
-        else return specifcQuestionList;
     }
 
     protected void alertQuitQuiz(Runnable onQuit) {

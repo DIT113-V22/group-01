@@ -1,7 +1,5 @@
 package com.example.smartcarmqttapp;
 
-import android.content.Context;
-
 import com.example.smartcarmqttapp.database.CrushersDataBase;
 import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.model.UserAnswer;
@@ -13,16 +11,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Assert.*;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RunWith(JUnit4.class)
+@RunWith(RobolectricTestRunner.class)
 public class QuizUnitTest {
 
     //fix this either using Robolectric testing (doesnt work atm) or something else
     // cannot create instantiated object of a android view class
-    private QuizQuestionActivity quizQuestionActivity;
+    private QuizQuestionActivity quizQuestionActivity = Robolectric.setupActivity(QuizQuestionActivity.class);
 
     private static List<Question> getTestableQuestions() {
         return Arrays.asList(
@@ -84,20 +85,20 @@ public class QuizUnitTest {
     @Test
     //TODO georg
     public void environmentCategoryChosenShouldMatchCategoryInQuiz(){
-        //insert test here
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
         // when custom quiz, with category = "Environment"
         //check list and if all questions have category env = pass
         String categoryChosen = "Environment";
         int questionCount = 10;
 
-        List<Question> categorySpecificList = quizQuestionActivity.customQuiz(questionCount, categoryChosen);
+        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db, new ArrayList<>());
         int correctCategoryQuestions = 0;
         for(Question question : categorySpecificList){
             if(question.getCategory().equals(categoryChosen)){
                 correctCategoryQuestions++;
             }
         }
-
+        db.close();
         //if each question has the correct category based on checking each category = true
         Assert.assertEquals(questionCount, correctCategoryQuestions);
     }
@@ -105,17 +106,19 @@ public class QuizUnitTest {
     @Test
     //TODO georg
     public void trafficRulesCategoryChosenShouldMatchCategoryInQuiz(){
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+
         String categoryChosen = "Basic Traffic Rules and Signs";
         int questionCount = 10;
 
-        List<Question> categorySpecificList = quizQuestionActivity.customQuiz(questionCount, categoryChosen);
+        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db, new ArrayList<>());
         int correctCategoryQuestions = 0;
         for(Question question : categorySpecificList){
             if(question.getCategory().equals(categoryChosen)){
                 correctCategoryQuestions++;
             }
         }
-
+        db.close();
         //if each question has the correct category based on checking each category = true
         Assert.assertEquals(questionCount, correctCategoryQuestions);
     }
@@ -123,17 +126,19 @@ public class QuizUnitTest {
     @Test
     //TODO georg
     public void safeDrivingCategoryChosenShouldMatchCategoryInQuiz(){
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+
         String categoryChosen = "Safety and Best Practices";
         int questionCount = 10;
 
-        List<Question> categorySpecificList = quizQuestionActivity.customQuiz(questionCount, categoryChosen);
+        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db, new ArrayList<>());
         int correctCategoryQuestions = 0;
         for(Question question : categorySpecificList){
             if(question.getCategory().equals(categoryChosen)){
                 correctCategoryQuestions++;
             }
         }
-
+        db.close();
         //if each question has the correct category based on checking each category = true
         Assert.assertEquals(questionCount, correctCategoryQuestions);
     }

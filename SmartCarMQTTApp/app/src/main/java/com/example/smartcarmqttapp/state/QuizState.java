@@ -1,8 +1,14 @@
 package com.example.smartcarmqttapp.state;
 
+import android.content.Context;
+
+import com.example.smartcarmqttapp.database.CrushersDataBase;
 import com.example.smartcarmqttapp.model.Question;
 import com.example.smartcarmqttapp.model.UserAnswer;
+import com.example.smartcarmqttapp.screens.quiz.QuizQuestionActivity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +123,30 @@ public class QuizState {
             }
         }
         return calcScore;
+    }
+
+    public List<Question> customQuiz(int questionCountSelected, String categorySelected, CrushersDataBase db, List<Question> questionList) {
+        //quiz with a specific category and question count
+        List<Question> temporaryList = new ArrayList<>();
+        if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
+            temporaryList = db.getCategoryQuestions(categorySelected);
+            Collections.shuffle(temporaryList);
+            for (int i = 0; i < questionCountSelected; i++) {
+                questionList.add(temporaryList.get(i));
+            }
+
+        } else if (questionCountSelected != 0) {
+            temporaryList = db.getAllQuestions();
+            Collections.shuffle(temporaryList);
+            for (int i = 0; i < questionCountSelected; i++) {
+                questionList.add(temporaryList.get(i));
+            }
+        } else if (!categorySelected.equals("No Category")) {
+            //quiz with only selected category question
+            questionList = db.getCategoryQuestions(categorySelected);
+        }
+
+        return questionList;
     }
 
     /**
