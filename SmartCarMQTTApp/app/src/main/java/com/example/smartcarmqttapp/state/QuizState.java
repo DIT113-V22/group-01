@@ -77,8 +77,16 @@ public class QuizState {
         }
     }
 
+    public void answerCurrentQuestion(UserAnswer answer) {
+        answerQuestion(getCurrentQuestion(currentPointer), answer, false);
+    }
+
     public Question getCurrentQuestion(int currentPointer) {
         return this.questions.get(currentPointer);
+    }
+
+    public Question getCurrentQuestion() {
+        return this.questions.get(this.currentPointer);
     }
 
     public void incrementScore() {

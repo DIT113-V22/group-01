@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(JUnit4.class)
@@ -22,6 +23,63 @@ public class QuizUnitTest {
     //fix this either using Robolectric testing (doesnt work atm) or something else
     // cannot create instantiated object of a android view class
     private QuizQuestionActivity quizQuestionActivity;
+
+    private static List<Question> getTestableQuestions() {
+        return Arrays.asList(
+                new Question(
+                        "Test Question 1",
+                        "First Answer",
+                        "Second Answer",
+                        "Third Answer",
+                        "Fourth Answer",
+                        1,
+                        "Correct Answer is First Answer",
+                        0,
+                        "Test Category 1",
+                        null,
+                        0
+                ),
+                new Question(
+                        "Test Question 2",
+                        "First Answer",
+                        "Second Answer",
+                        "Third Answer",
+                        "Fourth Answer",
+                        2,
+                        "Correct Answer is Second Answer",
+                        0,
+                        "Test Category 2",
+                        null,
+                        0
+                ),
+                new Question(
+                        "Test Question 3",
+                        "First Answer",
+                        "Second Answer",
+                        "Third Answer",
+                        "Fourth Answer",
+                        3,
+                        "Correct Answer is Third Answer",
+                        0,
+                        "Test Category 1",
+                        null,
+                        0
+                ),
+                new Question(
+                        "Test Question 4",
+                        "First Answer",
+                        "Second Answer",
+                        "Third Answer",
+                        "Fourth Answer",
+                        4,
+                        "Correct Answer is Fourth Answer",
+                        0,
+                        "Test Category 2",
+                        null,
+                        0
+                )
+        );
+    }
 
     @Test
     //TODO georg
@@ -82,11 +140,32 @@ public class QuizUnitTest {
 
     @Test
     //TODO Ansis
-    public void onCorrectAnswerShouldIncrementScore(){}
+    public void onCorrectAnswerShouldIncrementScore(){
 
+    }
+
+    /**
+     * Start Quiz with score 32
+     * After answering incorrectly, score should remain 32
+     */
     @Test
     //TODO ansis
-    public void onWrongAnswerShouldNotIncrementScore(){}
+    public void onWrongAnswerShouldNotIncrementScore(){
+        int expectedScore = 32;
+
+        List<Question> questions = getTestableQuestions();
+        UserAnswer incorrectAnswer = new UserAnswer(3, false);
+        QuizState quiz = new QuizState(true, questions, null, 32);
+
+        String failMessage = "Quiz with starting score 32\n" +
+                "Current Question has correct answer at index: " + quiz.getCurrentQuestion().getCorrectAnswer() + "\n" +
+                "Answered Question has index: " + incorrectAnswer.getIndex() + "\n" +
+                "Quiz should still have score " + expectedScore + "\n";
+
+        quiz.answerCurrentQuestion(incorrectAnswer);
+        int actualScore = quiz.getScore();
+        Assert.assertEquals(failMessage, expectedScore, actualScore);
+    }
 
     @Test
     //TODO georg
