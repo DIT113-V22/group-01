@@ -19,4 +19,4 @@ jobs:
         working-directory: ./SmartCarMQTTApp
         run: ./gradlew build
       - name: Run unit testing
-        run: ./QuizUnitTest.java test  
+        run: ./gradlew test  
