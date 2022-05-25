@@ -143,7 +143,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
         //add questions to question list via helper method --> help us select question
         this.db = new CrushersDataBase(this);
-        questionList = this.db.getAllQuestions();
+        try {
+            questionList = this.db.getAllQuestions();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Collections.shuffle(questionList);
         totalQuestions = questionList.size();
         specifcQuestionList = new ArrayList<>();
@@ -154,12 +158,20 @@ public class QuizQuestionActivity extends AppCompatActivity {
         //no options chosen -- generic quiz
         if (numberOfQuestions == 0 && category.equals("")) {
             quizState = new QuizState(true, questionList, null, 0);
-            quizState.customQuiz(numberOfQuestions, categorySelected, this.db, questionList);
+            try {
+                quizState.customQuiz(numberOfQuestions, categorySelected, this.db, questionList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             addQuestion(questionList);
         }
         else {
             quizState = new QuizState(true, specifcQuestionList, null, 0);
-            quizState.customQuiz(numberOfQuestions, category, this.db, specifcQuestionList);
+            try {
+                quizState.customQuiz(numberOfQuestions, category, this.db, specifcQuestionList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             addQuestion(specifcQuestionList);
         }
         totalQuestions = quizState.getQuestions().size();
@@ -261,9 +273,17 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     if (radioGroup.getCheckedRadioButtonId() == correctAnswer) {
                         scoreNumber++;
                         // num and index differ by 1
-                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, true), false);
+                        try {
+                            quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, true), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
-                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, false), false);
+                        try {
+                            quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, false), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     switch (correctAnswer) {
@@ -309,7 +329,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                     if(clicks == 1){
                         //if question was skipped the current question is flagged as 'incorrect'
-                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
+                        try {
+                            quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     //reset the skip feature
                     clicks = 0;
@@ -385,7 +409,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 for (; currentQuestionNum < totalQuestions; currentQuestionNum++) {
-                    quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
+                    try {
+                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 AlertDialog dialog = new AlertDialog.Builder(zis)

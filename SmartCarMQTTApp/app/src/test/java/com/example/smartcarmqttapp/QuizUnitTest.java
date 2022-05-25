@@ -84,7 +84,7 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void environmentCategoryChosenShouldMatchCategoryInQuiz(){
+    public void environmentCategoryChosenShouldMatchCategoryInQuiz() throws Exception {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
         // when custom quiz, with category = "Environment"
         //check list and if all questions have category env = pass
@@ -105,7 +105,7 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void trafficRulesCategoryChosenShouldMatchCategoryInQuiz(){
+    public void trafficRulesCategoryChosenShouldMatchCategoryInQuiz() throws Exception {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
         String categoryChosen = "Basic Traffic Rules and Signs";
@@ -125,7 +125,7 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void safeDrivingCategoryChosenShouldMatchCategoryInQuiz(){
+    public void safeDrivingCategoryChosenShouldMatchCategoryInQuiz() throws Exception {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
         String categoryChosen = "Safety and Best Practices";
@@ -155,7 +155,7 @@ public class QuizUnitTest {
      */
     @Test
     //TODO ansis
-    public void onWrongAnswerShouldNotIncrementScore(){
+    public void onWrongAnswerShouldNotIncrementScore() throws Exception {
         int expectedScore = 32;
 
         List<Question> questions = getTestableQuestions();
@@ -174,7 +174,7 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void onWrongAnswerShouldSetNeedsReviewField(){
+    public void onWrongAnswerShouldSetNeedsReviewField() throws Exception {
         Question question = new Question("test", "1", "2",
                                 "3", "4", 2,
                                 "test", 0, "test", "test", 0);
@@ -188,7 +188,7 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void onCorrectAnswerShouldDecreaseNeedsReviewField(){
+    public void onCorrectAnswerShouldDecreaseNeedsReviewField() throws Exception {
         Question question = new Question("test", "1", "2",
                 "3", "4", 2,
                 "test", 2, "test", "test", 0);
@@ -202,7 +202,7 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void onSecondCorrectAnswerShouldRemoveNeedsReviewValue(){
+    public void onSecondCorrectAnswerShouldRemoveNeedsReviewValue() throws Exception {
         Question question = new Question("test", "1", "2",
                 "3", "4", 2,
                 "test", 1, "test", "test", 0);
@@ -216,7 +216,10 @@ public class QuizUnitTest {
 
     @Test
     //TODO georg
-    public void allQuestionsShouldHaveValidNeedsReviewValue(){
+    /**
+     * @Test that each question created or in the current database
+     */
+    public void allQuestionsShouldHaveValidNeedsReviewValue() throws Exception {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
         for(Question question : db.getAllQuestions()){
             if(question.getNeedsReview() > 2 || question.getNeedsReview() < 0){

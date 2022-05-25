@@ -66,13 +66,15 @@ public class QuizState {
 
     // Submits an answer for the current question
     // DO NOT call for questions when the user runs out of time
-    public void answerQuestion(Question question, UserAnswer answer, boolean isTest) {
+    public void answerQuestion(Question question, UserAnswer answer, boolean isTest) throws Exception {
         if (question.getCorrectAnswer() == answer.getIndex()) {
             // Answer is correct. Increase the score and remove from review
             incrementScore();
-            question.setNeedsReview(
-                    question.getNeedsReview() - 1
-            );
+            if (question.getNeedsReview() > 0 && question.getNeedsReview() <= 2) {
+                question.setNeedsReview(
+                        question.getNeedsReview() - 1
+                );
+            }
         } else {
             // Answer is incorrect. Add question to review
             question.setNeedsReview(2);
@@ -83,7 +85,7 @@ public class QuizState {
         }
     }
 
-    public void answerCurrentQuestion(UserAnswer answer) {
+    public void answerCurrentQuestion(UserAnswer answer) throws Exception {
         answerQuestion(getCurrentQuestion(currentPointer), answer, false);
     }
 
@@ -125,7 +127,7 @@ public class QuizState {
         return calcScore;
     }
 
-    public List<Question> customQuiz(int questionCountSelected, String categorySelected, CrushersDataBase db, List<Question> questionList) {
+    public List<Question> customQuiz(int questionCountSelected, String categorySelected, CrushersDataBase db, List<Question> questionList) throws Exception {
         //quiz with a specific category and question count
         List<Question> temporaryList = new ArrayList<>();
         if (!categorySelected.equals("No Category") && questionCountSelected != 0) {

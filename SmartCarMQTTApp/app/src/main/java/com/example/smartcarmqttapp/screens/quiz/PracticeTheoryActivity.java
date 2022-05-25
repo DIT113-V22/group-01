@@ -80,7 +80,11 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theory_section);
         CrushersDataBase db = new CrushersDataBase(this);
-        allQuestions = db.getAllQuestions();
+        try {
+            allQuestions = db.getAllQuestions();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.categoryQuestions = groupQuestionsByCategory(allQuestions);
 
         initializeElements();
