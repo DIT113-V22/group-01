@@ -217,18 +217,16 @@ public class QuizUnitTest {
     @Test
     //TODO georg
     public void allQuestionsShouldHaveValidNeedsReviewValue(){
-        //get all questions
-        //check if their needs review value > 0 and < 2
-        /*
-        CrushersDataBase db = new CrushersDataBase();
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
         for(Question question : db.getAllQuestions()){
             if(question.getNeedsReview() > 2 || question.getNeedsReview() < 0){
                 //one question has a bad needsReview value meaning test fails
+                db.close();
                 assert false;
             }
         }
+        db.close();
         assert true;
-         */
     }
 
     @Test
