@@ -18,3 +18,5 @@ jobs:
       - name: Execute Gradle Build
         working-directory: ./SmartCarMQTTApp
         run: ./gradlew build
+      - name: Run unit testing
+        run: ./gradlew test  
