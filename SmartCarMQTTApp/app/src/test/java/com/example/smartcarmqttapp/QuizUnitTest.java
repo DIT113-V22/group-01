@@ -259,7 +259,8 @@ public class QuizUnitTest {
         int expectedNumberOfQuestions = 45;
         int actualNumberOfQuestions = examQuestions.size();
 
-        Assert.assertEquals(expectedNumberOfQuestions, actualNumberOfQuestions);
+        String failMessage = "Theory Exam should have " + questionCount + " questions but received " + actualNumberOfQuestions + " questions";
+        Assert.assertEquals(failMessage, expectedNumberOfQuestions, actualNumberOfQuestions);
     }
 
     @Test
@@ -274,7 +275,6 @@ public class QuizUnitTest {
         db.close();
 
         Map<String, Integer> foundCategories = new HashMap<>();
-
         for(Question question: examQuestions) {
             String questionCategory = question.getCategory();
             if(foundCategories.containsKey(questionCategory)) {
@@ -283,41 +283,100 @@ public class QuizUnitTest {
                 foundCategories.put(questionCategory, 1);
             }
         }
+
         Integer[] expectedNumberOfQuestions = new Integer[]{15, 15, 15};
         Integer[] actualNumberOfQuestions = foundCategories.values().toArray(new Integer[]{});
-        Assert.assertArrayEquals(expectedNumberOfQuestions, actualNumberOfQuestions);
-    }
 
-    //for all customQuiz tests --- DONT FORGET EDGE CASES (negative vlaues, invalid values, missing)
+        String failMessage = "Question distribution for every category should be " + Arrays.toString(expectedNumberOfQuestions) + "\n" +
+                "but received " + Arrays.toString(actualNumberOfQuestions);
+
+        Assert.assertArrayEquals(failMessage, expectedNumberOfQuestions, actualNumberOfQuestions);
+    }
 
     @Test
     //TODO ansis
     public void onCustomQuizWhenSelectingBothOptionsCustomQuizReflectsChoices() throws Exception {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
-        String category = "Environment"; // Parameters for theory exam
-        int questionCount = 45;
+        String category = "Environment"; // Both category and question count selected
+        int questionCount = 5;
 
-        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
         db.close();
+
+        boolean isCorrectCategory = true;
+        for(Question question: chosenQuestions) {
+            isCorrectCategory = isCorrectCategory && question.getCategory().equals(category);
+        }
+
+        int expectedNumberOfQuestions = 5;
+        int actualNumberOfQuestions = chosenQuestions.size();
+
+        String baseFailMessage = "Starting Custom Quiz on " + category + " (" + questionCount + " questions)\n";
+        String questionFailMessage = baseFailMessage + "Quiz should have " + expectedNumberOfQuestions + " questions but received " + actualNumberOfQuestions;
+        String categoryFailMessage = baseFailMessage + "Quiz should only have " + category + " questions, but received others.";
+
+        Assert.assertEquals(questionFailMessage, expectedNumberOfQuestions, actualNumberOfQuestions);
+        Assert.assertTrue(categoryFailMessage, isCorrectCategory);
     }
 
     @Test
     //TODO ansis
-    public void onCustomQuizWhenSelectingQuestionCountOptionCustomQuizReflectsChoice(){
+    public void onCustomQuizWhenSelectingQuestionCountOptionCustomQuizReflectsChoice() throws Exception{
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
+        String category = "No Category"; // Only number of questions selected
+        int questionCount = 10;
+
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        db.close();
+
+        int expectedNumberOfQuestions = questionCount;
+        int actualNumberOfQuestions = chosenQuestions.size();
+
+        String failMessage = "Starting Custom quiz with " + questionCount + " questions but only received " + actualNumberOfQuestions + " questions";
+
+        Assert.assertEquals(failMessage, expectedNumberOfQuestions, actualNumberOfQuestions);
     }
 
     @Test
     //TODO ansis
-    public void onCustomQuizWhenSelectingCategoryOptionCustomQuizReflectsChoice(){
+    public void onCustomQuizWhenSelectingCategoryOptionCustomQuizReflectsChoice() throws Exception{
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
+        String category = "Basic Traffic Rules and Signs"; // Only category selected
+        int questionCount = 0;
+
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        db.close();
+
+        boolean isCorrectCategory = true;
+        for(Question question: chosenQuestions) {
+            isCorrectCategory = isCorrectCategory && question.getCategory().equals(category);
+        }
+
+        String failMessage = "Quiz should only have " + category + " questions, but received others.";
+
+        Assert.assertTrue(failMessage, isCorrectCategory);
     }
 
-    @Test
-    //TODO ansis
-    public void onCustomQuizWhenSelectingNoOptionsCustomQuizShouldChooseRandomly(){
-
-    }
+//    @Test
+//    //TODO ansis
+//    public void onCustomQuizWhenSelectingNoOptionsCustomQuizShouldReturnQuestions() throws Exception{
+//        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+//
+//        String category = "No Category"; // Both category and question count selected
+//        int questionCount = 0;
+//
+//        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+//        db.close();
+//
+//        boolean questionsExist = chosenQuestions.size() != 0;
+//
+//        String failMessage = "Starting Custom Quiz with no options\n" +
+//                "Should return some questions but did not";
+//
+//        Assert.assertTrue(failMessage, questionsExist);
+//    }
 }
 
