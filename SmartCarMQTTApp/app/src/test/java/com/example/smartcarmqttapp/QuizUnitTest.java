@@ -16,7 +16,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(RobolectricTestRunner.class)
 public class QuizUnitTest {
@@ -145,24 +147,35 @@ public class QuizUnitTest {
 
     @Test
     //TODO Ansis
-    public void onCorrectAnswerShouldIncrementScore(){
+    public void onCorrectAnswerShouldIncrementScore() throws Exception {
+        int startingScore = 15;
+        int expectedScore = 16;
 
+        List<Question> questions = getTestableQuestions();
+        UserAnswer correctAnswer = new UserAnswer(1, true);
+        QuizState quiz = new QuizState(true, questions, null, startingScore);
+
+        String failMessage = "Quiz with starting score " + startingScore + "\n" +
+                "Current Question has correct answer at index: " + quiz.getCurrentQuestion().getCorrectAnswer() + "\n" +
+                "Answered Question has index: " + correctAnswer.getIndex() + "\n" +
+                "Quiz should now have score " + expectedScore + "\n";
+
+        quiz.answerCurrentQuestion(correctAnswer);
+        int actualScore = quiz.getScore();
+        Assert.assertEquals(failMessage, expectedScore, actualScore);
     }
 
-    /**
-     * Start Quiz with score 32
-     * After answering incorrectly, score should remain 32
-     */
     @Test
     //TODO ansis
     public void onWrongAnswerShouldNotIncrementScore() throws Exception {
+        int startingScore = 32;
         int expectedScore = 32;
 
         List<Question> questions = getTestableQuestions();
         UserAnswer incorrectAnswer = new UserAnswer(3, false);
-        QuizState quiz = new QuizState(true, questions, null, 32);
+        QuizState quiz = new QuizState(true, questions, null, startingScore);
 
-        String failMessage = "Quiz with starting score 32\n" +
+        String failMessage = "Quiz with starting score " + startingScore + "\n" +
                 "Current Question has correct answer at index: " + quiz.getCurrentQuestion().getCorrectAnswer() + "\n" +
                 "Answered Question has index: " + incorrectAnswer.getIndex() + "\n" +
                 "Quiz should still have score " + expectedScore + "\n";
@@ -234,24 +247,77 @@ public class QuizUnitTest {
 
     @Test
     //TODO ansis
-    public void theoryExamShouldContainSetAmountOfQuestions(){}
+    public void theoryExamShouldContainSetAmountOfQuestions() throws Exception {
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+
+        String category = "No Category"; // Parameters for theory exam
+        int questionCount = 45;
+
+        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        db.close();
+
+        int expectedNumberOfQuestions = 45;
+        int actualNumberOfQuestions = examQuestions.size();
+
+        Assert.assertEquals(expectedNumberOfQuestions, actualNumberOfQuestions);
+    }
+
+    @Test
+    //TODO ansis
+    public void theoryExamShouldContainQuestionsFromEveryCategory() throws Exception {
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+
+        String category = "No Category"; // Parameters for theory exam
+        int questionCount = 45;
+
+        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        db.close();
+
+        Map<String, Integer> foundCategories = new HashMap<>();
+
+        for(Question question: examQuestions) {
+            String questionCategory = question.getCategory();
+            if(foundCategories.containsKey(questionCategory)) {
+                foundCategories.put(questionCategory, foundCategories.get(questionCategory) + 1);
+            } else {
+                foundCategories.put(questionCategory, 1);
+            }
+        }
+        Integer[] expectedNumberOfQuestions = new Integer[]{15, 15, 15};
+        Integer[] actualNumberOfQuestions = foundCategories.values().toArray(new Integer[]{});
+        Assert.assertArrayEquals(expectedNumberOfQuestions, actualNumberOfQuestions);
+    }
 
     //for all customQuiz tests --- DONT FORGET EDGE CASES (negative vlaues, invalid values, missing)
 
     @Test
     //TODO ansis
-    public void onCustomQuizWhenSelectingBothOptionsCustomQuizReflectsChoices(){}
+    public void onCustomQuizWhenSelectingBothOptionsCustomQuizReflectsChoices() throws Exception {
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+
+        String category = "Environment"; // Parameters for theory exam
+        int questionCount = 45;
+
+        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        db.close();
+    }
 
     @Test
     //TODO ansis
-    public void onCustomQuizWhenSelectingQuestionCountOptionCustomQuizReflectsChoice(){}
+    public void onCustomQuizWhenSelectingQuestionCountOptionCustomQuizReflectsChoice(){
+
+    }
 
     @Test
     //TODO ansis
-    public void onCustomQuizWhenSelectingCategoryOptionCustomQuizReflectsChoice(){}
+    public void onCustomQuizWhenSelectingCategoryOptionCustomQuizReflectsChoice(){
+
+    }
 
     @Test
     //TODO ansis
-    public void onCustomQuizWhenSelectingNoOptionsCustomQuizShouldChooseRandomly(){}
+    public void onCustomQuizWhenSelectingNoOptionsCustomQuizShouldChooseRandomly(){
+
+    }
 }
 
