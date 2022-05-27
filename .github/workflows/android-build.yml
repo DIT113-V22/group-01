@@ -37,7 +37,7 @@ jobs:
       - name: Run instrumented tests for SmartCarMQTTApp
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          profile: Pixel 3 XL
+          profile: Pixel 3
           api-level: 30
           arch: x86_64
           working-directory: ./SmartCarMQTTApp
