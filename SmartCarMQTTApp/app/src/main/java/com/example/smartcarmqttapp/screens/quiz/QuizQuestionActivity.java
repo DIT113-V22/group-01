@@ -107,7 +107,7 @@ public class QuizQuestionActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         Bundle extras = intent.getExtras();
-        String category = "";
+        String category = "No Category";
         int numberOfQuestions = 0;
         if (extras != null) {
             MILLIS = extras.getInt("TIMER_VALUE", 0);
