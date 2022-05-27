@@ -20,7 +20,7 @@ jobs:
         run: ./gradlew build
 
 
-  run-instrumented test:
+  run-instrumented-tests:
     runs-on: macos-latest
     steps:
       - name: Clone Repo
