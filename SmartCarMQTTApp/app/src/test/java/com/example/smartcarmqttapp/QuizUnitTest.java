@@ -338,23 +338,22 @@ public class QuizUnitTest {
         Assert.assertTrue(failMessage, isCorrectCategory);
     }
 
-//    @Test
-//    //TODO ansis
-//    public void onCustomQuizWhenSelectingNoOptionsCustomQuizShouldReturnQuestions() throws Exception{
-//        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
-//
-//        String category = "No Category"; // Both category and question count selected
-//        int questionCount = 0;
-//
-//        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
-//        db.close();
-//
-//        boolean questionsExist = chosenQuestions.size() != 0;
-//
-//        String failMessage = "Starting Custom Quiz with no options\n" +
-//                "Should return some questions but did not";
-//
-//        Assert.assertTrue(failMessage, questionsExist);
-//    }
+    @Test
+    public void onCustomQuizWhenSelectingNoOptionsCustomQuizShouldReturnQuestions() throws Exception{
+        CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
+
+        String category = "No Category"; // Both category and question count selected
+        int questionCount = 0;
+
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db);
+        db.close();
+
+        boolean questionsExist = chosenQuestions.size() != 0;
+
+        String failMessage = "Starting Custom Quiz with no options\n" +
+               "Should return some questions but did not";
+
+        Assert.assertTrue(failMessage, questionsExist);
+    }
 }
 
