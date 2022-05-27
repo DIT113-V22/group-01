@@ -34,11 +34,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - name: Run instrumented tests for IslandRush
+      - name: Run instrumented tests for SmartCarMQTTApp
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          profile: Nexus 6
-          api-level: 29
+          profile: Pixel 3 XL
+          api-level: 30
           arch: x86_64
           working-directory: ./SmartCarMQTTApp
           script: ./gradlew connectedCheck        
