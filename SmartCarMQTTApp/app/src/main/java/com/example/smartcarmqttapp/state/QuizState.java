@@ -147,6 +147,9 @@ public class QuizState {
             //quiz with only selected category question
             questionList = db.getCategoryQuestions(categorySelected);
         }
+        else {
+            return questionList;
+        }
 
         return questionList;
     }

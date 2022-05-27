@@ -228,7 +228,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
                 findViewById(R.id.cardCategory).setVisibility(View.VISIBLE);
                 MILLIS = 0;
-                numOfQuestions = 15;
+                numOfQuestions = 45;
 
             }else if(position == 1) {
                 timerContainer.setVisibility(View.INVISIBLE);

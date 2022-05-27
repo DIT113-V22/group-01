@@ -156,10 +156,10 @@ public class QuizQuestionActivity extends AppCompatActivity {
         questionVideo = findViewById(R.id.videoScreen);
 
         //no options chosen -- generic quiz
-        if (numberOfQuestions == 0 && category.equals("")) {
+        if (numberOfQuestions == 0 && category.equals("No Category")) {
             quizState = new QuizState(true, questionList, null, 0);
             try {
-                quizState.customQuiz(numberOfQuestions, categorySelected, this.db, questionList);
+                quizState.customQuiz(numberOfQuestions, category, this.db, questionList);
             } catch (Exception e) {
                 e.printStackTrace();
             }
