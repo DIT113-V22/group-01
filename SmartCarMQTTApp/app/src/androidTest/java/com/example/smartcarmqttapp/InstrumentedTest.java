@@ -371,6 +371,8 @@ public class InstrumentedTest {
                 );
         materialButton.perform(doubleClick());
 
+        scrollView.perform(ViewActions.swipeDown());
+
         assert getText(onView(withId(R.id.questionCount))).equals("2 / 15");
 
     }
@@ -395,6 +397,10 @@ public class InstrumentedTest {
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
         materialButton3.perform(click());
+
+        ViewInteraction scrollView = onView(
+                allOf(withId(R.id.scrollview)));
+        scrollView.perform(ViewActions.swipeUp());
 
         ViewInteraction materialButton =
                 onView(withId(R.id.checkAnswer)).check(matches(allOf( isEnabled(), isClickable()))).perform(
