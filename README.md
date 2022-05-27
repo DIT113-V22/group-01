@@ -137,3 +137,29 @@ To accomplish our goal, we will create a remotely accessible api for the car, pr
 6. Open our project in Android Studio
 7. Start working!
 
+<a name="use"></a>
+## How to use our mobile app
+Before using our mobile app, you need to run mosquitto in order to establish connection between car and our app. Question arises, HOW?
+
+<a name="mosquitto"></a>
+### How to run Mosquitto 
+*These methods apply to Windows, MacOS, and Ubuntu*
+  - To start the broker, open a command prompt (Terminal)
+  - In the command prompt, navigate to the Mosquitto root folder, such as C:\Program Files (x86)\mosquitto.
+  - tart the Mosquitto service by running the command: "net start mosquitto".
+  - Acknowledge the message: The Mosquitto Broker service was started successfully.
+
+<a name="runSmce"></a>
+### How to run the environment (SMCE)
+  - Double click on the downloaded "SMCE" shortcut.
+  - The start screen for SMCE will now appear on the screen
+  - Select the "Start Fresh" button and then the '+' sign on the next screen.
+  - Click on "Add new".
+  - Select the Arduino folder's location and open it.
+  - Click on "compile", on top left
+  - then press "Start"
+  - enjoy driving!
+
+<a name="mobileApp"></a>
+### How to run the mobile app
+Now that you have installed our app, check out the [user manual](https://github.com/DIT113-V22/group-01/wiki/9.-User-Manual) to learn how to use it
