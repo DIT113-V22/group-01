@@ -150,30 +150,19 @@ public class QuizQuestionActivity extends AppCompatActivity {
         }
         Collections.shuffle(questionList);
         totalQuestions = questionList.size();
-        specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
 
+        specifcQuestionList = new ArrayList<>();
         questionVideo = findViewById(R.id.videoScreen);
-
-        //no options chosen -- generic quiz
-        if (numberOfQuestions == 0 && category.equals("No Category")) {
-            quizState = new QuizState(true, questionList, null, 0);
-            try {
-                quizState.customQuiz(numberOfQuestions, category, this.db, questionList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            addQuestion(questionList);
-        }
-        else {
+        try {
+            specifcQuestionList = QuizState.instance.customQuiz(numberOfQuestions, category, this.db);
             quizState = new QuizState(true, specifcQuestionList, null, 0);
-            try {
-                quizState.customQuiz(numberOfQuestions, category, this.db, specifcQuestionList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            addQuestion(specifcQuestionList);
+            System.out.println(specifcQuestionList.size());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        addQuestion(specifcQuestionList);
+
         totalQuestions = quizState.getQuestions().size();
         currentQ = quizState.getCurrentQuestion();
         onNextQuestionButtonClicked();

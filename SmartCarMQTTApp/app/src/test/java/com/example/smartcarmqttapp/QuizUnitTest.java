@@ -93,7 +93,7 @@ public class QuizUnitTest {
         String categoryChosen = "Environment";
         int questionCount = 10;
 
-        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db, new ArrayList<>());
+        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db);
         int correctCategoryQuestions = 0;
         for(Question question : categorySpecificList){
             if(question.getCategory().equals(categoryChosen)){
@@ -113,7 +113,7 @@ public class QuizUnitTest {
         String categoryChosen = "Basic Traffic Rules and Signs";
         int questionCount = 10;
 
-        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db, new ArrayList<>());
+        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db);
         int correctCategoryQuestions = 0;
         for(Question question : categorySpecificList){
             if(question.getCategory().equals(categoryChosen)){
@@ -133,7 +133,7 @@ public class QuizUnitTest {
         String categoryChosen = "Safety and Best Practices";
         int questionCount = 10;
 
-        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db, new ArrayList<>());
+        List<Question> categorySpecificList = QuizState.instance.customQuiz(questionCount, categoryChosen, db);
         int correctCategoryQuestions = 0;
         for(Question question : categorySpecificList){
             if(question.getCategory().equals(categoryChosen)){
@@ -253,7 +253,7 @@ public class QuizUnitTest {
         String category = "No Category"; // Parameters for theory exam
         int questionCount = 45;
 
-        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
 
         int expectedNumberOfQuestions = 45;
@@ -271,7 +271,7 @@ public class QuizUnitTest {
         String category = "No Category"; // Parameters for theory exam
         int questionCount = 45;
 
-        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
 
         Map<String, Integer> foundCategories = new HashMap<>();
@@ -301,7 +301,7 @@ public class QuizUnitTest {
         String category = "Environment"; // Both category and question count selected
         int questionCount = 5;
 
-        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
 
         boolean isCorrectCategory = true;
@@ -328,7 +328,7 @@ public class QuizUnitTest {
         String category = "No Category"; // Only number of questions selected
         int questionCount = 10;
 
-        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
 
         int expectedNumberOfQuestions = questionCount;
@@ -347,7 +347,7 @@ public class QuizUnitTest {
         String category = "Basic Traffic Rules and Signs"; // Only category selected
         int questionCount = 0;
 
-        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db, new ArrayList<>());
+        List<Question> chosenQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
 
         boolean isCorrectCategory = true;

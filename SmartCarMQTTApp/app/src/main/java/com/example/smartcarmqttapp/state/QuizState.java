@@ -127,28 +127,33 @@ public class QuizState {
         return calcScore;
     }
 
-    public List<Question> customQuiz(int questionCountSelected, String categorySelected, CrushersDataBase db, List<Question> questionList) throws Exception {
-        //quiz with a specific category and question count
+    public List<Question> customQuiz(int questionCountSelected, String categorySelected, CrushersDataBase db) throws Exception {
         List<Question> temporaryList = new ArrayList<>();
+        List<Question> fullList = db.getAllQuestions();
+
+        Collections.shuffle(fullList);
         if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
-            temporaryList = db.getCategoryQuestions(categorySelected);
-            Collections.shuffle(temporaryList);
+            List<Question> randomList = db.getCategoryQuestions(categorySelected);
+            Collections.shuffle(randomList);
             for (int i = 0; i < questionCountSelected; i++) {
-                questionList.add(temporaryList.get(i));
+                temporaryList.add(randomList.get(i));
             }
-
+            db.close();
+            return temporaryList;
         } else if (questionCountSelected != 0) {
-            temporaryList = db.getAllQuestions();
-            Collections.shuffle(temporaryList);
             for (int i = 0; i < questionCountSelected; i++) {
-                questionList.add(temporaryList.get(i));
+                temporaryList.add(fullList.get(i));
             }
+            return temporaryList;
         } else if (!categorySelected.equals("No Category")) {
-            //quiz with only selected category question
-            questionList = db.getCategoryQuestions(categorySelected);
+            temporaryList = db.getCategoryQuestions(categorySelected);
+            db.close();
+            return temporaryList;
         }
-
-        return questionList;
+        else{
+            db.close();
+            return fullList;
+        }
     }
 
     /**
