@@ -39,6 +39,6 @@ jobs:
         with:
           profile: Nexus 6
           api-level: 30
-          target: default
-          arch: x86
+          arch: x86_64
+          working-directory: ./SmartCarMQTTApp
           script: ./gradlew connectedCheck --stacktrace   
