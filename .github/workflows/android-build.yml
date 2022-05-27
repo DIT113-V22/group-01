@@ -18,3 +18,27 @@ jobs:
       - name: Execute Gradle Build
         working-directory: ./SmartCarMQTTApp
         run: ./gradlew build
+
+
+  run-instrumented test:
+    runs-on: macos-latest
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v2
+      - name: make gradlew available
+        run: |
+            cd SmartCarMQTTApp
+            chmod +x gradlew
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Run instrumented tests for IslandRush
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          profile: Nexus 6
+          api-level: 29
+          arch: x86_64
+          working-directory: ./SmartCarMQTTApp
+          script: ./gradlew connectedCheck        
