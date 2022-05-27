@@ -6,6 +6,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.doubleClick;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -28,6 +29,7 @@ import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -43,7 +45,7 @@ import org.w3c.dom.Text;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class InstrumentedTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -343,6 +345,10 @@ public class MainActivityTest {
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
         materialButton3.perform(click());
+
+        ViewInteraction scrollView = onView(
+                allOf(withId(R.id.scrollview)));
+        scrollView.perform(ViewActions.swipeUp());
 
         ViewInteraction materialButton =
                 onView(withId(R.id.nextQuestionBTN)).check(matches(allOf( isEnabled(), isClickable()))).perform(
