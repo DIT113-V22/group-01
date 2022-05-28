@@ -144,6 +144,7 @@ public class QuizState {
             for (int i = 0; i < questionCountSelected; i++) {
                 temporaryList.add(fullList.get(i));
             }
+            db.close();
             return temporaryList;
         } else if (!categorySelected.equals("No Category")) {
             temporaryList = db.getCategoryQuestions(categorySelected);

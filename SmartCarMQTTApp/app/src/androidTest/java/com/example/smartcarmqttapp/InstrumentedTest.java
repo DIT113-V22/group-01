@@ -329,6 +329,47 @@ public class InstrumentedTest {
                 .atPosition(0);
         linearLayout.perform(click());
 
+        ViewInteraction materialButton2 =
+                onView(withId(R.id.fifteenMinuteTimerButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
+
+        ViewInteraction materialButton =
+                onView(withId(R.id.fifteenQuestionButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
         materialButton3.perform(click());
@@ -337,7 +378,7 @@ public class InstrumentedTest {
                 allOf(withId(R.id.scrollview)));
         scrollView.perform(ViewActions.swipeUp());
 
-        ViewInteraction materialButton =
+        ViewInteraction materialBtn =
                 onView(withId(R.id.nextQuestionBTN)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                         new ViewAction() {
                             @Override
@@ -356,7 +397,7 @@ public class InstrumentedTest {
                             }
                         }
                 );
-        materialButton.perform(doubleClick());
+        materialBtn.perform(doubleClick());
 
         scrollView.perform(ViewActions.swipeDown());
 
@@ -381,6 +422,47 @@ public class InstrumentedTest {
                 .atPosition(0);
         linearLayout.perform(click());
 
+        ViewInteraction materialButton2 =
+                onView(withId(R.id.fifteenMinuteTimerButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
+
+        ViewInteraction materialButton =
+                onView(withId(R.id.fifteenQuestionButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
         materialButton3.perform(click());
@@ -389,7 +471,7 @@ public class InstrumentedTest {
                 allOf(withId(R.id.scrollview)));
         scrollView.perform(ViewActions.swipeUp());
 
-        ViewInteraction materialButton =
+        ViewInteraction materialButton4 =
                 onView(withId(R.id.checkAnswer)).check(matches(allOf( isEnabled(), isClickable()))).perform(
                         new ViewAction() {
                             @Override
@@ -435,6 +517,47 @@ public class InstrumentedTest {
                 .atPosition(0);
         linearLayout2.perform(click());
 
+        ViewInteraction materialButton2 =
+                onView(withId(R.id.fifteenMinuteTimerButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
+
+        ViewInteraction materialButton =
+                onView(withId(R.id.fifteenQuestionButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
         materialButton3.perform(click());
@@ -464,6 +587,47 @@ public class InstrumentedTest {
                 .atPosition(1);
         linearLayout2.perform(click());
 
+        ViewInteraction materialButton2 =
+                onView(withId(R.id.fifteenMinuteTimerButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
+
+        ViewInteraction materialButton =
+                onView(withId(R.id.fifteenQuestionButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
         materialButton3.perform(click());
@@ -492,6 +656,47 @@ public class InstrumentedTest {
                 .inAdapterView(allOf(withId(R.id.listCategory)))
                 .atPosition(2);
         linearLayout2.perform(click());
+
+        ViewInteraction materialButton2 =
+                onView(withId(R.id.fifteenMinuteTimerButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
+
+
+        ViewInteraction materialButton =
+                onView(withId(R.id.fifteenQuestionButton)).check(matches(allOf( isEnabled(), isClickable()))).perform(
+                        new ViewAction() {
+                            @Override
+                            public Matcher<View> getConstraints() {
+                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                            }
+
+                            @Override
+                            public String getDescription() {
+                                return "click plus button";
+                            }
+
+                            @Override
+                            public void perform(UiController uiController, View view) {
+                                view.performClick();
+                            }
+                        }
+                );
 
         ViewInteraction materialButton3 = onView(
                 allOf(withId(R.id.startQuizButton)));
