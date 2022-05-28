@@ -2,7 +2,7 @@
 ![Arduino Build Status](https://github.com/DIT113-V22/group-01/actions/workflows/arduino-build.yml/badge.svg)
 ![Android Build Status](https://github.com/DIT113-V22/group-01/actions/workflows/android-build.yml/badge.svg)
 
-# Crushers
+# Crusher's Car Crash Course
 A group of 6 like-minded people ready to tackle any challenge!<br>
 For more info on how we tackle the challenge, have a look at our [wiki](https://github.com/DIT113-V22/group-01/wiki)!
 
@@ -153,13 +153,45 @@ Before using our mobile app, you need to run mosquitto in order to establish con
 ### How to run the environment (SMCE)
   - Double click on the downloaded "SMCE" shortcut.
   - The start screen for SMCE will now appear on the screen
-  - Select the "Start Fresh" button and then the '+' sign on the next screen.
+  - Select the "Start Fresh" button and then the `+` sign on the next screen.
   - Click on "Add new".
-  - Select the Arduino folder's location and open it.
-  - Click on "compile", on top left
-  - then press "Start"
-  - enjoy driving!
+  - Select the Arduino folder's location and open it (file with the `.ino` extension).
+  - Click on "compile", on top left and wait. When the build succeeds, you will be told; if you want to keep an eye on things, open the `log` window next to the `compile` button. It's also where you will find compilation errors if something goes wrong.
+  - Then press "Start". You will notice that a car has appeared and that the attachment list has been filled. You should notice text being printed out if you open the `Serial` window on the bottom left.
+  - Enjoy driving!
 
 <a name="mobileApp"></a>
 ### How to run the mobile app
 Now that you have installed our app, check out the [user manual](https://github.com/DIT113-V22/group-01/wiki/9.-User-Manual) to learn how to use it
+
+<a name="moreAboutOurApp"></a>
+## Learn more about our app
+
+<a name="softwareArchitecture"></a>
+### Software Architecture
+An overview of our project's structure can be found here
+
+
+<a name="hardwareArchitecture"></a>
+### Hardware Architecture
+In this section we will talk about SMCE environment.
+We use a variety of features for various applications, which we shall discuss in further full detail.
+  - **Sensors**
+ <br>**Ultra Sonic:** The car comes equipped with a number of useful sensors by default. Pins 6 and 7 are connected to an ultrasonic sensor (SR04) on the front of the car with a long range in the default setup. This sensor is used to identify obstacles. The car will come to a halt if an obstacle is within 60 cm.</br>
+ <br>**Infrared:** This sensor is used to measure distances on the sides of the car between 12 and 78 cm. Their range is limited, but they are more precise and quick. In general, there are four infrared sensors on the car, front, back, left, and right.</br>
+ <br>**Odometer:** Two directional odometers, one on each side, that track the distance traveled by the vehicle. In contrast to their directionless cousins, these sensors normally reveal three signal lines. The direction of movement can be deduced based on the status of this third signal.</br>
+ <br>**Gyroscope:** gyroscope that can give you the car's direction in degrees [0, 360]. Clockwise movement increases the degree count, while counter-clockwise movement decreases it.</br>
+ <br>**Camera:** The car has a camera that may be used to transmit what it sees. It reads a frame from the camera every 65 milliseconds and copies it into a frameBuffer. This is then sent out to the Android app via the MQTT protocol.</br></br>
+ 
+ 
+  - **The current configuration for the smartcar has these attachments:**
+    - 4x infrared sensors
+    - 2x odometer sensors
+    - 1x gyroscope sensors
+    - 1x ultrasonic sensors
+    - 1x camera
+    - 2x brushed motors
+
+
+  - **Car shield library structure (for developers):**
+  <br>The purpose of this [page](https://platisd.github.io/smartcar_shield/) is to provide instructions on how to use the library's API, including explanations and examples for each exposed method.</br>
