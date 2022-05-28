@@ -18,8 +18,10 @@ jobs:
       - name: Execute Gradle Build
         working-directory: ./SmartCarMQTTApp
         run: ./gradlew build
-
-
+      - name: Run unit testing
+        working-directory: ./SmartCarMQTTApp
+        run: ./gradlew test  
+        
   run-instrumented-tests:
     runs-on: macos-latest
     steps:
@@ -41,4 +43,4 @@ jobs:
           api-level: 30
           arch: x86_64
           working-directory: ./SmartCarMQTTApp
-          script: ./gradlew connectedCheck --stacktrace   
+          script: ./gradlew connectedCheck --stacktrace

@@ -92,9 +92,12 @@ public class QuizQuestionActivity extends AppCompatActivity {
     private QuizQuestionActivity zis;
     private Question currentQuestion;
 
+    private Question currentQ;
+
     private VideoView questionVideo;
 
     private CrushersDataBaseManager results_db = new CrushersDataBaseManager(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +107,13 @@ public class QuizQuestionActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         Bundle extras = intent.getExtras();
-        MILLIS = extras.getInt("TIMER_VALUE", 0);
-        String category = extras.getString("category");
-        int numberOfQuestions = extras.getInt("numOfQuestions");
+        String category = "No Category";
+        int numberOfQuestions = 0;
+        if (extras != null) {
+            MILLIS = extras.getInt("TIMER_VALUE", 0);
+            category = extras.getString("category");
+            numberOfQuestions = extras.getInt("numOfQuestions");
+        }
 
         TOTAL_TIME = MILLIS;
         if (TOTAL_TIME > 0) startCountDown();
@@ -135,20 +142,32 @@ public class QuizQuestionActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radioGroup);
 
         //add questions to question list via helper method --> help us select question
-        CrushersDataBase db = new CrushersDataBase(this);
-        questionList = db.getAllQuestions();
+        this.db = new CrushersDataBase(this);
+        try {
+            questionList = this.db.getAllQuestions();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Collections.shuffle(questionList);
         totalQuestions = questionList.size();
-        specifcQuestionList = new ArrayList<>();
         categories = new HashSet<>();
-        this.db = new CrushersDataBase(this);
 
+        specifcQuestionList = new ArrayList<>();
         questionVideo = findViewById(R.id.videoScreen);
+        try {
+            specifcQuestionList = QuizState.instance.customQuiz(numberOfQuestions, category, this.db);
+            quizState = new QuizState(true, specifcQuestionList, null, 0);
+            System.out.println(specifcQuestionList.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        addQuestion(specifcQuestionList);
 
-        customQuiz(numberOfQuestions, category);
-
+        totalQuestions = quizState.getQuestions().size();
+        currentQ = quizState.getCurrentQuestion();
         onNextQuestionButtonClicked();
 
+        this.db.close();
         // bottomNavigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.practiceTheory);
@@ -167,40 +186,6 @@ public class QuizQuestionActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             overridePendingTransition(0, 0);
         });
-    }
-
-    protected void customQuiz(int questionCountSelected, String categorySelected) {
-        //quiz with a specific category and question count
-        if (!categorySelected.equals("No Category") && questionCountSelected != 0) {
-            questionList = db.getCategoryQuestions(categorySelected);
-            Collections.shuffle(questionList);
-            for (int i = 0; i < questionCountSelected; i++) {
-                specifcQuestionList.add(questionList.get(i));
-            }
-            totalQuestions = questionCountSelected;
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-            addQuestion(specifcQuestionList);
-            //random quiz with only the amount of selected questions
-        } else if (questionCountSelected != 0) {
-            Collections.shuffle(questionList);
-            for (int i = 0; i < questionCountSelected; i++) {
-                specifcQuestionList.add(questionList.get(i));
-            }
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-            totalQuestions = questionCountSelected;
-            addQuestion(specifcQuestionList);
-            //if they selected the question count and a category then this happens
-        } else if (!categorySelected.equals("No Category")) {
-            //quiz with only selected category question
-            specifcQuestionList = db.getCategoryQuestions(categorySelected);
-            totalQuestions = specifcQuestionList.size();
-            quizState = new QuizState(true, specifcQuestionList, null, scoreNumber);
-            addQuestion(specifcQuestionList);
-        } else { // exam with all questions
-            quizState = new QuizState(true, questionList, null, scoreNumber);
-            totalQuestions = questionList.size();
-            addQuestion(questionList);
-        }
     }
 
     protected void alertQuitQuiz(Runnable onQuit) {
@@ -277,9 +262,17 @@ public class QuizQuestionActivity extends AppCompatActivity {
                     if (radioGroup.getCheckedRadioButtonId() == correctAnswer) {
                         scoreNumber++;
                         // num and index differ by 1
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum-1, true));
+                        try {
+                            quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, true), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum-1, false));
+                        try {
+                            quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum-1, false), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     switch (correctAnswer) {
@@ -325,7 +318,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
 
                     if(clicks == 1){
                         //if question was skipped the current question is flagged as 'incorrect'
-                        quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                        try {
+                            quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     //reset the skip feature
                     clicks = 0;
@@ -401,7 +398,11 @@ public class QuizQuestionActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 for (; currentQuestionNum < totalQuestions; currentQuestionNum++) {
-                    quizState.answerQuestion(new UserAnswer(currentQuestionNum, false));
+                    try {
+                        quizState.answerQuestion(currentQ, new UserAnswer(currentQuestionNum, false), false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 AlertDialog dialog = new AlertDialog.Builder(zis)
