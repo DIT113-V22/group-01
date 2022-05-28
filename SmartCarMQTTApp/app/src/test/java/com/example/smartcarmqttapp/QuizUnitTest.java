@@ -23,9 +23,9 @@ import java.util.Map;
 @RunWith(RobolectricTestRunner.class)
 public class QuizUnitTest {
 
-    //fix this either using Robolectric testing (doesnt work atm) or something else
-    // cannot create instantiated object of a android view class
     private QuizQuestionActivity quizQuestionActivity = Robolectric.setupActivity(QuizQuestionActivity.class);
+
+    private int fullQuizQuestionCount = 45;
 
     private static List<Question> getTestableQuestions() {
         return Arrays.asList(
@@ -233,12 +233,12 @@ public class QuizUnitTest {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
         String category = "No Category"; // Parameters for theory exam
-        int questionCount = 45;
+        int questionCount = fullQuizQuestionCount; //45
 
         List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
 
-        int expectedNumberOfQuestions = 45;
+        int expectedNumberOfQuestions = fullQuizQuestionCount; //45
         int actualNumberOfQuestions = examQuestions.size();
 
         String failMessage = "Theory Exam should have " + questionCount + " questions but received " + actualNumberOfQuestions + " questions";
@@ -250,7 +250,7 @@ public class QuizUnitTest {
         CrushersDataBase db = new CrushersDataBase(quizQuestionActivity.getApplicationContext());
 
         String category = "No Category"; // Parameters for theory exam
-        int questionCount = 45;
+        int questionCount = fullQuizQuestionCount; //45
 
         List<Question> examQuestions = QuizState.instance.customQuiz(questionCount, category, db);
         db.close();
@@ -265,7 +265,7 @@ public class QuizUnitTest {
             }
         }
 
-        Integer[] expectedNumberOfQuestions = new Integer[]{15, 15, 15};
+        Integer[] expectedNumberOfQuestions = new Integer[]{15, 15, 15}; //expected: 15 questions per category
         Integer[] actualNumberOfQuestions = foundCategories.values().toArray(new Integer[]{});
 
         String failMessage = "Question distribution for every category should be " + Arrays.toString(expectedNumberOfQuestions) + "\n" +
