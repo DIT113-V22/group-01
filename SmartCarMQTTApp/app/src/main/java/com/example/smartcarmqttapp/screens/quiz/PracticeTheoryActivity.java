@@ -323,7 +323,6 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         intent.putExtra("numOfQuestions", numOfQuestions);
         intent.putExtra("category", selectedCategory);
         startActivity(intent);
-        // I tried passing
     }
 
 
