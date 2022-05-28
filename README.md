@@ -102,7 +102,7 @@ To accomplish our goal, we will create a remotely accessible api for the car, pr
     - **How are we going about doing it?**
     <br>Please see this page for instructions on how to install SMCE on [MacOs](https://github.com/ItJustWorksTM/smce-gd/wiki/MacOS-setup), [Windows](https://github.com/ItJustWorksTM/smce-gd/wiki/Windows-setup), or [Debian based Linux](https://github.com/ItJustWorksTM/smce-gd/wiki/Debian-based-Linux-setup)
 
-3. Download **Crusher's crash course** from Google play
+3. Find our project in the [current release](https://github.com/DIT113-V22/group-01/releases/tag/v0.0.9)
 
 <a name="installationForDevelopers"></a>
 ### Installation Procedure (for developers)
