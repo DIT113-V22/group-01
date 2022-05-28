@@ -387,8 +387,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) throws MqttException {
         if(controller != null) {
-            controller.changeSpeed(100 * yPercent);
-            double rotationAngleRadians = Math.atan(- xPercent / yPercent); // x direction flipped since negative x goes CCW (pos angle)
+            controller.changeSpeed(50 * -yPercent);
+            double rotationAngleRadians = -yPercent < 0 ? Math.atan(- xPercent / yPercent) : Math.atan(xPercent / yPercent); // x direction flipped since negative x goes CCW (pos angle)
             double rotationAngleDegrees = rotationAngleRadians * 180 / Math.PI;
             controller.steerCar(rotationAngleDegrees);
         }
