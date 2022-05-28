@@ -92,14 +92,14 @@ To accomplish our goal, we will create a remotely accessible api for the car, pr
       post- office (broker) and then it is forwarded to everyone that needs that message.
       
     - **Why do we need a broker?**
-    - We will need a broker to connect the app to the SMCE so we can practice driving.
+    <br>We will need a broker to connect the app to the SMCE so we can practice driving.
 
     - **How may a Mosquitto broker be set up?**
-    - Here's a clear explanation for how to download Mosquitto. Choose your operating system and follow the instructions:[Download Mosquitto](https://mosquitto.org/download/) 
+    <br>Here's a clear explanation for how to download Mosquitto. Choose your operating system and follow the instructions:[Download Mosquitto](https://mosquitto.org/download/) 
 
 2. We need to download SMCE (the car environment), which will allow you to practice and improve your skills.
     - **How are we going about doing it?**
-    - Please see this page for instructions on how to install SMCE on [MacOs](https://github.com/ItJustWorksTM/smce-gd/wiki/MacOS-setup), [Windows](https://github.com/ItJustWorksTM/smce-gd/wiki/Windows-setup), or [Debian based Linux](https://github.com/ItJustWorksTM/smce-gd/wiki/Debian-based-Linux-setup)
+    <br>Please see this page for instructions on how to install SMCE on [MacOs](https://github.com/ItJustWorksTM/smce-gd/wiki/MacOS-setup), [Windows](https://github.com/ItJustWorksTM/smce-gd/wiki/Windows-setup), or [Debian based Linux](https://github.com/ItJustWorksTM/smce-gd/wiki/Debian-based-Linux-setup)
 
 3. Download **Crusher's crash course** from Google play
 
@@ -170,6 +170,11 @@ Now that you have installed our app, check out the [user manual](https://github.
 <a name="softwareArchitecture"></a>
 ### Software Architecture
 An overview of our project's structure can be found here
+We designated to [UML diagram and EER diagram](https://github.com/DIT113-V22/group-01/wiki/10.-UML-Diagrams), which show our program's and database's structure in greater detail, respectively.
+
+**Deployment Diagram:** This diagram depicts how the components communicate with one another at a high level of abstraction.
+
+![deployment](https://user-images.githubusercontent.com/102043616/170822976-d018883e-340e-478d-a609-dc0e60c8d68d.png)
 
 
 <a name="hardwareArchitecture"></a>
