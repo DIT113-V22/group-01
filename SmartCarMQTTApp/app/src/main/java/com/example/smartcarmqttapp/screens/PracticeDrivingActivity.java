@@ -43,6 +43,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     private int clicks = 0;
     private boolean exit = false;
 
+    public JoystickView joystickView;
+
     public ImageView leftBlinkerArrow, rightBlinkerArrow;
     public CardView leftBlinkerButton, rightBlinkerButton;
     public ImageView imageView;
@@ -58,7 +60,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     //For error screen when the car is not connected
     public GifImageView screenError;
 
-    private Button toggleDataButton;
+    private Button toggleDataButton, goButton, brakeButton;
     private Dialog sensorDialog;
     PracticeDrivingActivity zis;
 
@@ -105,11 +107,16 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         dialog.setTitle("Quick Hints on how to drive the car");
         dialog.show();
 
+        joystickView = findViewById(R.id.joystickView);
+
         leftBlinkerArrow = findViewById(R.id.leftBlinkerArrow);
         rightBlinkerArrow = findViewById(R.id.rightBlinkerArrow);
 
         leftBlinkerButton = findViewById(R.id.leftBlinker);
         rightBlinkerButton= findViewById(R.id.rightBlinker);
+
+        goButton = findViewById(R.id.goButton);
+        brakeButton = findViewById(R.id.brakeButton);
 
         ultraSoundText = findViewById(R.id.udText);
         gyroText = findViewById(R.id.gyroText);
@@ -123,6 +130,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         switchCompat = findViewById(R.id.switchButton);
         toggleDataButton = findViewById(R.id.toggleDataBtn);
         sensorDialog = new Dialog(this);
+
+        goButton.setVisibility(View.INVISIBLE);
+        brakeButton.setVisibility(View.INVISIBLE);
 
         dashboard();
 
@@ -233,6 +243,48 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     }
 
+    public void onClickTilting(View view){
+        if(tilting.isChecked()){
+            joystickView.setVisibility(View.INVISIBLE);
+            goButton.setVisibility(View.VISIBLE);
+            brakeButton.setVisibility(View.VISIBLE);
+        } else {
+            joystickView.setVisibility(View.VISIBLE);
+            goButton.setVisibility(View.INVISIBLE);
+            brakeButton.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    public void onClickGo(View view) throws MqttException {
+        double initialThrottle = controller.throttle.get();
+        double acceleratedThrottle;
+
+        if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+            AudioPlayer.instance.playSound(true);
+        }
+
+        if(initialThrottle == 0) { // car standing still: start driving
+            acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
+        }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
+            acceleratedThrottle = 0;
+            AudioPlayer.instance.getMp().pause();
+        }else if(initialThrottle > 0) { // car driving: increase speed
+            acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
+        }else { // car driving backwards: increase speed (decrease speed modulus)
+            acceleratedThrottle = initialThrottle / ControlConstant.ACCELERATION_FACTOR;
+        }
+        acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
+        controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
+        controller.throttle.set(acceleratedThrottle); // stores current throttle
+    }
+
+
+    public void onClickBrake(View view) {
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -333,8 +385,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) throws MqttException {
         if (xPercent < -0.4){ // turn left
-            double initialAngle = controller.wheelAngle.get();
-            double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
+            double rotatedAngle = ControlConstant.TURN_LEFT_ANGLE;
             controller.steerCar(rotatedAngle);
             controller.wheelAngle.set(rotatedAngle);
 
@@ -343,8 +394,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
 
         if (xPercent > 0.4){ // turn right
-            double initialAngle = controller.wheelAngle.get();
-            double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
+            double rotatedAngle = ControlConstant.TURN_RIGHT_ANGLE;
             controller.steerCar(rotatedAngle);
             controller.wheelAngle.set(rotatedAngle);
 
@@ -376,6 +426,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             controller.changeSpeed(deceleratedThrottle); // publish to MQTT
             controller.throttle.set(deceleratedThrottle); // store current throttle
         }
+
+
         if (yPercent < -0.4) { // accelerate
             double initialThrottle = controller.throttle.get();
             double acceleratedThrottle;
