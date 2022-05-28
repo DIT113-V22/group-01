@@ -309,7 +309,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginTop="128dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="148dp"
                     android:checked="true"
                     android:onClick="onClickSoundOn"
                     android:textOff="OFF"
@@ -334,27 +335,25 @@
 
                 <Button
                     android:id="@+id/brakeButton"
-                    android:layout_width="100dp"
-                    android:layout_height="90dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="26dp"
+                    android:layout_width="140dp"
+                    android:layout_height="130dp"
+                    android:layout_marginStart="40dp"
                     android:backgroundTint="@color/purple_500"
                     android:onClick="onClickBrake"
                     android:text="BRAKE"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/leftBlinker" />
+                    app:layout_constraintTop_toBottomOf="@+id/estop" />
 
                 <Button
                     android:id="@+id/goButton"
-                    android:layout_width="100dp"
-                    android:layout_height="90dp"
-                    android:layout_marginTop="26dp"
+                    android:layout_width="140dp"
+                    android:layout_height="130dp"
                     android:layout_marginEnd="32dp"
                     android:backgroundTint="@color/purple_500"
                     android:onClick="onClickGo"
                     android:text="Go!"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rightBlinker" />
+                    app:layout_constraintTop_toBottomOf="@+id/estop" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
