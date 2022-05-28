@@ -196,7 +196,7 @@ public class InstrumentedTest {
         materialButton2.perform(click());
 
         assert getText(onView(withId(R.id.questionCount))).equals("1 / 45");
-        assert getText(onView(withId(R.id.timer))).equals("29:59");
+        assert getText(onView(withId(R.id.timer))).startsWith("29:5");
     }
 
     @Test
@@ -241,7 +241,7 @@ public class InstrumentedTest {
                 allOf(withId(R.id.startQuizButton)));
         materialButton2.perform(click());
 
-        assert getText(onView(withId(R.id.timer))).startsWith("09:");
+        assert getText(onView(withId(R.id.timer))).startsWith("09:5");
 
     }
 
@@ -309,7 +309,7 @@ public class InstrumentedTest {
         materialButton3.perform(click());
 
         assert getText(onView(withId(R.id.questionCount))).equals("1 / 15");
-        assert getText(onView(withId(R.id.timer))).startsWith("14:");
+        assert getText(onView(withId(R.id.timer))).startsWith("14:5");
     }
 
     @Test
