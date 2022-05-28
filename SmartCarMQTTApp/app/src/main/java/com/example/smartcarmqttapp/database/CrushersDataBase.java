@@ -726,7 +726,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
         db.insert(QuestionsTable.TABLE_NAME, null, cv);
     }
 
-    public List<Question> getCategoryQuestions(String category){
+    public List<Question> getCategoryQuestions(String category) throws Exception {
         List<Question> questionList = new ArrayList<>();
         db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT *" +
@@ -757,7 +757,7 @@ public class CrushersDataBase extends SQLiteOpenHelper {
     }
 
 
-    public List<Question> getAllQuestions(){
+    public List<Question> getAllQuestions() throws Exception {
     List<Question> questionList = new ArrayList<>();
     db = getReadableDatabase();
     Cursor cursor = db.rawQuery("SELECT * FROM " + QuestionsTable.TABLE_NAME, null);
