@@ -5,7 +5,6 @@ import static com.example.smartcarmqttapp.IntegrationTestUtils.*;
 
 import android.content.Context;
 
-import androidx.databinding.ObservableField;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -17,7 +16,6 @@ import org.junit.runners.MethodSorters;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Tests for checking if the communication with the car works.
