@@ -256,6 +256,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     }
 
+
     public void onClickGo(View view) throws MqttException {
         double initialThrottle = controller.throttle.get();
         double acceleratedThrottle;
@@ -281,8 +282,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     }
 
 
-    public void onClickBrake(View view) {
-
+    public void onClickBrake(View view) throws MqttException {
+    controller.changeSpeed(0);
+    controller.throttle.set(0.0);
     }
 
     @Override
@@ -384,6 +386,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) throws MqttException {
+        if (xPercent > -0.05 || xPercent < 0.05) {
+            controller.steerCar(0);
+            controller.wheelAngle.set(0.0);
+
+            if(FORCE_UPDATE) controller.gyroscopeHeading.set(0 - GYROSCOPE_OFFSET);
+        }
         if (xPercent < -0.4){ // turn left
             double rotatedAngle = ControlConstant.TURN_LEFT_ANGLE;
             controller.steerCar(rotatedAngle);
@@ -391,6 +399,8 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
             if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
         }
+
+
 
 
         if (xPercent > 0.4){ // turn right
