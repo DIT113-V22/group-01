@@ -99,8 +99,11 @@ public class Question {
         return needsReview;
     }
 
-    public void setNeedsReview(int needsReview) {
-        this.needsReview = needsReview;
+    public void setNeedsReview(int needsReview) throws Exception {
+        if (needsReview > 2 || needsReview < 0) {
+            throw new Exception("Cannot have a review number greater than 2 and less than 0");
+        }
+        else this.needsReview = needsReview;
     }
 
     public String getCategory() {

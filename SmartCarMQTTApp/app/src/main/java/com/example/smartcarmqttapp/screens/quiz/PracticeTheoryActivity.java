@@ -80,7 +80,11 @@ public class PracticeTheoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.theory_section);
         CrushersDataBase db = new CrushersDataBase(this);
-        allQuestions = db.getAllQuestions();
+        try {
+            allQuestions = db.getAllQuestions();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.categoryQuestions = groupQuestionsByCategory(allQuestions);
 
         initializeElements();
@@ -224,7 +228,7 @@ public class PracticeTheoryActivity extends AppCompatActivity {
                 numOfQuestionsTextView.setVisibility(View.VISIBLE);
                 findViewById(R.id.cardCategory).setVisibility(View.VISIBLE);
                 MILLIS = 0;
-                numOfQuestions = 15;
+                numOfQuestions = 45;
 
             }else if(position == 1) {
                 timerContainer.setVisibility(View.INVISIBLE);
