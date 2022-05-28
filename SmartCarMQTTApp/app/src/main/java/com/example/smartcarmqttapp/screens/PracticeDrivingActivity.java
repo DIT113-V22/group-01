@@ -29,6 +29,7 @@ import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.model.AudioPlayer;
+import com.example.smartcarmqttapp.model.JoystickView;
 import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,10 +38,12 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import pl.droidsonroids.gif.GifImageView;
 
 
-public class PracticeDrivingActivity extends AppCompatActivity implements SensorEventListener {
+public class PracticeDrivingActivity extends AppCompatActivity implements SensorEventListener, JoystickView.JoystickListener {
     public MqttCar controller;
     private int clicks = 0;
     private boolean exit = false;
+
+    public JoystickView joystickView;
 
     public ImageView leftBlinkerArrow, rightBlinkerArrow;
     public CardView leftBlinkerButton, rightBlinkerButton;
@@ -57,11 +60,11 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     //For error screen when the car is not connected
     public GifImageView screenError;
 
-    private Button toggleDataButton;
+    private Button toggleDataButton, goButton, brakeButton;
     private Dialog sensorDialog;
     PracticeDrivingActivity zis;
 
-    private Switch switchCompat;
+    private SwitchCompat switchCompat;
     private SensorManager sensorManager;
     private final float[] accelerometerReading = new float[3];
     private final float[] magnetometerReading = new float[3];
@@ -104,11 +107,16 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         dialog.setTitle("Quick Hints on how to drive the car");
         dialog.show();
 
+        joystickView = findViewById(R.id.joystickView);
+
         leftBlinkerArrow = findViewById(R.id.leftBlinkerArrow);
         rightBlinkerArrow = findViewById(R.id.rightBlinkerArrow);
 
         leftBlinkerButton = findViewById(R.id.leftBlinker);
         rightBlinkerButton= findViewById(R.id.rightBlinker);
+
+        goButton = findViewById(R.id.goButton);
+        brakeButton = findViewById(R.id.brakeButton);
 
         ultraSoundText = findViewById(R.id.udText);
         gyroText = findViewById(R.id.gyroText);
@@ -122,6 +130,9 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         switchCompat = findViewById(R.id.switchButton);
         toggleDataButton = findViewById(R.id.toggleDataBtn);
         sensorDialog = new Dialog(this);
+
+        goButton.setVisibility(View.INVISIBLE);
+        brakeButton.setVisibility(View.INVISIBLE);
 
         dashboard();
 
@@ -185,6 +196,11 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             screenError.setVisibility(View.GONE);
             controller = CarState.instance.getConnectedCar();
 
+            if (switchCompat.isChecked()) {
+                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.ferrari);
+                AudioPlayer.instance.playSound(false);
+            }
+
             controller.listeners.put("camera", () -> {
                 runOnUiThread(() -> {
                     imageView.setImageBitmap(controller.camera.get());
@@ -224,6 +240,50 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             screenError.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void onClickTilting(View view){
+        if(tilting.isChecked()){
+            joystickView.setVisibility(View.INVISIBLE);
+            goButton.setVisibility(View.VISIBLE);
+            brakeButton.setVisibility(View.VISIBLE);
+        } else {
+            joystickView.setVisibility(View.VISIBLE);
+            goButton.setVisibility(View.INVISIBLE);
+            brakeButton.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+
+    public void onClickGo(View view) throws MqttException {
+        double initialThrottle = controller.throttle.get();
+        double acceleratedThrottle;
+
+        if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
+            AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+            AudioPlayer.instance.playSound(true);
+        }
+
+        if(initialThrottle == 0) { // car standing still: start driving
+            acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
+        }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
+            acceleratedThrottle = 0;
+            AudioPlayer.instance.getMp().pause();
+        }else if(initialThrottle > 0) { // car driving: increase speed
+            acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
+        }else { // car driving backwards: increase speed (decrease speed modulus)
+            acceleratedThrottle = initialThrottle / ControlConstant.ACCELERATION_FACTOR;
+        }
+        acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
+        controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
+        controller.throttle.set(acceleratedThrottle); // stores current throttle
+    }
+
+
+    public void onClickBrake(View view) throws MqttException {
+    controller.changeSpeed(0);
+    controller.throttle.set(0.0);
     }
 
     @Override
@@ -321,6 +381,18 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
                 distanceVal.setText(CarState.instance.getDistance() + " cm");
             });
         }
+    }
+
+    @Override
+    public void onJoystickMoved(float xPercent, float yPercent, int source) throws MqttException {
+        if(controller != null) {
+            controller.changeSpeed(50 * -yPercent);
+            double rotationAngleRadians = -yPercent < 0 ? Math.atan(- xPercent / yPercent) : Math.atan(xPercent / yPercent); // x direction flipped since negative x goes CCW (pos angle)
+            double rotationAngleDegrees = rotationAngleRadians * 180 / Math.PI;
+            controller.steerCar(rotationAngleDegrees);
+        }
+
+
     }
 
     /**
