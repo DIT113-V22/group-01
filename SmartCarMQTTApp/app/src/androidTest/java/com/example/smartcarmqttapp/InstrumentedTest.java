@@ -522,7 +522,7 @@ public class InstrumentedTest {
                         new ViewAction() {
                             @Override
                             public Matcher<View> getConstraints() {
-                                return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                                return ViewMatchers.isEnabled(); // no constraints
                             }
 
                             @Override
