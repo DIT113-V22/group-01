@@ -386,81 +386,13 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent, int source) throws MqttException {
-        if (xPercent > -0.05 || xPercent < 0.05) {
-            controller.steerCar(0);
-            controller.wheelAngle.set(0.0);
-
-            if(FORCE_UPDATE) controller.gyroscopeHeading.set(0 - GYROSCOPE_OFFSET);
-        }
-        if (xPercent < -0.4){ // turn left
-            double rotatedAngle = ControlConstant.TURN_LEFT_ANGLE;
-            controller.steerCar(rotatedAngle);
-            controller.wheelAngle.set(rotatedAngle);
-
-            if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
+        if(controller != null) {
+            controller.changeSpeed(100 * yPercent);
+            double rotationAngleRadians = Math.atan(- xPercent / yPercent); // x direction flipped since negative x goes CCW (pos angle)
+            double rotationAngleDegrees = rotationAngleRadians * 180 / Math.PI;
+            controller.steerCar(rotationAngleDegrees);
         }
 
-
-
-
-        if (xPercent > 0.4){ // turn right
-            double rotatedAngle = ControlConstant.TURN_RIGHT_ANGLE;
-            controller.steerCar(rotatedAngle);
-            controller.wheelAngle.set(rotatedAngle);
-
-            if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
-        }
-
-
-        if (yPercent > 0.4) { // decelerate
-            double initialThrottle = controller.throttle.get();
-            double deceleratedThrottle;
-
-            if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
-                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
-                AudioPlayer.instance.playSound(true);
-            }
-
-            if(initialThrottle == 0) { // car standing still: start driving backwards
-                deceleratedThrottle = -ControlConstant.STARTING_THROTTLE;
-            }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE){
-                deceleratedThrottle = 0;
-                AudioPlayer.instance.getMp().pause();
-            }else if(initialThrottle > 0) { // car driving: slow down
-                deceleratedThrottle = initialThrottle * ControlConstant.DECELERATION_FACTOR;
-            }else{ // car driving backwards: speed up backwards
-                deceleratedThrottle = initialThrottle / ControlConstant.DECELERATION_FACTOR;
-            }
-            // speed modulus cant be greater than MAX
-            deceleratedThrottle = Math.max(deceleratedThrottle, -ControlConstant.MAX_THROTTLE);
-            controller.changeSpeed(deceleratedThrottle); // publish to MQTT
-            controller.throttle.set(deceleratedThrottle); // store current throttle
-        }
-
-
-        if (yPercent < -0.4) { // accelerate
-            double initialThrottle = controller.throttle.get();
-            double acceleratedThrottle;
-
-            if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
-                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
-                AudioPlayer.instance.playSound(true);
-            }
-
-            if(initialThrottle == 0) { // car standing still: start driving
-                acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
-            }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
-                acceleratedThrottle = 0;
-                AudioPlayer.instance.getMp().pause();
-            }else if(initialThrottle > 0) { // car driving: increase speed
-                acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
-            }else { // car driving backwards: increase speed (decrease speed modulus)
-                acceleratedThrottle = initialThrottle / ControlConstant.ACCELERATION_FACTOR;
-            }
-            acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
-            controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
-            controller.throttle.set(acceleratedThrottle); // stores current throttle
-        }
 
     }
 
