@@ -29,6 +29,7 @@ import com.example.smartcarmqttapp.MqttCar;
 import com.example.smartcarmqttapp.Navigation;
 import com.example.smartcarmqttapp.R;
 import com.example.smartcarmqttapp.model.AudioPlayer;
+import com.example.smartcarmqttapp.model.JoystickView;
 import com.example.smartcarmqttapp.state.CarState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,7 +38,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import pl.droidsonroids.gif.GifImageView;
 
 
-public class PracticeDrivingActivity extends AppCompatActivity implements SensorEventListener {
+public class PracticeDrivingActivity extends AppCompatActivity implements SensorEventListener, JoystickView.JoystickListener {
     public MqttCar controller;
     private int clicks = 0;
     private boolean exit = false;
@@ -327,6 +328,78 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
                 distanceVal.setText(CarState.instance.getDistance() + " cm");
             });
         }
+    }
+
+    @Override
+    public void onJoystickMoved(float xPercent, float yPercent, int source) throws MqttException {
+        if (xPercent < -0.4){ // turn left
+            double initialAngle = controller.wheelAngle.get();
+            double rotatedAngle = initialAngle + ControlConstant.TURN_LEFT_ANGLE;
+            controller.steerCar(rotatedAngle);
+            controller.wheelAngle.set(rotatedAngle);
+
+            if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
+        }
+
+
+        if (xPercent > 0.4){ // turn right
+            double initialAngle = controller.wheelAngle.get();
+            double rotatedAngle = initialAngle + ControlConstant.TURN_RIGHT_ANGLE;
+            controller.steerCar(rotatedAngle);
+            controller.wheelAngle.set(rotatedAngle);
+
+            if(FORCE_UPDATE) controller.gyroscopeHeading.set(rotatedAngle - GYROSCOPE_OFFSET);
+        }
+
+
+        if (yPercent > 0.4) { // decelerate
+            double initialThrottle = controller.throttle.get();
+            double deceleratedThrottle;
+
+            if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
+                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+                AudioPlayer.instance.playSound(true);
+            }
+
+            if(initialThrottle == 0) { // car standing still: start driving backwards
+                deceleratedThrottle = -ControlConstant.STARTING_THROTTLE;
+            }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE){
+                deceleratedThrottle = 0;
+                AudioPlayer.instance.getMp().pause();
+            }else if(initialThrottle > 0) { // car driving: slow down
+                deceleratedThrottle = initialThrottle * ControlConstant.DECELERATION_FACTOR;
+            }else{ // car driving backwards: speed up backwards
+                deceleratedThrottle = initialThrottle / ControlConstant.DECELERATION_FACTOR;
+            }
+            // speed modulus cant be greater than MAX
+            deceleratedThrottle = Math.max(deceleratedThrottle, -ControlConstant.MAX_THROTTLE);
+            controller.changeSpeed(deceleratedThrottle); // publish to MQTT
+            controller.throttle.set(deceleratedThrottle); // store current throttle
+        }
+        if (yPercent < -0.4) { // accelerate
+            double initialThrottle = controller.throttle.get();
+            double acceleratedThrottle;
+
+            if (switchCompat.isChecked() && !AudioPlayer.instance.getMp().isPlaying()) {
+                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.motorhummin);
+                AudioPlayer.instance.playSound(true);
+            }
+
+            if(initialThrottle == 0) { // car standing still: start driving
+                acceleratedThrottle = ControlConstant.STARTING_THROTTLE;
+            }else if(Math.abs(initialThrottle) < ControlConstant.MIN_THROTTLE) { // car accelerates to min speed
+                acceleratedThrottle = 0;
+                AudioPlayer.instance.getMp().pause();
+            }else if(initialThrottle > 0) { // car driving: increase speed
+                acceleratedThrottle = initialThrottle * ControlConstant.ACCELERATION_FACTOR;
+            }else { // car driving backwards: increase speed (decrease speed modulus)
+                acceleratedThrottle = initialThrottle / ControlConstant.ACCELERATION_FACTOR;
+            }
+            acceleratedThrottle = Math.min(acceleratedThrottle, ControlConstant.MAX_THROTTLE); // speed cant be over MAX
+            controller.changeSpeed(acceleratedThrottle); // publishes to MQTT
+            controller.throttle.set(acceleratedThrottle); // stores current throttle
+        }
+
     }
 
     /**
