@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.PracticeDrivingActivity">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -258,7 +257,7 @@
                     android:id="@+id/estop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="120dp"
+                    android:layout_marginTop="12dp"
                     android:backgroundTint="@color/teamBlue"
                     android:onClick="onClickEmergencyStop"
                     android:text="STOP"
@@ -267,68 +266,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/divider13" />
 
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="95dp"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#9C27B0"
-                    android:onClick="onClickAccelerate"
-                    app:layout_constraintBottom_toTopOf="@+id/estop"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/ic_arrow" />
-
-                <ImageButton
-                    android:id="@+id/imageButton5"
-                    android:layout_width="95dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="12dp"
-                    android:backgroundTint="#9C27B0"
-                    android:onClick="onClickDecelerate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/estop"
-                    app:srcCompat="@drawable/ic_arrow_down" />
-
-                <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_width="95dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="68dp"
-                    android:backgroundTint="#9C27B0"
-                    android:onClick="onClickRotateLeft"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/estop"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/ic_arrow_left" />
-
-                <ImageButton
-                    android:id="@+id/imageButton3"
-                    android:layout_width="95dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="68dp"
-                    android:backgroundTint="#9C27B0"
-                    android:onClick="onClickRotateRight"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/estop"
-                    app:srcCompat="@drawable/ic_arrow_right" />
-
                 <androidx.cardview.widget.CardView
                     android:id="@+id/leftBlinker"
                     android:layout_width="80dp"
                     android:layout_height="35dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginBottom="70dp"
                     android:onClick="onClickBlinkLeft"
                     app:cardBackgroundColor="@color/teamBlue"
-                    app:layout_constraintBottom_toTopOf="@+id/imageButton2"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="15dp">
 
                     <ImageView
                         android:id="@+id/leftBlinkerArrow"
@@ -344,11 +290,10 @@
                     android:layout_width="80dp"
                     android:layout_height="35dp"
                     android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="70dp"
                     android:onClick="onClickBlinkRight"
                     app:cardBackgroundColor="@color/teamBlue"
-                    app:layout_constraintBottom_toTopOf="@+id/imageButton3"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:layout_editor_absoluteY="15dp">
 
                     <ImageView
                         android:id="@+id/rightBlinkerArrow"
@@ -365,19 +310,26 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="128dp"
+                    android:checked="true"
+                    android:onClick="onClickSoundOn"
                     android:textOff="OFF"
                     android:textOn="ON"
                     android:textSize="25sp"
                     android:thumb="@drawable/thumb"
-                    android:onClick="onClickSoundOn"
-                    android:checked="true"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButton5"
-                    app:layout_constraintHorizontal_bias="0.326"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/leftBlinker"
                     app:showText="true"
                     app:track="@drawable/track"
                     tools:ignore="MissingConstraints" />
+
+                <com.example.smartcarmqttapp.model.JoystickView
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/estop" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
