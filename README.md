@@ -20,7 +20,8 @@ For more info on how we tackle the challenge, have a look at our [wiki](https://
 3. [ How to use our mobile app ](#use) 
    - 3.1. [ How to run Mosquitto ](#mosquitto)
    - 3.2. [ How to run the environment (SMCE) ](#runSmce)
-   - 3.3. [ How to run the mobile app ](#mobileApp)
+   - 3.3. [ How to change the environment (SMCE) ](#changeSmce)
+   - 3.4. [ How to run the mobile app ](#mobileApp)
 4. [ Learn more about our app ](#moreAboutOurApp)
    - 4.1. [ Software Architecture ](#softwareArchitecture)
    - 4.2. [ Hardware Architecture ](#hardwareArchitecture)
@@ -145,20 +146,43 @@ Before using our mobile app, you need to run mosquitto in order to establish con
 ### How to run Mosquitto 
 *These methods apply to Windows, MacOS, and Ubuntu*
   - To start the broker, open a command prompt (Terminal)
-  - In the command prompt, navigate to the Mosquitto root folder, such as C:\Program Files (x86)\mosquitto.
-  - tart the Mosquitto service by running the command: "net start mosquitto".
+  - In the command prompt, navigate to the Mosquitto root folder.
+  - tart the Mosquitto service by running the command: `net start mosquitto`.
   - Acknowledge the message: The Mosquitto Broker service was started successfully.
 
 <a name="runSmce"></a>
 ### How to run the environment (SMCE)
-  - Double click on the downloaded "SMCE" shortcut.
+  - Open the "SMCE" shortcut.
   - The start screen for SMCE will now appear on the screen
-  - Select the "Start Fresh" button and then the `+` sign on the next screen.
-  - Click on "Add new".
+  - Select the `Start Fresh` button and then the `+` sign on the next screen.
+  - Click on `Add new`.
   - Select the Arduino folder's location and open it (file with the `.ino` extension).
-  - Click on "compile", on top left and wait. When the build succeeds, you will be told; if you want to keep an eye on things, open the `log` window next to the `compile` button. It's also where you will find compilation errors if something goes wrong.
-  - Then press "Start". You will notice that a car has appeared and that the attachment list has been filled. You should notice text being printed out if you open the `Serial` window on the bottom left.
+  - Click on `Compile`, on top left and wait. When the build succeeds, you will be told; if you want to keep an eye on things, open the `Log` window next to the `compile` button. It's also where you will find compilation errors if something goes wrong.
+  - Then press `Start`. You will notice that a car has appeared and that the attachment list has been filled. You should notice text being printed out if you open the `Serial` window on the bottom left.
   - Enjoy driving!
+
+<a name="changeSmce"></a>
+### How to change the environment
+Here's a `.zip` file that gives you the option to adjust the SMCE environment. Add the `.zip` file to the mod folder in the SMCE user directory.
+
+you can find the user directory in these places:
+  - **Windows:** `%APPDATA%\Godot\app_userdata\SMCE`
+  - **macOS:** `~/Library/Application Support/Godot/SMCE`
+  - **Linux:** `~/.local/share/godot/SMCE`
+
+  1. Click the top left hamburger menu
+  
+![env1](https://user-images.githubusercontent.com/102043616/170826879-82e18c7b-bf64-4f0b-83f1-d2bb52f41026.png)
+  
+  2. Use the world dropdown to select Lindholmen
+
+![env2](https://user-images.githubusercontent.com/102043616/170826882-b59c2c15-9f25-4719-aab7-b8a6b3b6dbe1.png)
+
+  3. Welcome on campus
+
+![env3](https://user-images.githubusercontent.com/102043616/170826886-3c2b7bf3-d7b5-4fef-a72e-b22fd6e992d8.png)
+
+*If you have any questions, you can look up the [instructions](https://github.com/ItJustWorksTM/smce-gd/wiki/Modding) for altering the environment in SMCE.*
 
 <a name="mobileApp"></a>
 ### How to run the mobile app
