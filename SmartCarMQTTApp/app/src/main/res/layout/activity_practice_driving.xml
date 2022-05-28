@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".screens.PracticeDrivingActivity">
     <RelativeLayout
-        android:id="@+id/window"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintBottom_toTopOf="@+id/mainLayout"
@@ -25,21 +24,21 @@
             android:visibility="gone" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="215dp"
+            android:layout_width="205dp"
             android:layout_height="111dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="164dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginEnd="34dp"
             android:layout_marginBottom="179dp"
-            android:background="@color/white_transparent"
+            android:background="@android:color/transparent"
             android:translationX="20dp"
             android:translationY="-20dp"
             android:visibility="visible"
-            app:cardBackgroundColor="@color/white_transparent"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardElevation="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -127,10 +126,15 @@
 
     <LinearLayout
         android:id="@+id/mainLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="345dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/window">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.821"
+        app:srcCompat="@drawable/ic_aboutus_24">
 
         <View
             android:id="@+id/divider4"
@@ -152,7 +156,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="64dp">
+                android:layout_height="79dp">
 
                 <View
                     android:id="@+id/divider8"
@@ -164,7 +168,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="88dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -238,7 +242,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="208dp">
+                android:layout_height="238dp">
 
                 <View
                     android:id="@+id/divider13"
@@ -254,7 +258,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:layout_marginTop="90dp"
                     android:backgroundTint="@color/teamBlue"
                     android:onClick="onClickEmergencyStop"
                     android:text="STOP"
@@ -269,7 +272,6 @@
                     android:layout_height="35dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="15dp"
-                    android:layout_marginBottom="40dp"
                     android:onClick="onClickBlinkLeft"
                     app:cardBackgroundColor="@color/teamBlue"
                     app:layout_constraintStart_toStartOf="parent"
@@ -290,7 +292,6 @@
                     android:layout_height="35dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="40dp"
                     android:onClick="onClickBlinkRight"
                     app:cardBackgroundColor="@color/teamBlue"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -305,14 +306,8 @@
                         app:srcCompat="@drawable/ic_blinker" />
                 </androidx.cardview.widget.CardView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Switch
-                    android:id="@+id/tilting"
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -324,11 +319,11 @@
                     android:textOn="ON"
                     android:textSize="25sp"
                     android:thumb="@drawable/thumb"
-                    android:text="Use device tilting for steering"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/leftBlinker"
+                    app:showText="true"
+                    app:track="@drawable/track"
+                    tools:ignore="MissingConstraints" />
 
                 <com.example.smartcarmqttapp.model.JoystickView
                     android:id="@+id/joystickView"
@@ -369,21 +364,18 @@
                 android:layout_height="wrap_content">
 
                 <Switch
-                    android:id="@+id/switchButton"
+                    android:id="@+id/tilting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onClickTilting"
                     android:text="Use device tilting for steering"
-                    android:checked="true"
-                    android:onClick="onClickSoundOn"
-                    android:text="Play sounds while driving"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 

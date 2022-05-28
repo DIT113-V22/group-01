@@ -64,7 +64,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     private Dialog sensorDialog;
     PracticeDrivingActivity zis;
 
-    private Switch switchCompat;
+    private SwitchCompat switchCompat;
     private SensorManager sensorManager;
     private final float[] accelerometerReading = new float[3];
     private final float[] magnetometerReading = new float[3];
@@ -195,6 +195,11 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             imageView.setVisibility(View.VISIBLE);
             screenError.setVisibility(View.GONE);
             controller = CarState.instance.getConnectedCar();
+
+            if (switchCompat.isChecked()) {
+                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.ferrari);
+                AudioPlayer.instance.playSound(false);
+            }
 
             controller.listeners.put("camera", () -> {
                 runOnUiThread(() -> {
