@@ -10,4 +10,5 @@
     <color name="teamBlue">#79C5D6</color>
     <color name="teamBlueBlack">#2B2F30</color>
     <color name="cadmiumGreen">#097969</color>
+    <color name="white_transparent">#66FFFFFF</color>
 </resources>

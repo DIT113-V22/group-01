@@ -64,7 +64,7 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
     private Dialog sensorDialog;
     PracticeDrivingActivity zis;
 
-    private SwitchCompat switchCompat;
+    private Switch switchCompat;
     private SensorManager sensorManager;
     private final float[] accelerometerReading = new float[3];
     private final float[] magnetometerReading = new float[3];
@@ -189,16 +189,11 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
 
         imageView = findViewById(R.id.cameraView);
         screenError = findViewById(R.id.screenError);
+        AudioPlayer.instance.initBlinker(this, R.raw.blinker);
 
         if (CarState.instance.isConnected()) {
             imageView.setVisibility(View.VISIBLE);
             screenError.setVisibility(View.GONE);
-
-            if (switchCompat.isChecked()) {
-                AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.ferrari);
-                AudioPlayer.instance.playSound(false);
-            }
-
             controller = CarState.instance.getConnectedCar();
 
             controller.listeners.put("camera", () -> {
@@ -208,18 +203,17 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
             });
 
             controller.listeners.put("crashsounds", () -> {
-                    Log.d("crash sound", "crash sound");
                 runOnUiThread(() -> {
                     //A crash!!!! Oh no.....
                     double irDistance = CarState.instance.getConnectedCar().ir_distance.get();
-                    if (!crashed && irDistance < 10 && irDistance > 0){
+                    if (!crashed && irDistance < 10 && irDistance > 0) {
                         if (switchCompat.isChecked()) {
                             AudioPlayer.instance.chooseSongerino(getBaseContext(), R.raw.carcrash);
                             AudioPlayer.instance.playSound(false);
                             crashed = true;
                         }
                     }
-                    else {
+                    else if (irDistance >= 10 || irDistance <= 0) {
                         crashed = false;
                     }
                 });
@@ -511,10 +505,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         if (clicks == 1) {
             clicks--;
             leftBlinkerArrow.clearAnimation();
-        }else{
+            AudioPlayer.instance.disableBlinker();
+        } else {
             leftBlinkerArrow.startAnimation(animation);
             rightBlinkerArrow.clearAnimation();
             clicks++;
+            if (switchCompat.isChecked()) AudioPlayer.instance.enableBlinker();
         }
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
@@ -534,10 +530,12 @@ public class PracticeDrivingActivity extends AppCompatActivity implements Sensor
         if (clicks == 1) {
             clicks--;
             rightBlinkerArrow.clearAnimation();
-        }else{
+            AudioPlayer.instance.disableBlinker();
+        } else {
             rightBlinkerArrow.startAnimation(animation);
             leftBlinkerArrow.clearAnimation();
             clicks++;
+            if (switchCompat.isChecked()) AudioPlayer.instance.enableBlinker();
         }
         if(FORCE_UPDATE) controller.blinkerStatus.set(MqttCar.BlinkerDirection.Right);
     }
