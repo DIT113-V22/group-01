@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 
 public class AudioPlayer {
     private MediaPlayer mp;
+    private MediaPlayer mpBlinker;
 
     /*
     Sounds under resources.raw folder:
@@ -15,24 +16,75 @@ public class AudioPlayer {
     public final static AudioPlayer instance = new AudioPlayer();
 
     public void createMP(){
-        mp = new MediaPlayer();
-        mp.setVolume(100, 100);
+        try {
+            mp = new MediaPlayer();
+            mp.setVolume(100, 100);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void chooseSongerino(Context context, int id){
-        stopSound();
-        this.mp = MediaPlayer.create(context, id);
+        try {
+            stopSound();
+            this.mp = MediaPlayer.create(context, id);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void playSound(boolean looping){
-        mp.start();
-        mp.setLooping(looping);
+        try {
+            mp.setLooping(looping);
+            mp.start();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void stopSound(){
-        if (this.mp != null){
-            mp.stop();
-            mp.release();
+        try {
+            if (mp != null){
+                mp.stop();
+                mp.release();
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void initBlinker(Context context, int id){
+        try {
+            mpBlinker = MediaPlayer.create(context, id);
+            mpBlinker.setVolume(100, 100);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void enableBlinker(){
+        try {
+            mpBlinker.setLooping(true);
+            mpBlinker.start();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void disableBlinker(){
+        try {
+            if (mpBlinker.isPlaying()) {
+                mpBlinker.pause();
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
