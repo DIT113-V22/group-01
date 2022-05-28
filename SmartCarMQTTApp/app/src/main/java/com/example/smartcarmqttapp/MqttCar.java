@@ -302,8 +302,10 @@ public class MqttCar extends BaseObservable implements IMqttActionListener, Mqtt
             }
 
             // For ui updates
-            for (Runnable listener : listeners.values()) {
-                listener.run();
+            if (topic.equals(Topics.Heartbeat) || topic.equals(Topics.Sensors.Camera)) {
+                for (Runnable listener : listeners.values()) {
+                    listener.run();
+                }
             }
         }
         catch (NumberFormatException ex) {
