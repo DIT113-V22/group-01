@@ -8,6 +8,9 @@ For more info on how we tackle the challenge, have a look at our [wiki](https://
 
 [🖼 Project Idea Presentation](https://docs.google.com/presentation/d/16SZ2ToYdbLL906brSV6_ACyWLJ0RKk2l5obWzS27Ddo/edit#slide=id.p)
 
+**We are proud to present our app Crusher's Crash Course to you:**
+<br>https://www.youtube.com/watch?v=sFfU1-JhVWo
+
 # Table of Contents 
 1. [ Introduction ](#introduction)
    - 1.1.   [ What we are going to make ](#what) 
